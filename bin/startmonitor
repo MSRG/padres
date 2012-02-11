@@ -1,0 +1,63 @@
+#!/bin/bash
+
+USAGE="Usage: $(basename $0) [-help] [-Xms <mem_min>] [-Xmx <mem_max>] [-b <broker_uri>]"
+
+# function to check whether a parameter is given to an option
+check_arg_missing()
+{
+	if ( [[ $2 == -* ]] || [ -z $2 ] ); then
+		echo "Option $1 requires a parameter"
+		echo $USAGE
+		exit 1
+	fi
+}
+
+# Make sure environment variable $PADRES_HOME is set
+if [ -z "$PADRES_HOME" ]
+then
+	PADRES_HOME="$(cd $(dirname "$0")/.. && pwd)"
+	export PADRES_HOME
+fi
+
+ARGS=$*
+
+# default values
+MEMORY_MIN=128 
+MEMORY_MAX=256 
+PATHSEP=':'
+
+# adjust for cygwin
+case "`uname`" in
+  (CYGWIN*) 
+  	PADRES_HOME="$(cygpath -m "$PADRES_HOME")"
+  	PATHSEP='\\;'
+  	;;
+esac
+
+CLIENT_OPT=()
+
+# Parse for JVM specific flag params and RMI port
+while [ $# -gt 0 ]; do
+    case "$1" in
+    	( -Xms )
+			check_arg_missing $1 $2
+			MEMORY_MIN="$2" ;;
+		( -Xmx )
+			check_arg_missing $1 $2
+			MEMORY_MAX="$2" ;;
+		( -b )
+			check_arg_missing $1 $2
+			CLIENT_OPT=( "${CLIENT_OPT[@]}" $1 $2)
+			shift 2 ;;
+		( -help )
+			cat ${PADRES_HOME}/bin/docs/startmonitor.help
+			exit 0 ;;
+	esac
+	shift 2
+done
+
+java -Xms${MEMORY_MIN}m -Xmx${MEMORY_MAX}m \
+	 -cp ${PADRES_HOME}/build -Djava.ext.dirs=${JAVA_HOME}/jre/lib/ext${PATHSEP}${PADRES_HOME}/lib \
+	 -Djava.security.policy=${PADRES_HOME}/etc/java.policy \
+	 ca.utoronto.msrg.padres.tools.padresmonitor.MonitorFrame ${CLIENT_OPT[@]} &
+ 

@@ -1,0 +1,32 @@
+#!/bin/bash
+
+# check and set the PADRES_HOME environment value
+if [ -z "$PADRES_HOME" ]
+then
+	PADRES_HOME="$(cd $(dirname "$0")/../../.. && pwd)"
+fi
+
+# Stop the brokers
+${PADRES_HOME}/bin/stopbroker Broker1
+${PADRES_HOME}/bin/stopbroker Broker2
+
+# Stop the clients and monitor
+echo Stopping clients
+pkill -u $(whoami) -f 'ca.utoronto.msrg.padres.tools.guiclient.GUIClient.* -i Publisher '
+pkill -u $(whoami) -f 'ca.utoronto.msrg.padres.tools.guiclient.GUIClient.* -i Subscriber '
+pkill -u $(whoami) -f 'ca.utoronto.msrg.padres.tools.padresmonitor.MonitorFrame'
+
+# Stop the clients and monitor under cygwin
+case "`uname`" in
+    (CYGWIN*)
+    # Iterate through each process.
+    for pid in $(ps -s |tail -n +2 |awk '{print $1}'); do
+	  	# Look for a process with the appropriate arguments
+	  	match=$([ -f /proc/$pid/cmdline ] && cat /proc/$pid/cmdline | xargs -0 |egrep -e "/bin/startclient.* -i (Subscriber|Publisher) |/bin/startmonitor ")
+	  	if [ -n "$match" ]; then
+  	    	kill $pid
+  		fi
+    done
+    ;;
+esac
+

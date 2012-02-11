@@ -1,0 +1,145 @@
+<!-- DEMO SPECIFIC SCRIPTS -->
+
+<div id="demo_ex_panel_closed" class="panel" style="display: none;">
+	<a href="#" class="hide" onclick="togglePanels(document.getElementById('demo_ex_panel_closed'), document.getElementById('demo_ex_panel_open'));"><img src="images/expand.png"></a>
+</div>
+<div id="demo_ex_panel_open" class="panel">
+	<a href="#" class="hide" onclick="togglePanels(document.getElementById('demo_ex_panel_closed'), document.getElementById('demo_ex_panel_open'));"><img src="images/collapse.png"></a>
+	<div id="demo_ex_content" class="content" onmousedown="startResize(document.getElementById('demo_ex_form'), document.getElementById('demo_ex_panel_open'), 46);">
+
+	<form id="demo_ex_form">
+
+	<!-- DEMO SPECIFIC ELEMENTS -->
+		<!-- DEMO 0 -->
+		<script type="text/javascript">
+			function _runDemo0() {
+				// use js functions that are already available
+				// and use the "presentation" syntax
+				connect("localhost:1099");
+
+				subscribe("(class eq demo0)(myattr > 5)(urattr < 10)", "localhost:1099");
+				// 3rd argument = auto-advertise
+				publish("(class demo0)(myattr 1)(urattr 5)", "localhost:1099", true);
+				publish("(class demo0)(myattr 6)(urattr 5)", "localhost:1099", false);
+				publish("(class demo0)(myattr 3)(urattr 5)", "localhost:1099", false);
+				publish("(class demo0)(myattr 8)(urattr 15)", "localhost:1099", false);
+
+				// TODO: not quite working as I would expect ... got to debug: UI/RMIUC/Broker problem?
+				advertise("(class eq demo0_b)(myattr isPresent 'text')(urattr isPresent 'text')", "localhost:1099");
+				subscribe("(class eq demo0_b)(myattr str-prefix foo)(urattr str-contains bar)", "localhost:1099");
+				publish("(class demo0)(myattr football)(urattr barometer)", "localhost:1099", false);
+				publish("(class demo0)(myattr bigfoot)(urattr chocobar)", "localhost:1099", false);
+				publish("(class demo0)(myattr food)(urattr embarass)", "localhost:1099", false);
+				publish("(class demo0)(myattr Food)(urattr embark)", "localhost:1099", false);
+
+				// unsubscribing/unadvertising occurs through UI since messages IDs
+				// are not known here
+			}
+		</script>
+		<input type="button" value="Run Demo 0" onclick="_runDemo0()"; />
+
+		<br />
+		<br />
+
+		<!-- DEMO 1 -->
+		<input type="button" value="Run Demo 1" onclick="runMethod('ca.utoronto.msrg.padres.demo.webclient.demo.examples.ExampleDemo', 'demo1',null,null,defaultErrFunc);" />
+
+		<br />
+		<br />
+
+		<!-- DEMO 2 -->
+		<script type="text/javascript">
+			// Notice the real Padres syntax is used now since
+			// these values are passed into Java code and used directly
+			var xmlString = createXmlTag("broker", "localhost:1099");
+			xmlString += createXmlTag("adv", "[class,eq,demo],[val,>,0]");
+			xmlString += createXmlTag("sub", "[class,eq,demo]");
+			xmlString += createXmlTag("pub1", "[class,demo],[val,1]");
+			xmlString += createXmlTag("pub2", "[class,demo],[val,2]");
+			xmlString += createXmlTag("delay", "5000");
+			function _runDemo2() {
+				runMethod('ca.utoronto.msrg.padres.demo.webclient.demo.examples.ExampleDemo', 'demo2', xmlString, handleDemo2Succ, defaultErrFunc);
+			}
+			function handleDemo2Succ(xmlHttp) {
+				var doc = xmlToDoc(xmlHttp.responseText);
+				alert("Reply: " + getXmlTagValue(doc, "example_reply"));
+				cleanup(xmlHttp);
+			}
+		</script>
+		<input type="button" value="Run Demo 2" onclick="_runDemo2()" />
+
+		<br />
+		<br />
+
+		<!-- DEMO 3 -->
+		<script type="text/javascript">
+			var demo3Running;
+			function _startDemo3() {
+				demo3Running = true;
+
+				// It seems that trying to open multiple event connections
+				// to the server will cause one connection or the other to block.
+				// So do not grab events on this page if the "status" page is already
+				// open somewhere ... need to investigate further into multiple HTTP
+				// connection behaviour.
+				//
+				// Solution: browser setting
+				//           network.http.max-persistent-connections-per-server must be set
+				// Anyway, this is how to start receiving events
+				//
+				// getNextEvent("demo3_qid", handleDemo3Event, defaultHandleEventErr);
+
+				// run the demo
+				runMethod('ca.utoronto.msrg.padres.demo.webclient.demo.examples.ExampleDemo','startDemo3',
+					createXmlTag("delay", "3000"),
+					handleStartDemo3Succ,defaultErrFunc);
+			}
+			function handleStartDemo3Succ() {
+					document.getElementById("pauseDemo3").value="Pause Demo 3";
+			}
+
+			function _togglePauseDemo3() {
+				runMethod("ca.utoronto.msrg.padres.demo.webclient.demo.examples.ExampleDemo", "togglePauseDemo3",null,handlePauseDemo3Succ,defaultErrFunc);
+			}
+			function handlePauseDemo3Succ(xmlHttp) {
+				var doc = xmlToDoc(xmlHttp.responseText);
+				var paused = getXmlTagValue(doc, "paused");
+				if (paused == "true")
+					document.getElementById("pauseDemo3").value="Unpause Demo 3";
+				else if (paused == "false")
+					document.getElementById("pauseDemo3").value="Pause Demo 3";
+				cleanup(xmlHttp);
+			}
+
+			function _stopDemo3() {
+				demo3Running = false;
+				runMethod("ca.utoronto.msrg.padres.demo.webclient.demo.examples.ExampleDemo", "stopDemo3",null,null,defaultErrFunc);
+			}
+
+			function handleDemo3Event(xmlHttp) {
+				var doc = xmlToDoc(xmlHttp.responseText);
+				var type = getXmlTagValue(doc, PROP_EVENT_TYPE);
+				
+				// throw away everything but exception events
+				if (type == EVENT_TYPE_EXCEPTION) {
+					showError("Stream error: " + getXmlTagValue(doc, PROP_EVENT_CONTENT)); 
+				}
+
+				// get the next event
+				if (demo3Running == true)
+					setTimeout("getNextEvet('demo3_qid', handleDemo3Event, defaultHandleEventErr);", 0);
+				cleanup(xmlHttp);
+			}
+		</script>
+		<input type="button" value="Start Demo 3" onclick="_startDemo3();" />
+		<input type="button" id="pauseDemo3" value="Pause Demo 3" onclick="_togglePauseDemo3();" />
+		<input type="button" value="Stop Demo 3" onclick="_stopDemo3();" />
+	<!-- END DEMOS -->
+
+	<!-- TODO: Instructions for Writing custom demos -->
+	<p>
+	</p>
+	</form>
+
+	</div>
+</div>

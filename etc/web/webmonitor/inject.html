@@ -1,0 +1,157 @@
+<!-- Wrapper functions
+Avoid referring to actual element IDs/names from within js file.
+Changes to elements should only involve edits within this file.
+-->
+<script type="text/javascript">
+function _InjectMsg(){
+	var msgTypeValue = document.getElementById("msg_type_text").value;
+	var msgContentValue = document.getElementById("msg_content_text").value;
+	var xmlString = createXmlTag("msgtype", msgTypeValue);
+	xmlString += createXmlTag("msgcontent", msgContentValue);
+	runMethod("ca.utoronto.msrg.padres.broker.webmonitor.demo.BaseDemo","sendMsg",
+		xmlString,
+		handleInjectMsgSucc,defaultErrFunc);
+}
+function handleInjectMsgSucc(){
+	
+}
+function _retract(){
+	var classname = document.getElementById("class_text").value;
+	var xmlString = createXmlTag("classname",classname);
+	runMethod("ca.utoronto.msrg.padres.broker.webmonitor.demo.BaseDemo","retractPub",xmlString,null,defaultErrFunc);
+}
+function _InjectStopCmd(){
+	runMethod("ca.utoronto.msrg.padres.broker.webmonitor.demo.BaseDemo","stopBroker",
+		null,
+		handleInjectCmdSucc,defaultErrFunc);
+}
+
+function _InjectResumeCmd(){
+	runMethod("ca.utoronto.msrg.padres.broker.webmonitor.demo.BaseDemo","resumeBroker",
+		null,
+		handleInjectCmdSucc,defaultErrFunc);
+}
+
+function _InjectShutdownCmd(){
+	runMethod("ca.utoronto.msrg.padres.broker.webmonitor.demo.BaseDemo","shutdownBroker",
+		null,
+		handleInjectCmdSucc,defaultErrFunc);
+}
+function handleInjectCmdSucc(){
+
+}
+
+</script>
+
+<div id="inject_msg_panel_closed" class="panel" style="display: none;">
+	<a href="#" class="hide" onclick="togglePanels(document.getElementById('inject_msg_panel_closed'), document.getElementById('inject_msg_panel_open'));"><img src="images/expand.png"></a>
+</div>
+<div id="inject_msg_panel_open" class="panel">
+	<a href="#" class="hide" onclick="togglePanels(document.getElementById('inject_msg_panel_closed'), document.getElementById('inject_msg_panel_open'));"><img src="images/collapse.png"></a>
+	<div id="inject_msg_option" class="content">
+		<h3>
+		Inject Message
+		<a href="#" class="hide" onclick="toggleCollapse(document.getElementById('inject_msg_form'), this)"><img src="images/mini_collapse.png"></a>	
+		</h3>
+		
+		<form id="inject_msg_form" onmousedown="startResize(this, document.getElementById('inject_msg_panel_open'), 46);"
+			onmouseover="highlight(this);"
+			onmouseout="unhighlight(this);"
+		>
+			<div class="labels">
+				<input type="label" readonly="true" value="Message type:" /> <br />	
+				<input type="label" readonly="true" value="" /> <br />	
+				<input type="label" readonly="true" value="Message content:" /><br />
+			</div>
+			<div class="inputs">
+				<div id="msgTypeOptions">
+					<select id="msg_type_text">
+					<option value="adv">Advertisement</option>
+					<option value="sub">Subscription</option>
+					<option value="compositeSub">CompositeSubscription</option>
+					<option value="pub">Publiation</option>
+					</select>
+				</div>				
+				<input type="label" readonly="true" value="" />	
+				<input type="text" id="msg_content_text"/> <br /> 
+			</div>
+			<div class="right_align">
+			<input type="button" value="Inject Message" onclick="_InjectMsg()" />
+			</div>
+		</form>
+		
+		<h3>
+		Notification
+		<a href="#" class="hide" onclick="toggleCollapse(document.getElementById('inject_msg_form'), this)"><img src="images/mini_collapse.png"></a>
+		
+		</h3>
+		
+		<form id="inject_msg_form" onmousedown="startResize(document.getElementById('inject_msg_area'), document.getElementById('inject_msg_panel_open'), 46);"
+			onmouseover="highlight(this);"
+			onmouseout="unhighlight(this);"
+		>
+		<textarea id="inject_msg_area"></textarea><br />
+		<div class="right_align">
+		<input type="button" value="Clear" onclick="clearText(document.getElementById('inject_msg_area'))" />
+		</div>
+		</form>		
+	</div>	
+</div>
+
+<div id="inject_cmd_panel_closed" class="panel" style="display: none;">
+	<a href="#" class="hide" onclick="togglePanels(document.getElementById('inject_cmd_panel_closed'), document.getElementById('inject_cmd_panel_open'));"><img src="images/expand.png"></a>
+</div>
+<div id="inject_cmd_panel_open" class="panel">
+	<a href="#" class="hide" onclick="togglePanels(document.getElementById('inject_cmd_panel_closed'), document.getElementById('inject_cmd_panel_open'));"><img src="images/collapse.png"></a>
+	<div id="inject_cmd_option" class="content">
+		<h3>
+		Inject Command
+		<a href="#" class="hide" onclick="toggleCollapse(document.getElementById('inject_cmd_form'), this)"><img src="images/mini_collapse.png"></a>	
+		</h3>
+		
+		<form id="inject_cmd_form" onmousedown="startResize(this, document.getElementById('inject_cmd_panel_open'), 46);"
+			onmouseover="highlight(this);"
+			onmouseout="unhighlight(this);"
+		>
+			<div class="labels">
+				<input type="label" readonly="true" value="Broker Operation:" /> <br />	
+			</div>
+			<div class="right_align">
+			<input type="button" value="Stop" onclick="_InjectStopCmd()" />
+			<input type="button" value="Resume" onclick="_InjectResumeCmd()" />
+			<input type="button" value="Shutdown" onclick="_InjectShutdownCmd()" />
+			</div>
+		</form>
+		
+		<h3>
+		Retract Publication
+		<a href="#" class="hide" onclick="toggleCollapse(document.getElementById('pub_retract_form'), this)"><img src="images/mini_collapse.png"></a>
+		
+		</h3>
+		
+		<form id="pub_retract_form" onmousedown="startResize(this, document.getElementById('inject_cmd_panel_open'), 46);">
+		<div class="labels">
+			<input type="label" readonly="true" value="Class:" /> <br />
+			<input type="label" readonly="true" value="" /> <br />
+		</div>
+		<div class="inputs">
+			<input type="text" id="class_text"/> <br />
+			<input type="label" readonly="true" value="" /> <br />				
+		</div>
+		<div class="right_align">
+		<input type="button" value="Clear" onclick="clearText(document.getElementById('class_text'))" />
+		<input type="button" value="Retract" onclick="_retract()" />
+		</div>			
+		</form>
+		
+		
+	</div>	
+</div>
+
+<script type="text/javascript">
+	// initializations once divs are loaded
+	setNotificationArea(document.getElementById("inject_msg_area"));
+
+	// start event listening
+	startEvents(DEFAULT_WEBUI_QID);
+</script>

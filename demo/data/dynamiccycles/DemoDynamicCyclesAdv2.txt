@@ -1,0 +1,1 @@
+a [class,eq,CYCLE_DEMO],[applname,eq,STOCK],[price,>,100],[amount,isPresent,10]

@@ -1,0 +1,118 @@
+#!/bin/sh
+
+# Description:  Executes commands via ssh in strictly N threads
+# Author:		Alex Cheung (University of Toronto)
+# Note:			You must execute this file prefixed with a "./" or else the
+
+# Program arguments
+CALLER=$1
+COMMAND=$2
+ADDR_LIST=$3;
+ID=$4;
+
+# Logging
+LOG_PATH="log/";
+LOG_BASENAME=`basename ${CALLER}`;
+LOG_EXTNAME="log";
+OK_LOG_FILENAME="${LOG_BASENAME}.ok.${LOG_EXTNAME}";
+FAILED_LOG_FILENAME="${LOG_BASENAME}.failed.${LOG_EXTNAME}";
+OK_LOG_FILE="${LOG_PATH}${OK_LOG_FILENAME}";
+FAILED_LOG_FILE="${LOG_PATH}${FAILED_LOG_FILENAME}";
+OK_LOG_SEM="${TMP:-/tmp}/${OK_LOG_FILENAME}.lock";
+FAILED_LOG_SEM="${TMP:-/tmp}/${FAILED_LOG_FILENAME}.lock";
+
+N_THREADS=10;
+
+# Clean up function
+DONE=0;
+function cleanUp()
+{
+	if [[ ${DONE} == 0 ]]; then
+		${KILL} 0;
+	fi;
+}
+
+# Check arguments
+if [[ $# < 3 || $# > 4 ]]; then
+	echo "Usage: $0 <caller_name> <command> <address_list>";
+	exit 1;
+fi;
+
+IDENTITY=${IDENTITY:?"must be specified in environment variable"};
+SLICE=${SLICE:?"must be specified in environment variable"};
+
+if [ ! -r ${IDENTITY} ]; then
+	echo "${IDENTITY}: access denied";
+	exit 1;
+fi;
+
+# programs
+SSH="ssh -o StrictHostKeyChecking=no -o ConnectTimeout=5 -i ${IDENTITY} -n -x -l ${SLICE}";
+RM="rm -f";
+KILL="kill -n 9";
+
+trap 'cleanUp' EXIT || exit 1;
+	
+	
+# Main program
+if [[ $# == 3 ]]; then
+	# Initialize logs
+	mkdir -p ${LOG_PATH}
+	${RM} ${OK_LOG_FILE};
+	${RM} ${FAILED_LOG_FILE};
+	${RM} ${OK_LOG_SEM};
+	${RM} ${FAILED_LOG_SEM};
+	
+	#start threads
+	i=0;
+	locks="";
+	while (( ${N_THREADS} - i )); do
+		CALLER_SEM="${TMP:-/tmp}/${CALLER}.${i}.lock"
+		${RM} ${CALLER_SEM};
+		locks="${locks} ${CALLER_SEM}";
+		lockfile -1 ${CALLER_SEM};
+		./$0 ${CALLER} "${COMMAND}" ${ADDR_LIST} ${i} &
+		(( i=i+1 ));
+	done;
+	#wait for childs to terminate
+	lockfile -1 ${locks};
+	${RM} ${locks};
+	
+else
+	CALLER_SEM="${TMP:-/tmp}/${CALLER}.${ID}.lock"
+	i=0;
+
+	for ipAddress in $(< ${ADDR_LIST}); do
+		(( cur=i%${N_THREADS} ));
+		if [[ ${cur} == ${ID} ]]; then
+		    # Set up logging for SSH invocation
+		    TMP_LOG=${TMP:-/tmp}/${CALLER}.${ipAddress}.log;
+		    ${RM} ${TMP_LOG};
+
+			# SSH into the remote node
+			${SSH} ${ipAddress} "${COMMAND}" >> ${TMP_LOG} 2>&1;
+			exit_code=$?;
+
+		    # Get the logged message
+		    logMsg="Message was: `cat ${TMP_LOG}`";
+			${RM} ${TMP_LOG};
+
+			# Log to appropriate log file			
+			if [[ $exit_code == 0 ]]; then
+				lockfile -1 ${OK_LOG_SEM};
+				echo -e "${ipAddress}\tOK\n${logMsg}" >> ${OK_LOG_FILE};
+				echo -e "${ipAddress}\tOK";
+				${RM} ${OK_LOG_SEM};
+			else
+				lockfile -1 ${FAILED_LOG_SEM};
+				echo -e "${ipAddress}\tFAILED\n${logMsg}" >> ${FAILED_LOG_FILE};
+				echo -e "${ipAddress}\tFAILED\t${logMsg}\n";
+				${RM} ${FAILED_LOG_SEM};
+			fi;
+		fi;
+		(( i=i+1 ));
+	done;
+	${RM} ${CALLER_SEM};
+fi;
+
+DONE=1

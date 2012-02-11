@@ -1,0 +1,128 @@
+==========================================================================
+You may enter any one of the commands below into the Deployer's console.
+==========================================================================
+
+help | ?
+ - This screen
+
+exit | quit | bye | ciao | cu
+ - Exits the simulator
+
+load <file>
+ - Loads the topology/input/workload file.  Checks to see if all nodes
+   in the topology file are reachable by automatically running the sshtest
+   command
+
+sshtest <IP address list>
+ - Returns the list of node IP addresses that it can and cannot 
+   reach via SSH.  You will need to provide the absolute path (i.e. 
+   path that starts with "/" like /home/padres/iplist.txt).  Results 
+   are stored in build/panda/<date>/log/sshtest.[ok|failed].log.
+
+Note: The following commands can only be invoked after a topology file
+has been successfully loaded.
+
+install
+ - Install RPMs on all nodes you specified in the loaded input file, 
+   such as the Java SDK.  It does not hurt to run this command on nodes 
+   that already has the RPMs installed because nodes will not download 
+   the rpm file again nor reinstall it.
+
+uninstall
+ - Removes RPMs sitting in /tmp of remote nodes specified in the loaded 
+   topology file.  It does not hurt to run this command on nodes that
+   have already uninstalled its RPM files.
+
+reinstall
+ - Runs 'uninstall' then 'install' in sequence.
+
+upload [URL]
+ - Deploys the padres code to all broker nodes you specified.  It does
+   this by downloaded the tarball and extracting it by simply doing "tar
+   xzvf *.tar.gz", after which the tarball is deleted.  If you do not
+   specify a tarball URL, then the default one specified in 
+   panda.properties will be used.
+
+clean <all | log>
+ - 'all' cleans the entire home directory
+ - 'log' removes *.log files located under ${HOME}/build
+   
+deploy <auto>
+ - Starts the 2-phase deployment process by first setting up a stabilized
+   broker network before deploying the clients.  With the "auto" flag, 
+   panda will not give any prompts, deploy phase 1, and deploys phase 2
+   only after monitoring phase 1 deployment is complete.
+
+stop [time(s)]
+ - Stops the experiment by killing all broker and client processes on
+   their respective nodes after a certain period of time from now.  If 
+   time is not specified, then it means now.
+
+get <logs | errors>
+ - 'logs'   Retrieves the log files from remote machines and store them 
+            into a local directory called as LOGS-<current date>.
+ - 'errors' Grep for ERROR messages in Exception* log files under the
+            build directory.  No log files are retrieved in doing so.
+
+status
+ - Displays the current deployer status.  Hint: To get the run-time
+   status of a broker/client, use the monitoring tool.
+
+auto [URL to tarball]
+ - Performs all steps in one shot so you can sit back and relax, drink a 
+   coffee and eat a bun while waiting.  These steps include:
+     1. install
+     2. upload
+     3. deploy
+
+
+===========================================================================
+The following can be entered into both the console and the simulation file.
+If entered onto the console, then PANDA assumes that the node on which the
+broker/client runs is already bootstrapped and contains the desired PADRES 
+build.  In short, inputs entered onto the console are like loading an input
+from the file and automatically calling the 'deploy' command.
+===========================================================================
+
+Note: Commands (i.e. ADD) are NOT case-sensitive.
+
+Note: Add addresses should take the form of IP address and port number(s).
+      For example, 10.0.0.1:1099.  Or 10.0.0.2:45045/21979/1099
+      
+Tip:  Start all your brokers at time 0s, then your clients > 0s to allow 
+      PANDA to freeze your client deployment time until all brokers have
+      started and neighbor links estabilshed.
+
+<time(s)> ADD <id> <nodeIPaddr> bin/startbroker.sh -Xms <min_memory_in_MB> 
+   -Xmx <max_memory_in_MB> -hostname <nodeIPaddr> -i <broker_id> -p <port> 
+   -n <neighbor1,neighbor2,...> ...
+ - Adds a broker with the given broker ID at the indicated machine with
+   limited JVM memory. No spaces in between commas in neighbor list.
+   Mandatory flags include -hostname.  Recommended flags include -i and -p
+ - 0.0 ADD B1 10.0.1.2 startbroker.sh -Xms 256 -Xmx 512 -hostname 
+   10.0.1.2 -n 10.0.1.1:21979 -p 21979 -i B1
+   
+<time(s)> ADD <id> <nodeIPAddr> demo/bin/stockquote/startSQpublisher.sh -hostname <nodeIpAddr>
+   -i <id> -s <symbol1>/<symbol2>/... -r <rate1>/<rate2>/... 
+   -b <broker_IP+port> -d <delay_before_first_publish>
+ - Adds a publisher at the indicated machine's IP address according to
+   the following setup parameters.  If more than one symbol is provided,
+   separated by "/", then each symbol must have a corresponding publishing
+   rate.  In this case, the publisher will publish more than one stockquote 
+   symbol publication set.
+ - 0.11 ADD P0 10.0.1.10 startSQpublisher.sh -hostname 10.0.1.10 -i P0 
+   -s NXTL/JDSU/SCON -r 43.8/24.8/14.6 -d 0 -b 10.0.1.1:21979
+
+<time(s)> ADD <id> <nodeIPAddr> demo/bin/stockquote/startSQsubscriber.sh -hostname 10.0.1.10 
+   -i S0 -s "<subscription1>/<subscription2>/..." -b <broker_IP+port> 
+ - Adds a subscriber at the indicated machine's IP address according to
+   the following setup parameters.  The subscriber can issue multiple
+   subscriptions if provided with more than one subscription, each 
+   separated by "/".
+ - 637.86 ADD S0 10.0.1.10 startSQsubscriber.sh -hostname 10.0.1.10 -i S0 
+   -s "[class,eq,'STOCK']/[class,eq,'STOCK'],[symbol,eq,'ASTM'] 
+   -b 10.0.1.2:21979
+
+<time(s)> REMOVE <id> <nodeIPAddr>
+ - Removes a process with the given id by killing its process on the remote 
+   machine.

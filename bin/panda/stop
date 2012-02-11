@@ -1,0 +1,54 @@
+#!/bin/sh
+
+# Description:  Stops all java running processes on the remove machines
+# Author:		Alex Cheung (University of Toronto)
+# Notes:		You can use this file as a template by just changing the 
+#				CUSTOMIZABLE CODE section below with your own code
+
+# Parameters
+CALLER=`basename $0`;
+LIST=$1;
+SLEEP_TIME=${2:-0};
+CMD="";
+
+
+# Clean up function
+DONE=0;
+function cleanUp()
+{
+	if [[ ${DONE} == 0 ]]; then
+		${KILL} 0;
+	fi;
+}
+
+# Check arguments
+if [[ $# < 1 || $# > 2 ]]; then
+	echo "usage: $0 <address_list> [delay]";
+	exit 1;
+fi;
+
+# programs
+RM="rm -f";
+KILL="kill -n 9";
+EXEC="sshlexec";
+
+
+trap 'cleanUp' EXIT || exit 1;
+	
+
+# Main program
+
+# =====================================================================================
+# CUSTOMIZABLE CODE
+# =====================================================================================
+
+# Formulate what we want to execute	
+CMD="sleep ${SLEEP_TIME} && pkill -9 screen ; pkill -9 sleep ; pkill -9 java ; pkill -9 rmiregistry ; pkill -9 PROCESS-*";
+
+# =====================================================================================	
+
+
+# Pick an executor to run our command
+./${EXEC} ${CALLER} "${CMD}" ${LIST}
+
+DONE=1

@@ -1,0 +1,163 @@
+#!/bin/sh
+
+# Description:  Given a file containing the list of files that stores commands
+# 				to be executed on a particular machine, it runs a child instance 
+#				of itself to process each file in the list.
+# Author:		Alex Cheung (University of Toronto)
+# Note:			You must execute this file prefixed with a "./" or else the
+#				options used for the SSH commands in this script will not 
+#				take effect.
+#				Remember to set environment variables for IDENTITY and SLICE.
+
+# Program arguments
+if [[ $# == 1 ]]; then
+	NODE_CMD_FILE_LIST=$1;
+	PHASE_ID=${NODE_CMD_FILE_LIST##*.};
+elif [[ $# == 2 ]]; then
+	NODE_CMD_FILE=$1;
+	SLEEP_TIME=$2;
+	PHASE_ID=${NODE_CMD_FILE##*.};
+else 
+	echo "usage: $0 <node_file_list> <log_filename>"
+	exit 1;
+fi;
+
+# Logging
+LOG_PATH="log/";
+LOG_BASENAME=`basename $0`;
+LOG_EXTNAME="log"
+OK_LOG_FILENAME="${LOG_BASENAME}.${PHASE_ID}.ok.${LOG_EXTNAME}";
+FAILED_LOG_FILENAME="${LOG_BASENAME}.${PHASE_ID}.failed.${LOG_EXTNAME}";
+OK_LOG_FILE="${LOG_PATH}${OK_LOG_FILENAME}";
+FAILED_LOG_FILE="${LOG_PATH}${FAILED_LOG_FILENAME}";
+OK_LOG_SEM="${TMP:-/tmp}/${OK_LOG_FILENAME}.lock";
+FAILED_LOG_SEM="${TMP:-/tmp}/${FAILED_LOG_FILENAME}.lock";
+
+# Some constants
+SSH="ssh -o StrictHostKeyChecking=no -o ConnectTimeout=10 -i ${IDENTITY} -n -x -l ${SLICE}";
+RM="rm -f";
+KILL="kill -n 9";
+TIME="date +%s";
+
+# Clean up function
+DONE=0;
+function cleanUp()
+{
+	if [[ ${DONE} == 0 ]]; then
+		${KILL} 0;
+	fi;
+}
+
+IDENTITY=${IDENTITY:?"must be specified in environment variable"};
+SLICE=${SLICE:?"must be specified in environment variable"};
+
+if [ ! -r ${IDENTITY} ]; then
+	echo "${IDENTITY}: access denied";
+	exit 1;
+fi;
+
+trap 'cleanUp' EXIT || exit 1;
+
+# Parent code
+function runParent()
+{
+	# Initialize logs
+	mkdir -p ${LOG_PATH};
+	${RM} ${OK_LOG_FILE};
+	${RM} ${FAILED_LOG_FILE};
+	${RM} ${OK_LOG_SEM};
+	${RM} ${FAILED_LOG_SEM};
+	
+	# Determine how much time for each deployExecutor to sleep before doing its job
+	CONCURRENT_PROCESSES=20
+	TIME_PER_PROCESS=5
+	TOTAL_PROCESSES=`sed -n '$=' ${NODE_CMD_FILE_LIST}`;
+	(( MAX_SLEEP_TIME = ${TOTAL_PROCESSES} / (${CONCURRENT_PROCESSES} / ${TIME_PER_PROCESS}) ));
+	(( MAX_SLEEP_TIME += 1 ));	# Have random function include upper bound number
+	
+	locks="";
+	sleepTime="";
+	
+	# CALLER_SEM forces this initiator program to wait until the child process
+	# is finished execution
+	for nodeFile in $(< ${NODE_CMD_FILE_LIST}); do
+		CALLER_SEM="${TMP:-/tmp}/$0.${nodeFile}.lock"
+		${RM} ${CALLER_SEM};
+		locks="${locks} ${CALLER_SEM}";
+		lockfile -1 ${CALLER_SEM};
+		(( sleepTime = ${RANDOM} % ${MAX_SLEEP_TIME} ));
+		./$0 ${nodeFile} ${sleepTime} &
+	done;
+	
+	lockfile -1 ${locks};
+	${RM} ${locks};		# clean up just in case child program terminated unexpectedly
+}
+
+
+# Child code
+function runChild()
+{
+	# Get info from the command file's name
+	NODE_ADDR=${NODE_CMD_FILE%.*};
+	
+	CALLER_SEM="${TMP:-/tmp}/$0.${NODE_CMD_FILE}.lock"
+
+	# Sleep for random amount of time before doing work to avoid
+	# resource and network collision with other equivalent processes
+	sleep ${SLEEP_TIME};
+
+	# Set up logging for SSH invocation
+	TMP_LOG="${TMP:-/tmp}/$0.${NODE_ADDR}.log";
+	${RM} ${TMP_LOG};
+
+	# SSH into the remote node, logging each command executed
+	exec < ${NODE_CMD_FILE};
+	while read cmd; do
+		logMsg="Executed command: \"${cmd}\"";
+		t_start=$(${TIME});
+		${SSH} ${NODE_ADDR} "${cmd}" >> ${TMP_LOG} 2>&1;
+		exit_code=$?;
+
+		# Get the logged message
+		logMsg="${logMsg}\nReturned message: `cat ${TMP_LOG}`";
+		${RM} ${TMP_LOG};
+
+		# Log the execution time of the command
+		t_end=$(${TIME});
+		(( total = ${t_end} - ${t_start} ));
+		logMsg="${logMsg}\nCommand took ${total}s and returned ${exit_code}";
+
+		# Do not execute subsequent commands if current one fails
+		if [[ ${exit_code} != 0 ]]; then
+			logMsg="${logMsg}\nDeploy process aborted for ${NODE_ADDR}";
+			break;
+		fi;
+	done;
+
+	# Log to summary log file
+	if [[ ${exit_code} == 0 ]]; then
+		lockfile -1 ${OK_LOG_SEM};
+		echo -e "${NODE_ADDR}\tOK" >> ${OK_LOG_FILE};
+		echo -e "${NODE_ADDR}\tOK";
+		${RM} ${OK_LOG_SEM};
+	else
+		lockfile -1 ${FAILED_LOG_SEM};
+		echo -e "-----------------------------------------------" >> ${FAILED_LOG_FILE};
+		echo -e "${NODE_ADDR}\tFAILED:\n${logMsg}" >> ${FAILED_LOG_FILE};
+		echo -e "${NODE_ADDR}\tFAILED:\n${logMsg}\n";
+		${RM} ${FAILED_LOG_SEM};
+	fi;
+	
+	# Unblock the caller when we are done
+	${RM} ${CALLER_SEM};
+}
+
+
+# Main program starts here
+if [[ $# == 1 ]]; then
+	runParent;
+else
+	runChild;
+fi;	
+	
+DONE=1;

@@ -1,0 +1,6 @@
+[class,eq,'STOCK'],[low,<,80],[high,<,90]
+[class,eq,'STOCK'],[low,=,50],[high,=,50]
+[class,eq,'STOCK'],[low,>,20],[high,<,80]
+[class,eq,'STOCK'],[low,<,80],[high,>,10]
+[class,eq,'STOCK'],[low,<,70],[high,<,70]
+[class,eq,'STOCK'],[low,>,20],[high,>,10]

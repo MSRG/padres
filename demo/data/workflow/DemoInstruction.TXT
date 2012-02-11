@@ -1,0 +1,43 @@
+DEMO Case One: 
+     Application Name: PAYROLL, need 4 agents. When job fail, application end as well.
+
+                   A - JobA: Daily
+                  / \
+                 /   \
+  JobB: Daily  - B    C - JobC: Monday
+                 \   /
+                  \ /
+                   D - JobD: Daily
+                   
+
+
+DEMO Case Two: 
+     Application Name: JWORK, need 4 agents. When job fail, application end as well.
+
+                    A - JobA: Daily
+                    |
+                    |
+                    B - JobB: Workdays   
+                    |
+                    |
+                    C - JobC: Daily
+                    |
+                    |
+                    D - JobD: Daily
+                   
+DEMO Case Three: 
+     Application Name: FOODCHAIN, need 5 agents. AgentB will run JobE or JobB (2 jobs) depends the trigger condition.
+     JobE on AgentB will be triggered if JobA on AgentA failed, when other job fail, application end as well.
+ 
+               -------------- A 
+               |         JobA: Daily
+             Failure         / \
+               |            /   \
+               E           B     C - JobC: Tuesday
+        JobE: Daily   JobB: Daily
+               |            \   /
+               |             \ /
+               F              D 
+       JobF: Workday      JobD: Daily
+
+

@@ -1,0 +1,7 @@
+#!/bin/sh
+
+# Description:  This "cp" wrapper is used because I could not get Java to 
+#				execute any system commands, even if I put in /bin/cp.
+# Author:		Alex Cheung (University of Toronto)
+
+cp -r $1 $2

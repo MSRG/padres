@@ -1,0 +1,6 @@
+s [class,eq,'historic'],[subclass,eq,'stock'],[_query_id,eq,'q1'],[volume,>,100],[price,<,123.45],[symbol,eq,IBM]
+s [class,eq,'historic'],[subclass,eq,'stock'],[_query_id,eq,'q2'],[volume,>,10],[price,<,50.45],[symbol,eq,IBM]
+s [class,eq,'historic'],[subclass,eq,'stock'],[_query_id,eq,'q3'],[volume,<,100],[price,<,30.45],[symbol,eq,MS]
+s [class,eq,'historic'],[subclass,eq,'stock'],[_query_id,eq,'q4'],[volume,<,60],[price,>,30.45],[symbol,eq,MS]
+s [class,eq,'historic'],[subclass,eq,'stock'],[_query_id,eq,'q5'],[symbol,eq,'IBM'],[price,<,200.01],[volume,>,10],[_start_time,eq,'Thu Jul 20 22:23:59 EDT 2010'],[_end_time,eq,'Fri Sep 22 22:23:59 EDT 2018']
+s [class,eq,'historic'],[subclass,eq,'stock'],[_query_id,eq,'q6'],[symbol,eq,'MS'],[price,<,200.01],[volume,>,10],[_start_time,eq,'Thu Jul 20 22:23:59 EDT 2010'],[_end_time,eq,'Fri Sep 22 22:23:59 EDT 2018']

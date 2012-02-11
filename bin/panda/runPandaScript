@@ -1,0 +1,8 @@
+#!/bin/sh
+
+# Author:       Alex Cheung (University of Toronto)
+# Description:  Use this wrapper to run panda scripts directly from 
+#				the Unix console.  This is just a convenient feature.
+# Example:		runPandaScript sshtest iplist.txt
+
+env IDENTITY=privatekey SLICE=utoronto_jacobsen_lb SETUP=http://www.msrg.utoronto.ca/planetlab/setup/setup TARBALL=http://www.msrg.utoronto.ca/planetlab/cyber.tar.gz $*

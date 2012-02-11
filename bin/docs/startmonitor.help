@@ -1,0 +1,16 @@
+
+USAGE: startmonitor.sh [OPTIONS]
+
+   Starts a PADRES monitor which can be used to monitor the PADRES broker 
+   overlay and its components.
+   
+OPTIONS:
+
+ JVM Options:
+   -Xms, -Xmx            Minimum and Maximum memories for Java virtual machine
+
+ Others:
+   -help                 Prints this help
+   -b broker_uri         The URI of the broker to connect to. 
+                         (optional; default: empty) 
+

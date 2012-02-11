@@ -1,0 +1,24 @@
+#!/bin/bash
+
+# Constants
+VALID_VERSION=3.9
+PATTERN_PREFIX="OpenSSH_"
+PATTERN_SUFFIX="p"
+TMP_FILE=tmpversionoutput.txt
+
+SSH_OUTPUT=`ssh -V 2>&1`
+
+# Get rid of the prefix
+VERSION=${SSH_OUTPUT:${#PATTERN_PREFIX}}
+
+# Get rid of the suffix to isolate just the version number
+VERSION=${VERSION:0:((`expr index "$VERSION" $PATTERN_SUFFIX` - 1))}
+
+# Test for version compliance
+PASS=`echo "scale=1; $VERSION >= $VALID_VERSION" | bc`
+
+if (( $PASS != 1 )) 
+then
+	echo "WARNING! An ancient version of SSH is detected."
+	echo "Please see the online PADRES user guide for SSH version requirements."
+fi

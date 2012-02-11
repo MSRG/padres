@@ -1,0 +1,1 @@
+p [class,CYCLE_DEMO],[applname,STOCK],[price,200],[amount,1000]

@@ -1,0 +1,49 @@
+
+USAGE: startclient [OPTION]...
+
+   Start a GUI, command-line, or user-defined PADRES client. This script can be
+   used to run only the clients that extend ....padres.client.Client class.
+
+OPTIONS:
+
+ JVM Options:
+   -Xms, -Xmx           Minimum and Maximum memories for Java virtual machine.
+                        NOTE: just provide the numbers in MB without suffix; leave
+			a space between the option and the value. 
+                        (optional; default: 16MB and 64MB respectively)
+   -cp classpath        classpath to append to the JVM's classpath (optional)
+   -host client_ip	To specify the (local) IP address of the client. It is
+   	 		useful when the machine where the client is instantiated
+			has more than one ethernet interfaces (hence multiple IPs.)
+			Still, the option is only useful when rmi communication
+			protocol is used. (optional)
+
+ Client Interface:
+   -i client_id         Identifier of the client (mandatory)
+   -client classname    Fully qualified class name of the Client class (with a 
+   	   		main() method) to run. If the specified class is not in 
+			the class path, include the path of the class using -cp
+			option described above. 
+			(optional; default: padres.tools.guiclient.GUIClient
+			which provides a GUI interface to interact with) 
+			SEE ALSO: -cli option below
+   -b broker_uri,...    The comma separated list of the URIs of the brokers the 
+      			client is initially connected to 
+			(optional; default: empty) 
+   -cli 		Start the padres.tools.cliclient.CLIClient instead of the 
+   			GUIClient. It provides a command line interface to interact
+			with. (optional)
+			NOTE: not more than one of the -client, -cli, and -web options can be
+			used at the same time.
+   -web 		Start the padres.tools.webclient.WebClient instead of the 
+   			GUIClient. It provides a web interface to interact with. (optional)
+			NOTE: not more than one of the -client, -cli, and -web options can be
+			used at the same time.
+
+ Others:
+   -ll path_name        Name of the directory where the log files are to be 
+                        placed. (default: ~/.padres/logs/)
+   -c file_name         Configuration file with where all the above options are 
+                        specified. (default: $PADRES_HOME/etc/client.properties)
+   --help               Prints this help
+

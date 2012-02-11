@@ -1,0 +1,6 @@
+#!/bin/sh
+#PADRES_ROOT=`pwd | sed -e 's-/[^/]*$--'`
+PADRES_ROOT=`pwd | sed 's/\/cygdrive\/\(.\)/\/\1:/g' | sed -e 's-/[^/]*$--'`
+echo java -cp "padres-0.2.jar;lib/log4j-1.2.13.jar;lib/jgraph.jar;lib/jgrapht-0.5.1.jar;lib/jung-1.7.6.jar;lib/colt.jar;lib/commons-collections-3.2.jar;lib/concurrent.jar" -Djava.security.policy=etc/java.policy -Djava.rmi.server.hostname=localhost -Djava.rmi.server.codebase=file://$PADRES_ROOT/build/padres-0.2.jar -Dpadres.build="$PADRES_ROOT/build" jungmonitor.MonitorFrame
+#java -cp padres-0.2.jar:lib/log4j-1.2.13.jar:lib/jgraph.jar:lib/jgrapht-0.5.1.jar:lib/jung-1.7.6.jar:lib/colt.jar:lib/commons-collections-3.2.jar:lib/concurrent.jar -Djava.security.policy=etc/java.policy -Djava.rmi.server.hostname=localhost -Djava.rmi.server.codebase=file://$PADRES_ROOT/build/padres-0.2.jar -Dpadres.build="$PADRES_ROOT/build" jungmonitor.MonitorFrame
+java -cp "padres-0.2.jar;lib/log4j-1.2.13.jar;lib/jgraph.jar;lib/jgrapht-0.5.1.jar;lib/jung-1.7.6.jar;lib/colt.jar;lib/commons-collections-3.2.jar;lib/concurrent.jar" -Djava.security.policy=etc/java.policy -Djava.rmi.server.hostname="localhost" -Djava.rmi.server.codebase=file://$PADRES_ROOT/build/padres-0.2.jar -Dpadres.build="$PADRES_ROOT/build" jungmonitor.MonitorFrame

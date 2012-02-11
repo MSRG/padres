@@ -1,0 +1,135 @@
+<script type="text/javascript">
+function printActivity(doc) {
+	var errMsg = getXmlTagValue(doc, "error");
+	var activityMsg = "<span style=\"color:red;\">" + errMsg + "</span>";
+	if (errMsg == "") {
+		activityMsg = "<span style=\"color:green;\">" + getXmlTagValue(doc, "success") + "</span>";
+	}
+	var activityElem = document.getElementById("activity_area")
+	activityElem.innerHTML += activityMsg + "<br/>\n";
+	activityElem.scrollTop = activityElem.scrollHeight;
+}
+
+function connect() {
+	brokerURI = window.prompt("Broker URI to connect:", "rmi://localhost:1099/Broker1");
+	xmlString = createXmlTag("command", "connect " + brokerURI);
+	runMethod(xmlString, connectSucc, defaultErrFunc);
+}
+
+function connectSucc(xmlHttp) {
+	var doc = xmlToDoc(xmlHttp.responseText);
+	var errMsg = getXmlTagValue(doc, "error");
+	if (errMsg == "") {
+		var brokerURI = getXmlTagValue(doc, "cmd_data");
+		var selectElem = document.getElementById("broker_select");
+		var newOption = document.createElement("option");
+		newOption.text = newOption.value = brokerURI;
+		try {
+			selectElem.add(newOption, null);
+		} catch(ex) {
+			selectElem.add(newOption);
+		}
+		document.getElementById("broker_select_div").style.display = "block";
+	}
+	printActivity(doc);
+	cleanup(xmlHttp);
+}
+
+function disconnect() {
+	var selectElem = document.getElementById("broker_select");
+	var selectedBroker = selectElem.options[selectElem.selectedIndex];
+	xmlString = createXmlTag("command", "disconnect " + selectedBroker.value);
+	runMethod(xmlString, disconnectSucc, defaultErrFunc);
+}
+
+function disconnectSucc(xmlHttp) {
+	var doc = xmlToDoc(xmlHttp.responseText);
+	var errMsg = getXmlTagValue(doc, "error");
+	if (errMsg == "") {
+		var brokerURI = getXmlTagValue(doc, "cmd_data");
+		var selectElem = document.getElementById("broker_select");
+		selectElem.remove(selectElem.selectedIndex);
+		if (selectElem.length == 0) {
+			document.getElementById("broker_select_div").style.display = "none";
+		}
+	}
+	printActivity(doc);
+	cleanup(xmlHttp);
+}
+
+function sendCommand(elem, e) {
+	var key;
+	if (window.event) {
+		key = e.keyCode;
+	} else if (e.which) {
+		key = e.which;
+	}
+	if (key == 13) {
+		xmlString = createXmlTag("command", elem.value);
+		elem.value = "";
+		runMethod(xmlString, commandSucc, defaultErrFunc);
+	}
+}
+
+function commandSucc(xmlHttp) {
+	var doc = xmlToDoc(xmlHttp.responseText);
+	printActivity(doc);
+	cleanup(xmlHttp);
+}
+
+function getNotifications() {
+	xmlString = createXmlTag("command", "getnotifications");
+	runMethod(xmlString, notifySucc, defaultErrFunc);
+}
+
+function notifySucc(xmlHttp) {
+	var doc = xmlToDoc(xmlHttp.responseText);
+	cleanup(xmlHttp);
+	var message = getXmlTagValue(doc, "success");
+	if (message == "") {
+		setTimeout("getNotifications()", 5000);
+	} else {
+		var notifyElem = document.getElementById("notify_area")
+		notifyElem.innerHTML += message + "<br/>\n";
+		notifyElem.scrollTop = notifyElem.scrollHeight;
+		getNotifications();
+	}
+}
+</script>
+
+<div id="shell">
+
+<div id="shell_buttons"><input type="button"
+	value="Connect To Broker" onclick="connect();" style="float: left;" />
+<div id="broker_select_div"
+	style="float: left; padding-left: 10px; display: none; border-left: solid 2px #ccc"><select
+	id="broker_select">
+</select><input type="button" value="Disconnect" onclick="disconnect();" /></div>
+</div>
+
+<div id="shell_prompt" class="box"
+	style="margin-top: 10px; clear: both;">
+<h3>User Input</h3>
+<input id="prompt_input" type="text" size="100"
+	onkeypress="sendCommand(this, event);" /></div>
+
+<div id="shell_activitiy" class="box">
+<h3>Client Activities</h3>
+<div id="activity_area"></div>
+</div>
+
+<div id="shell_notify" class="box">
+<h3>Broker Notifications</h3>
+<div id="notify_area"></div>
+</div>
+</div>
+
+<script type="text/javascript">
+<!--
+//document.getElementById("pagetitle").innerHTML = "Web Client";
+document.getElementById("prompt_input").value = "";
+document.getElementById("activity_area").value = "";
+document.getElementById("notify_area").value = "";
+getNotifications();
+//-->
+</script>

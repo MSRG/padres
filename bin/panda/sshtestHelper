@@ -1,0 +1,171 @@
+#!/bin/sh
+
+# Description:  Derived from sshlexec, but this has logic to time execution and
+#				check available disk space on the remote node and report
+#				failure if insufficient disk space is detected.
+# Author:		Alex Cheung (University of Toronto)
+# Note:			You must execute this file prefixed with a "./" or else the
+#				options used for the SSH commands in this script will not 
+#				take effect.
+#				Remember to set environment variables for IDENTITY and SLICE.
+
+# Program arguments
+CALLER=$1;
+COMMAND=$2;
+if [[ $# == 3 ]]; then
+	ADDR_LIST=$3;
+elif [[ $# == 4 ]]; then
+	IP_ADDRESS=$3;
+	SLEEP_TIME=$4;
+else 
+	echo $@;
+	echo $#;
+	echo "Usage: $0 <caller_name> <address_list>";
+	exit 1;
+fi;
+
+
+
+# Logging
+LOG_PATH="log/";
+LOG_BASENAME=`basename ${CALLER}`;
+LOG_EXTNAME="log";
+OK_LOG_FILENAME="${LOG_BASENAME}.ok.${LOG_EXTNAME}";
+OK_SORTED_LOG_FILENAME="${LOG_BASENAME}.ok.sorted.${LOG_EXTNAME}";
+FAILED_LOG_FILENAME="${LOG_BASENAME}.failed.${LOG_EXTNAME}";
+OK_LOG_FILE="${LOG_PATH}${OK_LOG_FILENAME}";
+OK_SORTED_LOG_FILE="${LOG_PATH}${OK_SORTED_LOG_FILENAME}";
+FAILED_LOG_FILE="${LOG_PATH}${FAILED_LOG_FILENAME}";
+OK_LOG_SEM="${TMP:-/tmp}/${OK_LOG_FILENAME}.lock";
+FAILED_LOG_SEM="${TMP:-/tmp}/${FAILED_LOG_FILENAME}.lock";
+
+# Some constants
+MIN_DISK_SPACE=100000;	# In kilobytes, according to the 'df' command
+SSH="ssh -o StrictHostKeyChecking=no -o ConnectTimeout=5 -i ${IDENTITY} -n -x -l ${SLICE}";
+RM="rm -f";
+KILL="kill -n 9";
+TIME="date +%s";
+
+# Clean up function
+DONE=0;
+function cleanUp()
+{
+	if [[ ${DONE} == 0 ]]; then
+		${KILL} 0;
+	fi;
+}
+
+
+function isPositiveInteger() {
+	if [ "$(echo $1 | grep "^[[:digit:]]*$")" ]; then
+		return 1;
+	fi;
+
+	return 0;
+}
+
+
+IDENTITY=${IDENTITY:?"must be specified in environment variable"};
+SLICE=${SLICE:?"must be specified in environment variable"};
+
+if [ ! -r ${IDENTITY} ]; then
+	echo "${IDENTITY}: access denied";
+	exit 1;
+fi;
+
+trap 'cleanUp' EXIT || exit 1;
+
+
+function sortOkResults() {
+	`cat ${OK_LOG_FILE} | sort +2n | awk '{ print $1 }' > ${OK_SORTED_LOG_FILE}`;
+	`cat ${OK_LOG_FILE} | sort +2n | awk '{ print $1 "\t" $3 }' > ${OK_SORTED_LOG_FILE}.1`;
+}
+
+# Main program starts here
+
+if [[ $# == 3 ]]; then
+	# Initialize logs
+	mkdir -p ${LOG_PATH}
+	${RM} ${OK_LOG_FILE};
+	${RM} ${FAILED_LOG_FILE};
+	${RM} ${OK_LOG_SEM};
+	${RM} ${FAILED_LOG_SEM};
+
+	# Determine how much time for each thread to sleep before doing its job
+	CONCURRENT_PROCESSES=30
+	TIME_PER_PROCESS=5
+	TOTAL_PROCESSES=`sed -n '$=' ${ADDR_LIST}`;
+	(( MAX_SLEEP_TIME = ${TOTAL_PROCESSES} / (${CONCURRENT_PROCESSES} / ${TIME_PER_PROCESS}) ));
+	(( MAX_SLEEP_TIME += 1 ));	# Have random function include upper bound number
+
+	locks="";
+	sleepTime="";
+
+	# CALLER_SEM forces this parent process to wait until the child process 
+	# is finished execution
+	for ipAddress in $(< ${ADDR_LIST}); do
+		CALLER_SEM="${TMP:-/tmp}/${CALLER}.${ipAddress}.lock";
+		${RM} ${CALLER_SEM};
+		locks="${locks} ${CALLER_SEM}";
+		lockfile -1 ${CALLER_SEM};
+		(( sleepTime = ${RANDOM} % ${MAX_SLEEP_TIME} ));
+		./$0 ${CALLER} "${COMMAND}" ${ipAddress} ${sleepTime} &
+	done;
+
+	lockfile -1 ${locks};
+	${RM} ${locks};		# clean up just in case child program terminated unexpectedly
+
+	sortOkResults;
+	
+else
+	CALLER_SEM="${TMP:-/tmp}/${CALLER}.${IP_ADDRESS}.lock";
+
+	# Sleep for a while to avoid congestion
+	sleep ${SLEEP_TIME};
+
+	# Set up logging for SSH invocation
+	TMP_LOG=${TMP:-/tmp}/${CALLER}.${IP_ADDRESS}.log;
+	${RM} ${TMP_LOG};
+
+	# Time SSH into the remote node
+	startTime=$(${TIME});
+	${SSH} ${IP_ADDRESS} "${COMMAND}" >> ${TMP_LOG} 2>&1;
+	exit_code=$?;
+	endTime=$(${TIME});
+	(( duration = $endTime - $startTime ));
+
+	# Get the logged message, which can be a ssh error message in the case of a 
+	# failure, or a number in the case of a successful login
+	logMsg=`cat ${TMP_LOG}`;
+	isPositiveInteger $logMsg;
+
+	# If result is the available disk space...
+	if [[ $? == 1 && $exit_code == 0 ]]; then
+		availableDiskSpace=${logMsg};
+		if [ $availableDiskSpace -lt $MIN_DISK_SPACE ]; then
+			logMsg="Insufficient disk space.  ${availableDiskSpace}kB left.";
+			exit_code=1;
+		fi;
+	fi;
+
+	${RM} ${TMP_LOG};
+	
+	# Log to appropriate log file
+	if [[ $exit_code == 0 ]]; then
+		lockfile -1 ${OK_LOG_SEM};
+		echo -e "${IP_ADDRESS}\tOK\t${duration}" >> ${OK_LOG_FILE};
+		echo -e "${IP_ADDRESS}\tOK";
+		${RM} ${OK_LOG_SEM};
+	else
+		lockfile -1 ${FAILED_LOG_SEM};
+		echo -e "${IP_ADDRESS}\tFAILED\t${duration}\n${logMsg}" >> ${FAILED_LOG_FILE};
+		echo -e >> ${FAILED_LOG_FILE};
+		echo -e "${IP_ADDRESS}\tFAILED\n${logMsg}";
+		${RM} ${FAILED_LOG_SEM};
+	fi;
+	
+	# Unblock the caller when we are done
+	${RM} ${CALLER_SEM};
+fi;
+
+DONE=1;

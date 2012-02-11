@@ -1,0 +1,43 @@
+PADRES v2.0
+===========
+
+This version of PADRES includes a number of new features, architectural changes,
+demos, and performance enhancements as outlined below.
+
+New features
+- Support for socket communication between brokers and clients.
+- Brokers support advertisement covering.
+- Brokers can be controlled with command line and Web management interfaces.
+- Historic database can use an embedded Apache Derby database in addition to 
+  an external user-provisioned database.
+- Monitor displays cleaner broker and client names.
+- Monitor supports tracing of messages.
+- Composite subscription can support subexpressions in both the left and right
+  hand-side
+
+Architectural changes
+- Communication layer can support pluggable protocols.
+- Broker and client URI formats are generalized for pluggable protocols.
+- More robust parsing of message formats based on a JavaCC parser.
+- More flexible configuration settings.
+- Client is easier to extend and it is easier to handle notifications.
+- Client now supports a pluggable command handler.
+
+Demos
+- Stock quote
+- Web client
+- Historic data query
+- Failure detector and monitor
+- Fixed and dynamic cycles
+
+Performance enhancements
+- Faster and more robust test framework based on dependency injection pattern.
+- Faster subscription covering algorithm using a more light-weight covering 
+  data structure.
+- Faster publication forwarding (resolved performance issue in Rete matcher/router).
+
+
+--------------------------------------------------------------------
+Middleware Systems Research Group (msrg.org)
+University of Toronto
+2012-02-11

@@ -1,0 +1,22 @@
+#!/bin/bash
+
+# check and set the PADRES_HOME environment value
+if [ -z "$PADRES_HOME" ]
+then
+	PADRES_HOME="$(cd $(dirname "$0")/../../.. && pwd)"
+fi
+
+# Start two brokers
+echo Starting Broker1 and Broker2
+${PADRES_HOME}/bin/startbroker -uri socket://localhost:2001/Broker1 -b DB
+${PADRES_HOME}/bin/startbroker -uri socket://localhost:2002/Broker2 -b DB -n socket://localhost:2001/Broker1
+sleep 10
+
+# Start two clients
+echo Staring two clients
+${PADRES_HOME}/bin/startclient -i Publisher -b socket://localhost:2001/Broker1
+${PADRES_HOME}/bin/startclient -i Subscriber -b socket://localhost:2002/Broker2
+
+# Start the monitor
+echo Starting PADRES monitor
+${PADRES_HOME}/bin/startmonitor -b socket://localhost:2001/Broker1

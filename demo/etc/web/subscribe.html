@@ -1,0 +1,210 @@
+<!-- Wrapper functions
+Avoid referring to actual element IDs/names from within js file.
+Changes to elements should only involve edits within this file.
+-->
+<script type="text/javascript">
+function _addPredicate() {
+	addContentToText(
+			document.getElementById("subscription_text")
+		,document.getElementById("attribute_text").value
+		,document.getElementById("operator_text").value
+		,document.getElementById("value_text").value
+		);
+		
+		document.getElementById("attribute_text").focus();
+}
+function _addPredicates() {
+	var option=document.getElementById("sub_preds_option");
+	addToText(
+		document.getElementById("subscription_text")
+		,option.options[option.selectedIndex].value + "\n"
+		);
+}
+function _subscribe() {
+	var option=document.getElementById("broker_option");
+	if (option.selectedIndex < 0) {
+		alert("Not connected to any Brokers");
+		return;
+	}
+	subscribe(
+		document.getElementById("subscription_text").value
+		,option.options[option.selectedIndex].value
+		);
+}
+function _loadFile() {
+	loadFile(
+		document.getElementById("filename_text").value,
+		MSG_TYPE_SUB
+		);
+}
+</script>
+
+<div id="subscription_panel_closed" class="panel" style="display: none;">
+<a href="#" class="hide" onclick="togglePanels(document.getElementById('subscription_panel_closed'), document.getElementById('subscription_panel_open'));"><img src="images/expand.png"></a>
+</div>
+<div id="subscription_panel_open" class="panel">
+<a href="#" class="hide" onclick="togglePanels(document.getElementById('subscription_panel_closed'), document.getElementById('subscription_panel_open'));"><img src="images/collapse.png"></a>
+	<div id="subscription_content" class="content">
+		
+		<h3>
+			<img src="images/subscribe.png" />
+			Issue Subscription
+		</h3>
+		
+		<form id="predicate_form"
+			onmousedown="startResize(document.getElementById('predicate_form'), document.getElementById('subscription_panel_open'), 46);"
+			onmouseover="highlight(this);"
+			onmouseout="unhighlight(this);"
+			>
+			<div class="labels">
+				<input type="label" readonly="true" value="Attr:"/> <br />
+				<input type="label" readonly="true" value="Op:" /> <br />
+				<input type="label" readonly="true" value="Val:" />
+			</div>
+			<div class="inputs">
+				<input type="text" id="attribute_text"/>
+				<select id="operator_text">
+				<option id="i_eq" value="=" selected="selected">=</option>
+				<option id="i_ne" value="isPresent">isPresent</option>
+				<option id="i_lt" value="&lt;">&lt;</option>
+				<option id="i_le" value="&lt;=">&lt;=</option>
+				<option id="i_ge" value="&gt;=">&gt;=</option>
+				<option id="i_gt" value="&gt;">&gt;</option>
+				<option id="i_ne" value="&lt;&gt;">&lt;&gt;</option>
+				<option id="s_eq" value="eq">eq</option>
+				<option id="s_lt" value="str-lt">str-lt</option>
+				<option id="s_le" value="str-le">str-le</option>
+				<option id="s_ge" value="str-ge">str-ge</option>
+				<option id="s_gt" value="str-gt">str-gt</option>
+				<option id="s_ne" value="neq">neq</option>
+				<option id="s_co" value="str-contains">str-contains</option>
+				<option id="s_pr" value="str-prefix">str-prefix</option>
+				<option id="s_po" value="str-postfix">str-postfix</option>
+				</select>
+				<input type="text" id="value_text"/>
+			</div>
+			<div class="right_align">
+			<input type="button" value="Add Predicate" onclick="_addPredicate()" />
+			</div>
+		</form>
+		
+		<form id="subscription_form" onmousedown="startResize(document.getElementById('subscription_text'), document.getElementById('subscription_panel_open'), 46);"
+			onmouseover="highlight(this);"
+			onmouseout="unhighlight(this);"
+		>
+		<textarea id="subscription_text"></textarea>
+		<div class="right_align">
+		<input type="button" value="Clear" onclick="clearText(document.getElementById('subscription_text'))" />
+		<input type="button" value="Subscribe" onclick="_subscribe()" />
+		</div>
+		</form>
+	</div>
+</div>
+		
+<div id="sub_advanced_panel_closed" class="panel" style="display: none;">
+	<a href="#" class="hide" onclick="togglePanels(document.getElementById('sub_advanced_panel_closed'), document.getElementById('sub_advanced_panel_open'));"><img src="images/expand.png"></a>
+</div>
+<div id="sub_advanced_panel_open" class="panel">
+	<a href="#" class="hide" onclick="togglePanels(document.getElementById('sub_advanced_panel_closed'), document.getElementById('sub_advanced_panel_open'));"><img src="images/collapse.png"></a>
+	<div id="sub_advanced_content" class="content">
+		<h3>
+			<img src="images/advanced.png" />
+			Advanced
+		</h3>
+		
+		<form id="sub_preds_form" onmousedown="startResize(document.getElementById('sub_preds_form'), document.getElementById('sub_advanced_panel_open'), 46);"
+		>
+			<div class="labels">
+				<input type="label" readonly="true" value="File:" /> <br />
+				<input type="label" readonly="true" value=""/> <br />
+				<input type="label" readonly="true" value="Preds:"/>
+			</div>
+			<div class="inputs">
+				<input type="file" id="filename_text" /> <br />
+				<input type="label" readonly="true" value=""/> <br />
+				<select id="sub_preds_option"></select> <br />
+				<div class="right_align">
+				<input type="button" value="Load File" onclick="_loadFile()" />
+				<input type="button" value="Add Predicate(s)" onclick="_addPredicates()" />
+				</div>
+			</div>
+		</form> 
+
+		<form id="compsub_form" onmousedown="startResize(document.getElementById('compsub_form'), document.getElementById('sub_advanced_panel_open'), 46);"
+		>
+				<p>
+				Composite Subscriptions
+				</p>
+
+				<p>
+				Start:
+				<input type="button" value="{" onclick="addToText(document.getElementById('subscription_text'), '{')" />
+				&nbsp;
+
+				End:
+				<input type="button" value="}" onclick="addToText(document.getElementById('subscription_text'), '}')" />
+				&nbsp;
+
+
+				And:
+				<input type="button" value="&" onclick="addToText(document.getElementById('subscription_text'), '} &\n\n{')" />
+				&nbsp;
+				Or:
+				<input type="button" value="||" onclick="addToText(document.getElementById('subscription_text'), '} ||\n\n{')" />
+				</p>
+		</form>
+		
+		<form id="broker_form" onmousedown="startResize(document.getElementById('broker_form'), document.getElementById('sub_advanced_panel_open'), 46);"
+		>
+			<div class="labels">
+				<input type="label" readonly="true" value="Brokers:" />
+			</div>
+			<div class="inputs">
+				<select id="broker_option"></select>
+			</div>
+			<div class="right_align">
+				<input type="button" value="Refresh" onclick="loadBrokers()" />
+			</div>
+		</form>
+	</div>
+
+</div>
+		
+<div id="messages_panel_closed" class="panel" style="display: none;">
+	<a href="#" class="hide" onclick="togglePanels(document.getElementById('messages_panel_closed'), document.getElementById('messages_panel_open'));"><img src="images/expand.png"></a>
+</div>
+<div id="messages_panel_open" class="panel">
+	<a href="#" class="hide" onclick="togglePanels(document.getElementById('messages_panel_closed'), document.getElementById('messages_panel_open'));"><img src="images/collapse.png"></a>
+	<div id="messages_content" class="content" onmousedown="startResize(document.getElementById('subscription_list_form'), document.getElementById('messages_panel_open'), 46);">
+		
+		<h3>
+			<img src="images/subscriptions.png" />
+			Active Subscriptions
+		</h3>
+		
+		<form id="subscription_list_form" onmousedown="startResize(this, document.getElementById('messages_panel_open'), 46)"
+			onmouseover="highlight(this);"
+			onmouseout="unhighlight(this);"
+		>
+			<input type="button" value="Refresh" onclick="refreshActiveSubscriptions()" />
+			<div id="subscription_list" class="message_list">
+			</div>
+		</form>	
+	</div>
+	</script>
+</div>
+
+<script type="text/javascript">
+	// initializations once divs are loaded
+	setSubListElem(document.getElementById("subscription_list"));
+	setSubOptionElem(document.getElementById("sub_preds_option"));
+	setBrokerOptionElem(document.getElementById("broker_option"));
+
+	loadBrokers();
+	refreshActiveSubscriptions();
+
+	setPageTitleText("Subscribe");
+
+	// start event listening
+	// startEvents(DEFAULT_WEBUI_QID);
+</script>

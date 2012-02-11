@@ -1,0 +1,64 @@
+#!/bin/sh
+
+###############################################################################
+#
+# File:         cleanAll
+# Description:  Removes the build directory in the home directory of selected 
+#				machines
+# Author:		Alex Cheung (University of Toronto)
+#
+# Notes:		You can use this file as a template by just changing the 
+#				CUSTOMIZABLE CODE section below with your own code
+#
+# Copyright 2006, University of Toronto, all rights reserved.
+#
+###############################################################################
+
+# Parameters
+CALLER=`basename $0`;
+LIST=$1;
+CMD="";
+
+
+# Clean up function
+DONE=0;
+function cleanUp()
+{
+	if [[ ${DONE} == 0 ]]; then
+		${KILL} 0;
+	fi;
+}
+
+# Check arguments
+if [[ $# != 1 ]]; then
+	echo "usage: $0 <address_list>";
+	exit 1;
+fi;
+
+# programs
+RM="rm -fr";
+KILL="kill -n 9";
+EXEC="sshlexec";
+
+PADRES_PATH=${PADRES_PATH:-padres};
+
+trap 'cleanUp' EXIT || exit 1;
+	
+
+# Main program
+
+# =====================================================================================
+# CUSTOMIZABLE CODE
+# =====================================================================================
+
+# Formulate what we want to execute	
+#CMD="${RM} ${PADRES_PATH} *.tar.gz";
+CMD="${RM} *";
+
+# =====================================================================================	
+
+
+# Pick an executor to run our command
+./${EXEC} ${CALLER} "${CMD}" ${LIST}
+
+DONE=1

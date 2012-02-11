@@ -1,0 +1,30 @@
+#!/bin/bash
+
+# Add license header to files specified as command line arguments.
+
+SCRIPT_DIR="$(cd $(dirname "$0")/ && pwd)"
+LICENSE_FILE="$SCRIPT_DIR"/license.txt
+HEADER_FILE="$SCRIPT_DIR"/header.txt
+TMP_FILE="$SCRIPT_DIR"/tmp.$$
+
+# Generate the header based on the license file.
+# (Surround the license text with java comment tags.) 
+(
+	echo "/*"
+	exec 0<"$LICENSE_FILE"
+	while read line; do
+		echo " * $line"
+	done
+	echo " */"
+) > "$HEADER_FILE"
+
+
+# Add header to each file
+for file in "$@"; do
+	(cat "$HEADER_FILE"; echo; cat "$file") > "$TMP_FILE"
+	mv "$TMP_FILE" "$file"
+done
+
+
+# Cleanup
+rm "$HEADER_FILE"

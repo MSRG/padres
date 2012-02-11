@@ -1,0 +1,60 @@
+#!/bin/sh
+
+
+# Description:  Tests the connectivity of nodes via SSH
+# Author:		Alex Cheung (University of Toronto)
+# Notes:		You can use this file as a template by just changing the 
+#				CUSTOMIZABLE CODE section below with your own code
+#
+#				For non-ambiguous results, remove your ~/.ssh/known_hosts 
+#				before running this program.  If you have not done so, 
+#				press Ctrl-C to stop this program now.
+
+# Parameters
+CALLER=`basename $0`;
+LIST=$1;
+CMD="";
+
+
+# Clean up function
+DONE=0;
+function cleanUp()
+{
+	if [[ ${DONE} == 0 ]]; then
+		${KILL} 0;
+	fi;
+}
+
+# Check arguments
+if [[ $# != 1 ]]; then
+	echo "usage: $0 <address_list>";
+	exit 1;
+fi;
+
+# programs
+RM="rm -f";
+KILL="kill -n 9";
+EXEC="sshtestHelper";
+
+
+trap 'cleanUp' EXIT || exit 1;
+	
+
+# Main program
+
+# =====================================================================================
+# CUSTOMIZABLE CODE
+# =====================================================================================
+
+# Formulate what we want to execute	
+# This fetches the output line "/dev...." from 'df' and parses for the 3rd numeric
+# field which is the available disk space in kilobytes.
+CMD="/bin/bash -c 'sum=0; while ((sum < 10000)); do ((sum++)); done;' && df | grep "\/$" | awk '{i = NF - 2; print $i}'";
+
+# =====================================================================================	
+
+
+# Pick an executor to run our command
+./${EXEC} ${CALLER} "${CMD}" ${LIST}
+
+DONE=1

@@ -1,0 +1,83 @@
+PADRES v1.5 Installation
+========================
+
+Dependancies:
+-------------
+ * Linux OS with bash shell
+ * Java 1.6
+ * Java RMI Registry
+ * Java third party libraries (given the minimum versions):
+   o log4j-1.2.13.jar: Java logging library
+   o pg73jdbc3.jar: PostgresSQL JDBC Driver
+   o jung-1.7.6.jar: Java Universal Network/Graph Framework
+     + colt.jar: Cern Colt Scientific Library
+     + commons-collections-3.2.jar: Apache Jakarta Commons Collections
+   o simple-3.1.3.jar 
+   o derby.jar: Apache Derby embedded database (version 10.7.1.1)
+
+The above libraries are included in the PADRES distribution. If you would like
+to use your own versions of these libraries, simply delete them from the lib
+directory. Be sure that your copies of these libaries are in your Java classpath.
+
+Quick installational instructions
+---------------------------------
+
+To install PADRES, execute the following commands. Be sure to replace
+"$INSTALL_DIR" with the location where you want to install. The binaries and
+scripts will be put in the $INSTALL_DIR/padres/ directory.
+
+ > ./install -d $INSTALL_DIR
+ > export PADRES_HOME="$INSTALL_DIR/padres"
+ > export PATH="$PATH:$PADRES_HOME/bin"
+
+That's it! Now you can walk through some of the sample deployments in the
+PADRES User Guide at http://msrg.org/projects/padres/docs/documentation.php
+
+
+Detailed installational instructions
+------------------------------------
+ *  Uncompress the package (if you are seeing this file you have
+     already passed this step.) 
+    o It will create padres directory inside the directory where
+      you downloaded the PADRES package. 
+ * Run the install.sh script found in the newly created directory
+   (where this INSTALL file found) to install PADRES.
+   o By default, the script will install PADRES at
+     /usr/local/padres/. You have to run the script with the
+     administrator privilege.
+   o If you want to change the PADRES default installation directory,
+     you can run the install script with the -d option as:
+         $ ./install.sh [-d <padres_dir>]
+   o You can use the install script to install PADRES anywhere in your
+     home directory or you can just treat the created padres
+     directory itself as the installation directory (without using the
+     install script at all.)
+ * Set the environment variables:
+   o Make sure the JAVA_HOME environment variable is set.
+   o Set an enviornment variable PADRES_HOME with the absolute path of
+     the installation directory. 
+         $ export PADRES_HOME=<installation_directory>
+     Change the value of the <installation_directory> accordingly.
+   o Add $PADRES_HOME/bin/ to your PATH variable.
+         $ export PATH="$PATH:$PADRES_HOME/bin"
+   o Include these lines in your ~/.bashrc file to avoid
+     setting the variables every time you reboot your system. 
+ * Make sure that the required third party Java libraries are
+   installed.
+   o Generally the third party libraries are installed in
+     $JAVA_HOME/jre/lib/ext/.
+   o In case you do not have the necessary third party libraries
+     installed in your computer, you can download them from the above
+     Download section.
+     + Download, uncompress, and use the install_lib.sh included in
+       the package to install the libraries. It will install the
+       downloaded library files in $PADRES_HOME/lib/ directory (the
+       install script need the PADRES_HOME set.) If you are using sudo
+       to install, launch the install script as follows: 
+         $ sudo ./install_lib.sh -d $PADRES_HOME
+
+
+--------------------------------------------------------------------
+Middleware Systems Research Group
+University of Toronto
+2012-02-11

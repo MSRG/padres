@@ -1,0 +1,66 @@
+#!/bin/sh
+
+# Description:  Uploads the code tarball onto the designated machines
+# Author:		Alex Cheung (University of Toronto)
+# Notes:		You can use this file as a template by just changing the 
+#				CUSTOMIZABLE CODE section below with your own code
+
+# Parameters
+CALLER=`basename $0`;
+LIST=$1;
+CMD="";
+
+
+# Clean up function
+DONE=0;
+function cleanUp()
+{
+	if [[ ${DONE} == 0 ]]; then
+		${KILL} 0;
+	fi;
+}
+
+# Check arguments
+if [[ $# != 1 ]]; then
+	echo "usage: $0 <address_list>";
+	exit 1;
+fi;
+
+# programs
+RM="rm -f";
+KILL="kill -n 9";
+EXEC="sshsexec";
+
+
+trap 'cleanUp' EXIT || exit 1;
+	
+
+# Main program
+
+# =====================================================================================
+# CUSTOMIZABLE CODE
+# =====================================================================================
+# Variables
+WGET="wget -N -q -t 3";
+TARBALL=${TARBALL:?"must be specified in environment variable"};
+TARBALL_FILE=`basename ${TARBALL}`;
+
+# Formulate what we want to execute	
+CMD="${WGET} ${TARBALL} && tar xzvf ${TARBALL_FILE}";
+
+# Check URL of tarball file works
+errorMsg=`${WGET} ${TARBALL}`;
+if [[ $? != 0 ]]; then
+	echo -e "Upload aborted: URL of tarball is invalid...\n${errorMsg}" >> ${FAILED_LOG_FILE};
+	exit 1;
+else
+	# Clean up our mess
+	${RM} ${TARBALL_FILE};
+fi;
+# =====================================================================================	
+
+
+# Pick an executor to run our command
+./${EXEC} ${CALLER} "${CMD}" ${LIST}
+
+DONE=1

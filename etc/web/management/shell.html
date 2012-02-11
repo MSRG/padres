@@ -1,0 +1,21 @@
+<html>
+    <head>
+        <title>PADRES Broker Management Shell</title>
+        <link rel="stylesheet" href="css/style.css" type="text/css" />
+        <script src="scripts/ajax.js" type="text/javascript">
+        </script>
+        <script src="scripts/shell.js" type="text/javascript">
+        </script>
+    </head>
+    <body>
+        <h1>PADRES Broker Management Interface</h1>
+        <textarea id="console" readonly="true" value="">
+Use 'help' command to list the available commands.
+        </textarea>
+        <input type="text" id="cmd_line" wrap="off" onkeydown="processKeyDown(event, this);" onkeyup="processKeyUp(event, this)"/><!-- initializations -->
+        <script type="text/javascript">
+            setConsole(document.getElementById('console'));
+            document.getElementById('cmd_line').focus();
+        </script>
+    </body>
+</html>

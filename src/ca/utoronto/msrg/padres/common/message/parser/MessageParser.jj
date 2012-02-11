@@ -1,0 +1,676 @@
+/**
+ * JavaCC file
+ */
+ 
+options {
+  JDK_VERSION = "1.4";
+}
+PARSER_BEGIN(MessageParser)
+package ca.utoronto.msrg.padres.common.message.parser;
+
+import ca.utoronto.msrg.padres.common.message.*;
+import java.util.*;
+import java.text.*;
+
+import java.lang.UnsupportedOperationException;
+
+public class MessageParser {
+  public enum ParserType  {
+    UNINITIALIZED,
+    ADV_PARSER,
+    SUB_PARSER,
+    COMP_SUB_PARSER,
+    PUB_PARSER,
+  };
+
+  static int sNum = 0;
+  public ParserType _parsertype = ParserType.UNINITIALIZED;
+  public Set<String> attrlist = Collections.synchronizedSet(new HashSet<String>());
+
+  public MessageParser(ParserType type, java.io.InputStream stream) {
+      this(stream, (String)null);
+      _parsertype = type;
+  }
+
+  public MessageParser(String a) throws ParseException {
+      this(ParserType.UNINITIALIZED, a);
+  }
+
+ /* Reinitialise. */
+ /*
+ static public void ReInit(java.io.Reader stream, int type) {
+   _parsertype = type;
+   sNum = 0;
+   ReInit(stream);
+ }
+ */
+
+  public MessageParser(ParserType type, String stringRep)  throws ParseException {
+    this(type, new java.io.StringBufferInputStream(stringRep));
+  }
+}
+
+PARSER_END(MessageParser)
+
+SKIP : {" " | "\t" | "\n" | "\r"}
+TOKEN :
+{ < CLASS: "class" >
+| < COMMA: "," >
+| < EQ: "eq" >
+| < SEMICOLON: ";">
+| < COLON: ":">
+| < ISPRESENT: "isPresent">
+| < SOPERATOR:  "str-le" | "str-lt" | "str-gt" | "str-ge" | "str-prefix" 
+                      | "str-postfix" | "str-contains" |"neq" >
+| < IOPERATOR: "=" | "<" | ">" | "<=" | ">="  | "<>"  >
+| < COPERATOR:   "&" | "||" >
+| < ANAME: ["a"-"z","A"-"Z","_",":","/"] ( ["a"-"z","A"-"Z","_","-","0"-"9",":","/"] )*>
+| < TIMEFORMAT:  <ANAME> (" " ( <ANAME> | <AVALZEROINT> | <AVALLONG> | ([":","0"-"9"])*))* >
+| < AVALZEROINT:  "0" (["0"-"9"])+ >
+| < AVALSTR:  "\'\'" | "\'" ["a"-"z","A"-"Z","|","&","_","-","[","]"," ","{","}","<",">","=","0"-"9",".",":",";","/",",","#"](["a"-"z","A"-"Z","$","|","&","_","-","[","]"," ","{","}","<",">","=","0"-"9",".",":",";","/",",","#"])* "\'" 
+					  | "\"" ["a"-"z","A"-"Z","|","&","_","-","[","]"," ","{","}","<",">","=","0"-"9",".",":",";","/",",","#"](["a"-"z","A"-"Z","$","|","&","_","-","[","]"," ","{","}","<",">","=","0"-"9",".",":",";","/",",","#"])* "\"" 
+					  | "\"\"">
+| < AVALLONG: ["1"-"9"] (["0"-"9"])* | ["+","-"] ["1"-"9"] (["0"-"9"])* | "0" >
+| < AVALDOUBLE: ["1"-"9"] ( ["0"-"9"] )* "." ( ["0"-"9"] )+
+			  | ["+","-"] ["1"-"9"] ( ["0"-"9"] )* "." ( ["0"-"9"] )+
+              | "0." ( ["0"-"9"] )+
+              | ["+","-"] "0." ( ["0"-"9"] )+
+              | "." ( ["0"-"9"] )+
+              | ["+","-"] "." ( ["0"-"9"] )+ >
+| < SVARIABLE: <SVAR> | "\'" <SVAR> "\'" | "\"" <SVAR> "\"" >
+| < IVARIABLE: <IVAR> | <FVAR> | "\'" <FVAR> "\'" | "\'" <IVAR> "\'" | "\"" <FVAR> "\"" |"\"" <IVAR> "\"">
+| < #IVAR:     "$I$" ["a"-"z","A"-"Z","_"] ( ["a"-"z","A"-"Z","_","-","0"-"9"] )* >
+| < #SVAR:     "$S$" ["a"-"z","A"-"Z","_"] ( ["a"-"z","A"-"Z","_","-","0"-"9"] )* >
+| < #FVAR:     "$F$" ["a"-"z","A"-"Z","_"] ( ["a"-"z","A"-"Z","_","-","0"-"9"] )* >
+}
+
+Object Input() throws ParseException :
+{
+  Object parseroutput = null;
+}
+{
+  "{"
+  parseroutput = CompositeSubscription(null)
+  "}"
+  {
+    return parseroutput;
+  }
+|
+// If the 4th token from here, we find an Operator input is
+// a Subscription or an Advertisement, otherwise it should be
+// a Value and the input would be a Publication.
+  LOOKAHEAD(4)
+  parseroutput = SubscriptionOrAdvertisement()
+  {
+    return parseroutput;
+  } 
+|
+  parseroutput = Publication()
+  {
+    return parseroutput;
+  }
+} 
+
+//
+// Composite Subscription
+//
+
+CompositeSubscription CompositeSubscription(CompositeSubscription comsubparameter) throws ParseException:
+{
+  Token t;
+  CompositeSubscription comsubreturn;
+  if (comsubparameter == null)    comsubparameter = new CompositeSubscription();}
+{
+  comsubreturn = Term(comsubparameter)
+  (
+    t = <COPERATOR>
+    {
+      CompositeNode cn = new CompositeNode(t.image, comsubreturn.getRoot(), null, null);
+	  comsubreturn.setRoot(cn);
+    }
+    comsubreturn = Term(comsubparameter)
+  )*
+  {
+    return comsubreturn;
+  }
+}
+
+CompositeSubscription Term(CompositeSubscription comsubparameter) throws ParseException:
+{}
+{
+// If the next token is a "[" the input is a subscription,
+// otherwise it is still a composite subscription.
+  LOOKAHEAD(2)
+  "{"  {    Subscription sub;
+  }
+  sub = SubCompositeSubscription()
+  "}"
+  {
+    sNum++;
+    String key = "s" + sNum;
+	comsubparameter.addSubscription(key, sub);
+	if (comsubparameter.getRoot() == null)	{ 
+      CompositeNode cn = new CompositeNode(key, null, null, null);
+	  comsubparameter.setRoot(cn);	  
+	}
+	else
+	{ 
+      CompositeNode cn = new CompositeNode("s" + sNum, null, null, comsubparameter.getRoot());
+	  comsubparameter.getRoot().setRightNode(cn);
+	}
+    return comsubparameter;  }
+  |
+  "{"
+  {    CompositeSubscription comsub;
+  }
+  comsub = CompositeSubscription(comsubparameter)
+  "}"
+  {    return comsub;
+  }
+}
+
+//
+// Subscription or Advertisement (both are equal syntactically)
+//
+
+Object SubscriptionOrAdvertisement() throws ParseException:
+{
+TokenReturner a;
+}
+{
+  a = ClassAttributeOperatorValueTriple()
+  {
+    Object obj = null;
+    switch(_parsertype) {    case SUB_PARSER:    {
+      obj = new Subscription();
+      if (a.val.image.charAt(0) == '\'' || a.val.image.charAt(0) == '\"')
+      {
+        String op = a.op.image;
+        String value = a.val.image;
+        Predicate predicate = new Predicate(op, value.substring(1,value.length()-1));
+        ((Subscription)obj).addPredicate("class", predicate); 
+      }
+      else
+      {
+        String op = a.op.image;
+        String value = a.val.image;
+        ((Subscription)obj).addPredicate("class", new Predicate(op, value));
+      }
+      break;
+    }
+    case ADV_PARSER:
+    {
+      obj = new Advertisement();
+      if (a.val.image.charAt(0) == '\'' || a.val.image.charAt(0) == '\"')
+      {
+        String op = a.op.image;
+        String value = a.val.image;
+        Predicate predicate = new Predicate(op, value.substring(1,value.length()-1));
+        ((Advertisement)obj).addPredicate("class", predicate);
+      }
+      else
+      {
+        String op = a.op.image;
+        String value = a.val.image;
+        ((Advertisement)obj).addPredicate("class", new Predicate(op, value));
+      }
+      break;
+    }
+    default:
+      throw new IllegalStateException("Wrong parser type: " + _parsertype);
+    }
+  }
+  (
+    <COMMA> a = AttributeOperatorValueTriple()
+    {
+      switch(_parsertype) {
+      case COMP_SUB_PARSER:
+      case SUB_PARSER:
+      {
+        String op = a.op.image;
+        String value = a.val.image;
+        switch(a.valtype)
+        {
+          case STRING:
+            {
+              if (a.val.image.charAt(0) == '\'' || a.val.image.charAt(0) == '\"')
+	            ((Subscription)obj).addPredicate(a.attr.image, new Predicate(a.op.image, a.val.image.substring(1,a.val.image.length()-1))); 
+              else
+	            ((Subscription)obj).addPredicate(a.attr.image, new Predicate(a.op.image, a.val.image));
+              break;
+            }
+          case LONG:
+            {
+              Long l = new Long(value.startsWith("+") ? value.substring(1) : value);
+              Predicate predicate = new Predicate(op, l);
+              ((Subscription)obj).addPredicate(a.attr.image, predicate);
+              break;
+            }
+          case DOUBLE:
+            {
+              Predicate predicate = new Predicate(op, new Double(value));
+              ((Subscription)obj).addPredicate(a.attr.image, predicate);
+              break;
+            }
+          default:
+            throw new UnsupportedOperationException("Unknown value type: " + a.valtype);
+        }
+        break;
+      }
+      case ADV_PARSER:
+      {
+        String op = a.op.image;
+        String value = a.val.image;
+        switch(a.valtype)
+        {
+          case STRING:
+            {
+              if (a.val.image.charAt(0) == '\'' || a.val.image.charAt(0) == '\"')
+              ((Advertisement)obj).addPredicate(a.attr.image, new Predicate(a.op.image, a.val.image.substring(1,a.val.image.length()-1))); 
+              else
+              ((Advertisement)obj).addPredicate(a.attr.image, new Predicate(a.op.image, a.val.image));
+              break;
+            }
+          case LONG:
+            {
+              Long l = new Long(value.startsWith("+") ? value.substring(1) : value);
+              Predicate predicate = new Predicate(op, l);
+              ((Advertisement)obj).addPredicate(a.attr.image, predicate);
+              break;
+            }
+          case DOUBLE:
+            {
+              Predicate predicate = new Predicate(op, new Double(value));
+              ((Advertisement)obj).addPredicate(a.attr.image, predicate);
+              break;
+            }
+          default:
+            throw new UnsupportedOperationException("Unknown value type: " + a.valtype);
+        }
+      }
+      break;
+    }
+  }
+  )*
+  <SEMICOLON>
+  {
+    return obj;
+  }
+}
+
+Subscription SubCompositeSubscription() throws ParseException:
+{
+  TokenReturner a;
+}
+{
+  a = ClassAttributeOperatorValueTriple()
+  {
+    Subscription sub = new Subscription();
+    if (a.val.image.charAt(0) == '\'' || a.val.image.charAt(0) == '\"')
+      sub.addPredicate("class", new Predicate(a.op.image, a.val.image.substring(1,a.val.image.length()-1))); 
+    else
+      sub.addPredicate("class", new Predicate(a.op.image, a.val.image));
+  }
+  (
+    <COMMA> a = AttributeOperatorValueTriple()
+    {
+      switch(_parsertype) {
+      case COMP_SUB_PARSER:
+      {
+        String op = a.op.image;
+        String value = a.val.image;
+        switch(a.valtype)
+        {
+          case STRING:
+          {
+            if (a.val.image.charAt(0) == '\'' || a.val.image.charAt(0) == '\"')
+	          sub.addPredicate(a.attr.image,
+							   new Predicate(a.op.image,
+											 a.val.image.substring(1,a.val.image.length()-1)));
+            else
+	          sub.addPredicate(a.attr.image, new Predicate(a.op.image, a.val.image));
+            break;
+          }
+
+          case LONG:
+            {
+              Long l = new Long(value.startsWith("+") ? value.substring(1) : value);
+              Predicate predicate = new Predicate(op, l);
+              sub.addPredicate(a.attr.image, predicate);
+              break;
+            }
+          case DOUBLE:
+            {
+              Predicate predicate = new Predicate(op, new Double(value));
+              sub.addPredicate(a.attr.image, predicate);
+              break;
+            }
+          default:
+            throw new UnsupportedOperationException("Unknown value type: " + a.valtype);
+        }
+        break;
+      }
+      default:
+        throw new UnsupportedOperationException("Unknown parser type: " + _parsertype);
+      }
+//      if (a.val.image.charAt(0) == '\'' || a.val.image.charAt(0) == '\"') {//        sub.addPredicate(a.attr.image, new Predicate(a.op.image, a.val.image.substring(1,a.val.image.length()-1))); //      } else {//        sub.addPredicate(a.attr.image, new Predicate(a.op.image, a.val.image));//      }
+    }
+  )*
+  {
+    return sub;
+  }
+}
+
+
+//
+// Class attribute is mandatory
+//
+TokenReturner ClassAttributeOperatorValueTriple() : 
+{
+  TokenReturner a = null;
+}
+{
+  "["
+  {
+    a = new TokenReturner();
+  }
+  a.attr = <CLASS>  <COMMA> a.op = <EQ> <COMMA>
+  (
+    a.val = <AVALSTR>
+    |
+    a.val = <ANAME>
+  )
+  "]"
+  {
+    attrlist = Collections.synchronizedSet(new HashSet<String>());
+    return a;
+  }
+}
+
+//
+// Class attribute is mandatory
+//
+Token ClassAttributeValuePair() : 
+{
+  Token a;
+}
+{
+  "["
+  <CLASS> <COMMA>
+  (
+    a = <AVALSTR>
+    |
+    a = <ANAME>
+  )
+  "]"
+  {
+    attrlist = Collections.synchronizedSet(new HashSet<String>());
+	return a;
+  }
+}
+
+TokenReturner AttributeOperatorValueTriple2() throws ParseException :
+{
+  TokenReturner a = null;
+}
+{
+   "["
+   	{
+      a = new TokenReturner();
+    }
+    a.attr = <ANAME> <COMMA>
+    (
+      (
+        a.op = <SOPERATOR>
+        |
+        a.op = <EQ>
+      )
+      <COMMA>
+      (
+        a.val = SVALUE()
+        |
+        a.val = <ANAME>
+      )
+      |
+      a.op = <IOPERATOR> <COMMA> a.val = IVALUE()
+      |
+      a.op = <ISPRESENT> <COMMA>
+      (
+        a.val = SVALUE()
+        |
+        a.val = <ANAME>
+        |
+        a.val = IVALUE()
+      )
+    )
+    "]"
+    {
+      if (!attrlist.add(a.attr.image))
+         throw new ParseException("Attribute " + a.attr.image + " exists multiple times " + attrlist);
+      return a;
+    }
+}
+
+TokenReturner AttributeOperatorValueTriple() throws ParseException :
+{
+  TokenReturner a = null;
+}
+{
+   "["
+   	{
+      a = new TokenReturner();
+    }
+    a.attr = <ANAME> <COMMA>
+    (
+      (
+        a.op = <SOPERATOR>
+        |
+        a.op = <EQ>
+      )
+      <COMMA>
+      (
+        a.val = SVALUE()
+        |
+        a.val = <ANAME>
+      )
+      |
+      (	      a.op = <IOPERATOR> <COMMA>
+	      (	          a.val = <IVARIABLE>
+	          { a.valtype = TokenReturner.ValueType.STRING; }
+	          |
+	          a.val = <AVALLONG>
+	          { a.valtype = TokenReturner.ValueType.LONG; }
+	          |
+	          a.val = <AVALDOUBLE>
+	          { a.valtype = TokenReturner.ValueType.DOUBLE; }
+	      )
+	      |
+	      a.op = <ISPRESENT> <COMMA>
+	        (
+	          a.val = SVALUE()	          { a.valtype = TokenReturner.ValueType.STRING; }
+	          |
+	          a.val = <ANAME>
+	          { a.valtype = TokenReturner.ValueType.STRING; }
+	          |
+	          a.val = <IVARIABLE>
+	          { a.valtype = TokenReturner.ValueType.STRING; }
+	          |
+	          a.val = <AVALLONG>
+	          { a.valtype = TokenReturner.ValueType.LONG; }
+	          |
+	          a.val = <AVALDOUBLE>
+	          { a.valtype = TokenReturner.ValueType.DOUBLE; }
+	        ) 
+        )
+    ) "]"
+    {
+      if (!attrlist.add(a.attr.image))
+         throw new ParseException("Attribute " + a.attr.image + " exists multiple times " + attrlist);
+      return a;
+    }
+}
+
+//
+// Publication
+//
+
+Publication Publication() throws ParseException:
+{
+  TokenReturner a = null;
+  Token val;
+}
+{
+   val = ClassAttributeValuePair()
+   {
+     Publication pub = new Publication();
+     if (val.image.charAt(0) == '\'' || val.image.charAt(0) == '\"')
+       pub.addPair("class", val.image.substring(1,val.image.length()-1)); 
+     else
+       pub.addPair("class", val.image);
+   }
+   (
+     <COMMA> a = AttributeValuePair()
+     {
+       if (a.val.image.charAt(0) == '\'' || a.val.image.charAt(0) == '\"')
+       {
+         pub.addPair(a.attr.image, a.val.image.substring(1,a.val.image.length()-1)); 
+       }
+       else
+       {
+         switch(a.valtype)
+         {           case LONG:
+             Long l = new Long(a.val.image.startsWith("+") ? a.val.image.substring(1) : a.val.image);
+             pub.addPair(a.attr.image, new Long(l));
+             break;
+           case DOUBLE:
+             pub.addPair(a.attr.image, new Double(a.val.image));
+             break;
+           case STRING:
+             pub.addPair(a.attr.image, a.val.image);
+             break;
+           default:
+             throw new UnsupportedOperationException(
+               "Unknown value type: " + a.val + "(" + a.valtype + ")");         }
+       }
+     }
+   )*
+
+   <SEMICOLON>
+   {
+     pub.setTimeStamp(null);
+   }
+   (
+     val = <TIMEFORMAT> <SEMICOLON>
+     {
+       try       {         DateFormat df = new SimpleDateFormat ("EEE MMM dd kk:mm:ss zzz yyyy");
+         pub.setTimeStamp(df.parse(val.image));
+       }catch(java.text.ParseException e)       {
+         throw new ParseException(e.toString());    
+       }
+     }
+   )?
+   {
+     if (pub.getTimeStamp() == null)       pub.setTimeStamp(new Date());
+     return pub;
+   }
+}
+
+TokenReturner AttributeValuePair2() throws ParseException:
+{}
+{
+   "["
+	{
+      TokenReturner a = new TokenReturner();
+      a.op = null;
+    }
+    a.attr = <ANAME> <COMMA>
+    (
+      (
+        a.val = SVALUE()
+        |
+        a.val = <ANAME>
+      )
+      |
+      a.val = IVALUE()
+    )
+    "]"
+    {
+      if (!attrlist.add(a.attr.image))
+         throw new ParseException("Attribute " + a.attr.image + " exists multiple times.");
+      return a;
+    }
+}
+
+TokenReturner AttributeValuePair() throws ParseException:
+{}
+{
+   "["
+	{
+      TokenReturner a = new TokenReturner();
+      a.op = null;
+    }
+    a.attr = <ANAME> <COMMA>
+    (
+      a.val = <IVARIABLE>
+      {
+        a.valtype = TokenReturner.ValueType.STRING;
+      }
+      |
+      a.val = SVALUE()
+      {
+        a.valtype = TokenReturner.ValueType.STRING;
+      }
+      |
+      a.val = <ANAME>
+      {
+        a.valtype = TokenReturner.ValueType.STRING;
+      }
+      |
+      a.val = <AVALDOUBLE>
+      {
+        a.valtype = TokenReturner.ValueType.DOUBLE;
+      }
+      |
+      a.val = <AVALLONG>
+      {
+        a.valtype = TokenReturner.ValueType.LONG;
+      }
+    )
+    "]"
+    {      if (!attrlist.add(a.attr.image))
+         throw new ParseException("Attribute " + a.attr.image + " exists multiple times" + attrlist);
+      return a;
+    }
+}
+
+
+Token SVALUE():
+{
+  Token a;
+}
+{
+  (
+    a = <AVALSTR>
+    |
+    a = <SVARIABLE>
+  )
+  {    return a;
+  }
+}
+
+Token IVALUE():
+{
+  Token a;
+}
+{
+  (
+    a = <AVALDOUBLE>
+    |
+    a = <AVALLONG>
+    |
+    a = <IVARIABLE>
+  )
+  {
+    return a;
+  }
+}

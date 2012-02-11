@@ -1,0 +1,116 @@
+/* general elements */ /* background image currently not used */
+body {
+	font-family: sans-serif;
+	background-image: url(background.jpg);
+	background-attachment: fixed;
+	background-color: #eeeeff;
+}
+
+#titlebox {
+	margin: 0;
+	padding: 0;
+}
+
+#logo {
+	float: left;
+}
+
+#titlebar {
+	margin: 10px 0px;
+	padding: 5px;
+	border: solid 1px #cccccc;
+	color: #ffffff;
+	background-color: #6699ff;
+	font-weight: bold;
+	font-size: 100%;
+}
+
+#titlebar a {
+	margin-left: 5px;
+	margin-right: 5px;
+	color: #ffffff;
+	text-decoration: none;
+	font-weight: bold;
+}
+
+#titlebar a:hover {
+	text-decoration: underline;
+}
+
+img {
+	border: 0;
+}
+
+h1 {
+	margin: 0px;
+	padding: 0 0 0 30px;
+	color: #000066;
+	font-size: 200%;
+}
+
+h2 {
+	margin: 0px;
+	padding: 0 0 0 30px;
+	color: #000066;
+	font-size: 150%;
+}
+
+h3 {
+	margin: 0 0 5px 0;
+	padding: 0;
+	color: #000;
+	font-size: 110%;
+}
+
+div.box {
+	clear: both;
+	width: 700px;
+	margin: 5px 0px;
+	padding: 5px 10px;
+	border: 1px solid #ccc;
+}
+
+input[type="button"] {
+	margin: 3px 10px 3px 0px;
+	color: #fff;
+	background-color: #036;
+	border: 1px solid #69f;
+}
+
+select {
+	margin: 3px 5px 3px 0px;
+	border: solid 1px #aaaaaa;
+	background-color: #ffffff;
+}
+
+#prompt_input {
+	width: 680px;
+	border: solid 1px #333;
+	color: #fff;
+	background-color: #333;
+	font-weight: bold;
+}
+
+#activity_area,#notify_area {
+	width: 680px;
+	height: 250px;
+	border: solid 1px #333;
+	color: blue;
+	background-color: #fff;
+	font-size: 80%;
+	overflow: auto;
+}
+
+#footer {
+	clear: both;
+	margin-top: 15px;
+	padding: 5px;
+	border: solid 1px #cccccc;
+	background-color: #ffffff;
+}
+
+#footer h5 {
+	margin: 0;
+	text-align: right;
+	color: #0000aa;
+}

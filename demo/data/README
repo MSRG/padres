@@ -1,0 +1,34 @@
+
+The properties files in this directory are used to start brokers in the
+configuration in the diagram shown below. Connections are indicated by the
+arrows (i.e. an arrow from B -> A means A started first and when B starts it
+connects to A). All connections are established using the port numbers shown
+and with a host of "localhost". By default the brokers only start the RMI
+binding, and heartbeating is turned off
+
+   _______                           _______
+   |     |                           |     |
+   |  A  |                           |  C  |
+   |     |<----                 -----|     |
+   | 1099|    |                 |    | 1097|
+   |_____|    |                 |    |_____|
+              |                 |
+              |                 |
+              |                 |
+              |     _______     |
+              ------|     |<-----
+                    |  B  |
+                    |     |
+                    | 1098|
+              ----->|_____|<-----
+              |                 |
+              |                 |
+              |                 |
+   _______    |                 |    _______
+   |     |    |                 |    |     |
+   |  E  |    |                 |    |  D  |
+   |     |-----                 -----|     |
+   | 1095|                           | 1096|
+   |_____|                           |_____|
+
+

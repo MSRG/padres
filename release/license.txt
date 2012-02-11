@@ -1,0 +1,27 @@
+
+    Copyright (c) 2009
+
+    Middleware Systems Research Group,
+    University of Toronto, Canada
+    http://www.msrg.utoronto.ca
+
+    Authors: The Padres Team, Middleware Systems Research Group
+
+    This file is part of the PADRES Distributed Publish/Subscribe System:
+    http://www.padres.msrg.utoronto.ca.
+
+    The PADRES or (Padres) software is distributed under the Eclipse
+    Public License 1.0 (EPL).
+
+    You can redistribute Padres and/or modify it under the terms of the
+    Eclipse Public License 1.0 (EPL).
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    EPL Software License for more details.
+
+    You should have received a copy of the EPL Software License
+    along with this program. If you have not, you may obtain one from
+    http://www.eclipse.org/legal/epl-v10.html
+

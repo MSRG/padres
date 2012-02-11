@@ -1,0 +1,53 @@
+#!/bin/bash
+
+USAGE="Usage: $(basename $0) <broker_id>"
+
+if [ $# -ne 1 ]; then
+    echo $USAGE
+    exit 1
+fi
+
+BROKER_ID=$1
+
+# determine the PIDs of the run script and java jvm
+SCRIPT_PID=$(ps aux | grep startbroker | awk '/-uri \w+:\/\/[A-Za-z0-9\.]+:[[:digit:]]+\/'$BROKER_ID'($| )/{print $2}')
+JAVA_PID=$(ps aux | grep BrokerCore | awk '/-uri \w+:\/\/[A-Za-z0-9\.]+:[[:digit:]]+\/'$BROKER_ID'($| )/{print $2}')
+
+# Find PIDs under cygwin
+case "`uname`" in
+    (CYGWIN*)
+    # Reset pids in case we accidentally found the wrong ones above.
+    SCRIPT_PID=""
+    JAVA_PID="" 
+
+    # Iterate through each process.
+    for pid in $(ps -s |tail -n +2 |awk '{print $1}'); do
+  	# Look for a process with the appropriate arguments
+  	match=$([ -f /proc/$pid/cmdline ] && cat /proc/$pid/cmdline | xargs -0 | grep -w startbroker | egrep -e "-uri\W+\w+://\w+:[[:digit:]]+/$BROKER_ID")
+  	if [ -n "$match" ]; then
+  	    # Found a match
+  	    JAVA_PID=$pid
+  	    break # Only use the first match
+  	fi
+    done
+    ;;
+esac
+
+
+# kill both processes; may not be necessary, just to be sure
+killed=0
+if [ ! -z $SCRIPT_PID ]; then
+	kill -9 $SCRIPT_PID &> /dev/null
+	killed=1
+fi
+if [ ! -z $JAVA_PID ]; then
+	kill -9 $JAVA_PID &> /dev/null
+	killed=1
+fi
+
+# print message
+if [ $killed -eq 0 ]; then
+    echo "The broker $BROKER_ID is not running"
+else
+    echo "Broker $BROKER_ID is stopped"
+fi

@@ -1,0 +1,36 @@
+PADRES 2.0: Open issues list
+----------------------------
+
+The following issues are know. Future PADRES releases may address these issues.
+
+- A Broker ID can not contain " " (space), "_" (underscore) or "-" (hyphen)
+  characters.
+
+- Currently, PADRES does not support duplicate attributes, i.e.,  messages can
+  not have duplicate attributes, e.g., a > 10,  a < 5 (ranges will be supported
+  in a later release).
+
+- To use the Command Line Interface (CLI), only a single broker can be
+  instantiated per JVM (multiple brokers can be instantiated in a single JVM,
+  but no CLI can be used). 
+
+- To use the Web Management Interface (WBI), only a single broker per machine
+  can be operated (multiple brokers can be run per machine, but then no WMI is
+  available).
+
+- Log files do not contain broker IDs.
+
+- The behaviour resulting from running two clients with the same ID on the same
+  broker is undefined.
+
+- Currently, only a single consumption policy is supported, consume-and-remain
+  (CLI allows purging messages).
+
+- BrokerControl, BrokerMonitor, NetworkDiscovery, HearbeatManager can't be used
+  as classes.
+
+- Test case testSubPubMatchingWithTwoSubsWithDiffLastHopWithMoreBrokers is
+  failing
+
+- The client GUI does not support unadvertise and unsubscribe operations.
+

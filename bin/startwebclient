@@ -1,0 +1,84 @@
+#!/bin/bash
+
+USAGE="Usage: $(basename $0) [-help] [-Xms <mem_min>] [-Xmx <mem_max>]\n
+              \t\t-i <client_id>] [-c <config_file>] [-b <broker_uri_list>] \n
+              \t\t-port <webserver_port] [-webdir <web_rootdir>] [-ipage <index_page>]"
+
+# function to check whether a parameter is given to an option
+check_arg_missing()
+{
+    if ( [[ $2 == -* ]] || [ -z $2 ] ); then
+	echo "Option $1 requires a parameter"
+	echo -e $USAGE
+	exit 1
+    fi
+}
+
+# check and set the PADRES_HOME environment value
+if [ -z "$PADRES_HOME" ]
+then
+    PADRES_HOME="$(cd $(dirname "$0")/.. && pwd)"
+    export PADRES_HOME
+fi
+
+# get the command line arguments
+ARGS=$*
+
+# path separater for java class path values
+PATHSEP=':'
+# adjust for cygwin
+case "`uname`" in
+    CYGWIN*) 
+	PADRES_HOME="$(cygpath -m "$PADRES_HOME")"
+	PATHSEP='\\;'
+	;;
+esac
+
+# default values
+MEMORY_MIN=128
+MEMORY_MAX=512
+CLIENT="ca.utoronto.msrg.padres.tools.webclient.WebClient"
+
+# build the class path with all the jar files in the lib directory
+CLASS_PATH="${PADRES_HOME}/build/"
+for jar_file in ${PADRES_HOME}/lib/*.jar
+do
+    CLASS_PATH="${CLASS_PATH}${PATHSEP}${jar_file}"
+done
+
+CLIENT_OPT=()
+
+# Parse command line arguments
+while [ $# -gt 0 ]; do
+    case "$1" in
+	-Xms )
+	    check_arg_missing $1 $2;
+	    MEMORY_MIN=$2; 
+	    shift 2 ;;
+	-Xmx )
+	    check_arg_missing $1 $2
+	    MEMORY_MAX=$2; 
+	    shift 2 ;;
+	-help )
+	    cat ${PADRES_HOME}/bin/docs/startclient.help; 
+	    exit 0;;
+	-i | -c | -b | -port | -webdir | -ipage )
+	    check_arg_missing $1 $2
+	    CLIENT_OPT=( "${CLIENT_OPT[@]}" $1 $2)
+	    shift 2 ;;
+	* )
+	    echo "Unrecognized option $1"
+	    echo -e $USAGE
+	    exit 1 ;;
+    esac
+done
+
+# start the client
+java -Xms${MEMORY_MIN}m -Xmx${MEMORY_MAX}m -cp ${CLASS_PATH} \
+     -Djava.security.policy=${PADRES_HOME}/etc/java.policy \
+     $CLIENT ${CLIENT_OPT[@]}
+
+# java -Xms${MEMORY_MIN}m -Xmx${MEMORY_MAX}m -cp ${CLASS_PATH} \
+#      -Djava.ext.dirs=${JAVA_HOME}/jre/lib/ext${PATHSEP}${PADRES_HOME}/lib \
+#      -Djava.security.policy=${PADRES_HOME}/etc/java.policy \
+#      $CLIENT ${CLIENT_OPT[@]}

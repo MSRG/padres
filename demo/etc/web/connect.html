@@ -1,0 +1,74 @@
+<!-- Wrapper functions
+Avoid referring to actual element IDs/names from within js file.
+Changes to elements should only involve edits within this file.
+-->
+<script type="text/javascript">
+function _connect() {
+	connect(
+		document.getElementById("address_text").value
+		);
+}
+function _disconnect() {
+	var option=document.getElementById("broker_option");
+	disconnect(
+		option.options[option.selectedIndex].value
+		);
+}
+function _setDefaultBroker() {
+	var option=document.getElementById("broker_option");
+	var def=option.options[option.selectedIndex].value;
+	setCookie(CK_DEFAULT_BROKER, def);
+	alert("Default Broker is now " + def);
+}
+</script>
+
+<div id="connect_panel_closed" class="panel" style="display: none;">
+	<a href="#" class="hide" onclick="togglePanels(document.getElementById('connect_panel_closed'), document.getElementById('connect_panel_open'));"><img src="images/expand.png"></a>
+</div>
+<div id="connect_panel_open" class="panel">
+	<a href="#" class="hide" onclick="togglePanels(document.getElementById('connect_panel_closed'), document.getElementById('connect_panel_open'));"><img src="images/collapse.png"></a>
+	<div id="connect_content" class="content" onmousedown="startResize(document.getElementById('connect_form'), document.getElementById('connect_panel_open'), 46);">
+		
+		<h3>
+			<img src="images/connect.png" />
+			Connect to Broker
+		</h3>
+		
+		<form id="connect_form">
+			<div class="labels">
+				<input type="label" readonly="true" value="Host:" />
+			</div>
+			<div class="inputs">
+				<input type="text" id="address_text" value="localhost:1099" />
+			</div>
+			<div class="right_align">
+				<input type="button" value="Connect" onclick="_connect()" />
+				</div>
+			</form>
+			
+			<h3>
+				Connected Brokers
+		</h3>
+		
+		<form id="broker_form">
+			<div class="labels">
+				<input type="label" readonly="true" value="Brokers:" />
+			</div>
+			<div class="inputs">
+				<select id="broker_option"></select>
+			</div>
+			<div class="right_align">
+				<input type="button" value="Refresh" onclick="loadBrokers()" />
+				<input type="button" value="Set Default" onclick="_setDefaultBroker()" />
+				<input type="button" value="Disconnect" onclick="_disconnect()" />
+			</div>
+		</form>
+	</div>
+</div>
+	
+<script type="text/javascript">
+	// initialize
+	setBrokerOptionElem(document.getElementById("broker_option"));
+	loadBrokers();
+	setPageTitleText("Connect");
+</script>

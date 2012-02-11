@@ -1,0 +1,29 @@
+body {
+    background-color: #F7F5FA;
+	color: #234C7A;
+    padding: 5px 10px
+} 
+
+h1 {
+	margin: 10px 0px;
+}
+
+#console {
+    height: 90%;
+	width: 100%;
+	margin: 0px;
+	padding: 5px;
+	border: solid 1px #033e6b;
+	background-color: #fff;
+	color: #000;
+}
+
+#cmd_line {
+    width: 100%;
+	margin: 5px 0px;
+    padding: 5px 2px;
+    border: solid 1px #033e6b;
+    background-color: #fff;
+    color: #000;
+	font-weight: bold;
+}

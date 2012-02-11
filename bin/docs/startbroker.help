@@ -1,0 +1,40 @@
+
+USAGE: startbroker.sh -i broker_id [OPTION]...
+
+   Start a PADRES broker with a specified ID.
+
+OPTIONS:
+
+ JVM Options:
+   -Xms, -Xmx            Minimum and Maximum memories for Java virtual machine 
+                         (optional; default: 256MB and 512MB respectively)
+
+ Broker Interface:
+   -uri broker_uri       The URI of the broker (mandatory). This option can be omitted, 
+   						 only if a new config file with the broker URI value is 
+                         specified with the -c option. Broker URI has the following
+                         format: <comm_protocol>://<host_addr>:<port_no>/<broker_id>
+                         - comm_protocol is either 'rmi' or 'socket'
+                         - host_addr is the hostname/IP address of the machine where 
+                           the broker is instantiated
+                         - port_no is the port number at which the broker is listening
+                           for new connections
+                         - broker_id is the unique string identifier for the broker  
+                           (Note: broker_id can not contain the symbol "-" (dash)).
+   -hostname             The IP address of the interface of the local machine at 
+                         which the broker is to run (optional; default: IP address of
+                         the eth0 as returned by ifconfig)
+
+ Remote Brokers:
+   -n <broker_uri>,...   Comma separated list of the URIs of neighbor brokers to which 
+   						 the broker is connected to (optional; default: empty.)
+
+ Others:
+   -ll path_name         Name of the directory where the log files are to be 
+                         placed. (optional; default: ~/.padres/logs/)
+   -c file_name          Configuration file with where all the above options are
+                         specified. (optional; default: $PADRES_HOME/etc/broker.properties)
+   -help                 Prints this help
+   .....				 For other available options refer to the Broker configuration
+   						 documentation.                      
+

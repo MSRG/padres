@@ -1,0 +1,121 @@
+#!/bin/sh
+
+# Description:  This script downloads tarball (if not up to date) and unpacks
+#				them in the $HOME directory
+# Author:		Alex Cheung (University of Toronto)
+
+
+# URL of where the tarballs and scripts will be hosted
+UTSERVER="http://www.msrg.utoronto.ca/planetlab/setup/"
+
+# These can be in any order you like, regardless of dependency order
+RPMS_32="
+  ${UTSERVER}utempter-0.5.2-16.i386.rpm
+  ${UTSERVER}screen-3.9.13-5.i386.rpm
+  "
+
+RPMS_64="
+  "
+
+RPMS="";
+
+# These will get unpacked into the $HOME directory
+TARBALLS_32="
+  ${UTSERVER}java32.tar.gz
+  "
+
+TARBALLS_64="
+  ${UTSERVER}java64.tar.gz
+  "
+
+TARBALLS=""
+
+# These will be located in the $HOME directory and run each time PANDA invokes
+# a command through ssh to, for example, set up environment variables.
+SCRIPTS="
+  ${UTSERVER}javahome
+  "
+
+# Programs
+CP="cp -f"
+WGET="wget -N --tries=3"
+CHMOD="chmod a+rx"
+RPM_INSTALL="rpm -U"
+
+# Constants
+WGET_UP_TO_DATE_PATTERN="not retrieving"
+WGET_DOWNLOADED_PATTERN="saved"
+SEPARATOR="==================================="
+
+# UPDATE: Uncomment this part to accomodate for 32 bit and 64 bit rpms and tarballs.
+#         Currently, the 64 bit jdk 1.6 is extremely slow, so just use 32 bit
+# Determine whether the system is 32bit or 64bit and install appropriate
+# tarballs and rpms specified above.
+#if [ "`uname -i | grep 64`" ]; then
+#	RPMS=${RPMS_64};
+#	TARBALLS=${TARBALLS_64};
+#else
+#	RPMS=${RPMS_32};
+#	TARBALLS=${TARBALLS_32};
+#fi;
+
+RPMS=${RPMS_32};
+TARBALLS=${TARBALLS_32};
+
+
+# Tarballs.  Attempt to issue a wget.  If remote file is up to date, then 
+# wget will not download again, in which case, don't unpack again
+for tarball in ${TARBALLS}; do
+	echo ${SEPARATOR};
+	file=`basename ${tarball}`;
+	check=`${WGET} ${tarball} 2>&1 | tail -n 2`;
+	if [ "`echo ${check} | grep \"${WGET_DOWNLOADED_PATTERN}\"`" ]; then
+		echo "Tarball ${file} (re)downloaded.  Unpacking...";
+	    tar xzf ${file};
+	elif [ "`echo ${check} | grep \"${WGET_UP_TO_DATE_PATTERN}\"`" ]; then
+	    echo "Tarball ${file} is up to date";
+	else
+		echo "WARNING: wget did not return recognizable message: ${check}";
+		echo "Unpack anyways";
+	    tar xzf ${file};
+	fi
+	echo;
+done;
+
+
+# Fetch and give executable permission to SCRIPTS
+for file in ${SCRIPTS}; do
+	echo ${SEPARATOR};
+	${WGET} ${file};
+	file=`basename ${file}`;
+	${CHMOD} ${file};
+	echo "Downloaded ${file} and upgraded it with executable permission";
+	echo;
+done;
+
+
+# Fetch RPMs
+cd /tmp;
+rpm_list="";
+for rpm in ${RPMS}; do
+    file=`basename ${rpm}`;
+	echo ${SEPARATOR};
+    if [ -e "${file}" ]; then
+		echo "${rpm} was already downloaded (assuming installed).  Skip!";
+		continue;
+	else
+		echo Downloading ${rpm};
+        ${WGET} ${rpm};
+    fi;
+
+	rpm_list="${rpm_list} ${file}";
+done;
+
+
+# We let rpm resolve any dependency ordering by issuing a single rpm -U
+# command to install all rpms in one shot
+echo ${SEPARATOR};
+echo "Attempting to install RPMs: ${rpm_list}";
+sudo ${RPM_INSTALL} ${rpm_list};
+echo;
+

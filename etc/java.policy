@@ -1,0 +1,11 @@
+// When this project goes live, we will uncomment this:
+//grant {
+//	permission java.net.SocketPermission "*", "accept, connect, listen, resolve";
+//;
+
+
+grant {
+	permission java.security.AllPermission;
+	permission java.util.PropertyPermission "user.home", "read";
+	permission java.io.FilePermission "<<ALL FILES>>", "read";
+};

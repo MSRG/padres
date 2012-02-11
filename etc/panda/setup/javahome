@@ -1,0 +1,14 @@
+#!/bin/sh
+
+# Description:  This script goes under $HOME on the Planet-Lab nodes
+#				so that it gets executed and set the path for Java.
+#				Assumes the user pre-packages the jdk into a directory 
+#				called 'java' extracted under the home directory of the 
+#				remote machine.  Inside 'java' should be bin, lib, etc.
+# Author:		Alex Cheung (University of Toronto)
+
+
+JAVA_PARENT_DIR="java"
+
+export JAVA_HOME="${HOME}/${JAVA_PARENT_DIR}"
+export PATH=${JAVA_HOME}/bin:$PATH

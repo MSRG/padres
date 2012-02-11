@@ -1,0 +1,128 @@
+<!-- Wrapper functions
+Avoid referring to actual element IDs/names from within js file.
+Changes to elements should only involve edits within this file.
+-->
+<script type="text/javascript">
+function _loadFile(){
+	var logfileValue = document.getElementById("logfile_text").value;
+	var patternValue = document.getElementById("pattern_text").value;
+	var xmlString = createXmlTag("logfile", logfileValue);
+	xmlString += createXmlTag("pattern", patternValue);
+	runMethod("ca.utoronto.msrg.padres.broker.webmonitor.demo.BaseDemo","getLogFile",
+		xmlString,
+		handleLoadFileSucc,defaultErrFunc);
+}
+function handleLoadFileSucc(){
+	
+}
+function _loadQueue(){
+	var queueValue = document.getElementById("queue_text").value;
+	var xmlString = createXmlTag("queue",queueValue);
+	runMethod("ca.utoronto.msrg.padres.broker.webmonitor.demo.BaseDemo","getQueue",
+		xmlString,
+		handleLoadQueueSucc,defaultErrFunc);
+}
+function handleLoadQueueSucc(){
+}
+</script>
+
+<div id="log_file_panel_closed" class="panel" style="display: none;">
+	<a href="#" class="hide" onclick="togglePanels(document.getElementById('log_file_panel_closed'), document.getElementById('log_file_panel_open'));"><img src="images/expand.png"></a>
+</div>
+<div id="log_file_panel_open" class="panel">
+	<a href="#" class="hide" onclick="togglePanels(document.getElementById('log_file_panel_closed'), document.getElementById('log_file_panel_open'));"><img src="images/collapse.png"></a>
+	<div id="log_file_option" class="content">
+		<h3>
+		Choose Log File
+		<a href="#" class="hide" onclick="toggleCollapse(document.getElementById('choose_log_file_form'), this)"><img src="images/mini_collapse.png"></a>	
+		</h3>
+		
+		<form id="choose_log_file_form" onmousedown="startResize(this, document.getElementById('log_file_panel_open'), 46);"
+			onmouseover="highlight(this);"
+			onmouseout="unhighlight(this);"
+		>
+			<div class="labels">
+				<input type="label" readonly="true" value="Log file:" /> <br />	
+				<input type="label" readonly="true" value="" /> <br />	
+				<input type="label" readonly="true" value="Matching pattern:" /><br />
+				
+			</div>
+			<div class="inputs">
+				<div id="logfileOptions">
+					<select id="logfile_text">
+					<option value="messagePath">MessagePath</option>
+					<option value="systemError">SystemError</option>
+					<option value="exception">Exception</option>
+					</select>
+				</div>				
+				<input type="label" readonly="true" value="" />	
+				<input type="text" id="pattern_text"/> <br /> 
+			</div>
+			<div class="right_align">
+			<input type="button" value="Load File" onclick="_loadFile()" />
+			</div>
+		</form>
+		
+		<h3>
+		Choose Queue
+		<a href="#" class="hide" onclick="toggleCollapse(document.getElementById('choose_queue_form'), this)"><img src="images/mini_collapse.png"></a>	
+		</h3>
+		
+		<form id="choose_queue_form" onmousedown="startResize(this, document.getElementById('log_file_panel_open'), 46);"
+			onmouseover="highlight(this);"
+			onmouseout="unhighlight(this);"
+		>
+			<div class="labels">
+				<input type="label" readonly="true" value="Queue:" /> <br />	
+				<input type="label" readonly="true" value="" /> <br />	
+				
+			</div>
+			<div class="inputs">
+				<div id="queueOptions">
+					<select id="queue_text">
+					<option value="inputQueue">InputQueue</option>
+					</select>
+				</div>				
+			</div>
+			<div class="right_align">
+			<input type="button" value="Load Queue" onclick="_loadQueue()" />
+			</div>
+		</form>
+		
+	</div>	
+</div>
+
+<div id="queue_panel_closed" class="panel" style="display: none;">
+	<a href="#" class="hide" onclick="togglePanels(document.getElementById('queue_panel_closed'), document.getElementById('queue_panel_open'));"><img src="images/expand.png"></a>
+</div>
+<div id="queue_panel_open" class="panel">
+	<a href="#" class="hide" onclick="togglePanels(document.getElementById('queue_panel_closed'), document.getElementById('queue_panel_open'));"><img src="images/collapse.png"></a>
+	<div id="queue_option" class="content">
+		
+		
+		<h3>
+		Notification
+		<a href="#" class="hide" onclick="toggleCollapse(document.getElementById('notification_form'), this)"><img src="images/mini_collapse.png"></a>
+		</h3>
+		
+		<form id="notification_form" onmousedown="startResize(document.getElementById('notification_area'), document.getElementById('queue_panel_open'), 46);"
+			onmouseover="highlight(this);"
+			onmouseout="unhighlight(this);"
+		>
+		<textarea id="notification_area"></textarea><br />
+		<div class="right_align">
+		<input type="button" value="Clear" onclick="clearText(document.getElementById('notification_area'))" />
+		</div>
+		</form>		
+		
+		
+	</div>	
+</div>
+
+<script type="text/javascript">
+	// initializations once divs are loaded
+	setNotificationArea(document.getElementById("notification_area"));
+
+	// start event listening
+	startEvents(DEFAULT_WEBUI_QID);
+</script>

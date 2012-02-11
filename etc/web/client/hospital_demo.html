@@ -1,0 +1,175 @@
+<script type="text/javascript">
+<!--
+function printActivity(doc) {
+	var errMsg = getXmlTagValue(doc, "error");
+	var activityMsg = "<span style=\"color:red;\">" + errMsg + "</span>";
+	if (errMsg == "") {
+		activityMsg = "<span style=\"color:green;\">" + getXmlTagValue(doc, "success") + "</span>";
+	}
+	var activityElem = document.getElementById("notify_area")
+	activityElem.innerHTML += activityMsg + "<br/>\n";
+	activityElem.scrollTop = activityElem.scrollHeight;
+}
+
+function connect() {
+	xmlString = createXmlTag("command", "connect rmi://localhost:1099/Broker1");
+	runMethod(xmlString, connectSucc, defaultErrFunc);
+}
+
+function connectSucc(xmlHttp) {
+	var doc = xmlToDoc(xmlHttp.responseText);
+	printActivity(doc);
+	cleanup(xmlHttp);
+}
+
+function disconnect() {
+	var selectElem = document.getElementById("broker_select");
+	var selectedBroker = selectElem.options[selectElem.selectedIndex];
+	xmlString = createXmlTag("command", "disconnect " + selectedBroker.value);
+	runMethod(xmlString, disconnectSucc, defaultErrFunc);
+}
+
+function disconnectSucc(xmlHttp) {
+	var doc = xmlToDoc(xmlHttp.responseText);
+	var errMsg = getXmlTagValue(doc, "error");
+	if (errMsg == "") {
+		var brokerURI = getXmlTagValue(doc, "cmd_data");
+		var selectElem = document.getElementById("broker_select");
+		selectElem.remove(selectElem.selectedIndex);
+		if (selectElem.length == 0) {
+			document.getElementById("broker_select_div").style.display = "none";
+		}
+	}
+	printActivity(doc);
+	cleanup(xmlHttp);
+}
+
+function startOperation(op) {
+	document.getElementById("operation").style.display = "none";
+	if (op == "doctor") {
+		document.getElementById("pagetitle").innerHTML = "Doctor Office";
+		document.getElementById("doctor_box").style.display = "block";
+		var clientID = document.getElementById("subtitle").innerHTML;
+		sendCommand("a [class,eq,'mri_request'],[doctor_id,eq,'" + clientID + "'],[patient_name,isPresent,'name']");
+		sendCommand("s [class,eq,'mri_result'],[doctor_id,eq,'" + clientID + "'],[patient_name,isPresent,'name']");
+	} else {
+		document.getElementById("pagetitle").innerHTML = "MRI Lab";
+		sendCommand("a [class,eq,'mri_result'],[doctor_id,isPresent,'id'],[patient_name,isPresent,'name']");
+		sendCommand("s [class,eq,'mri_request'],[doctor_id,isPresent,'id'],[patient_name,isPresent,'name']");
+	}
+	getNotifications(op);
+}
+
+function sendCommand(cmd) {
+	xmlString = createXmlTag("command", cmd);
+	elem.value = "";
+	runMethod(xmlString, commandSucc, defaultErrFunc);
+}
+
+function commandSucc(xmlHttp) {
+	var doc = xmlToDoc(xmlHttp.responseText);
+	printActivity(doc);
+	cleanup(xmlHttp);
+}
+
+function getNotifications(op) {
+	xmlString = createXmlTag("command", "getnotifications");
+	if (op == "doctor") {
+		runMethod(xmlString, docNotifySucc, defaultErrFunc);
+	} else {
+		runMethod(xmlString, mriNotifySucc, defaultErrFunc);
+	}
+}
+
+function docNotifySucc(xmlHttp) {
+	var doc = xmlToDoc(xmlHttp.responseText);
+	cleanup(xmlHttp);
+	var message = getXmlTagValue(doc, "success");
+	if (message == "") {
+		setTimeout("getNotifications('doctor')", 5000);
+	} else {
+		var notifyElem = document.getElementById("notify_area")
+		notifyElem.innerHTML += message + "<br/>\n";
+		notifyElem.scrollTop = notifyElem.scrollHeight;
+		getNotifications('doctor');
+	}
+}
+
+function mriNotifySucc(xmlHttp) {
+	var doc = xmlToDoc(xmlHttp.responseText);
+	cleanup(xmlHttp);
+	var message = getXmlTagValue(doc, "success");
+	if (message == "") {
+		setTimeout("getNotifications('mri')", 5000);
+	} else {
+		var publication = parsePublication(message);
+		var patientName = publication['patient_name'].replace(/"/g, "");
+		var doctorID = publication['doctor_id'].replace(/"/g, "");
+		var notifyElem = document.getElementById("notify_area");
+		var onclickTxt = "processPatient('" + patientName + "', '" + doctorID + "'); this.disabled=true;";
+		var buttonTxt = "<input type=\"button\" value=\"process\" onclick=\"" + onclickTxt + "\" />";
+		notifyElem.innerHTML += "<div id=\"" + patientName + "\">" + message + 
+						buttonTxt + "<br/></div>\n";
+		notifyElem.scrollTop = notifyElem.scrollHeight;
+		getNotifications('mri');
+	}
+}
+
+function clearNotifications() {
+	document.getElementById("notify_area").innerHTML = "";
+}
+
+function sendPatientName() {
+	var clientID = document.getElementById("subtitle").innerHTML;
+	var inputElem = document.getElementById("patient_input");
+	xmlString = createXmlTag("command", "p [class,'mri_request'],[doctor_id,'" + 
+								clientID + "'],[patient_name,'" + inputElem.value + "']");
+	inputElem.value = "";
+	runMethod(xmlString, commandSucc, defaultErrFunc);
+}
+
+function processPatient(patientName, doctorID) {
+	xmlString = createXmlTag("command", "p [class,'mri_result'],[doctor_id,'" + 
+			doctorID + "'],[patient_name,'" + patientName + "']");
+	document.getElementById(patientName).style.color = "#ccc";
+	runMethod(xmlString, commandSucc, defaultErrFunc);
+}
+//-->
+</script>
+
+<!-- 
+<div id="shell_buttons"><input type="button"
+	value="Connect To Broker" onclick="connect();" style="float: left;" />
+<div id="broker_select_div"
+	style="float: left; padding-left: 10px; display: none; border-left: solid 2px #ccc"><select
+	id="broker_select">
+</select><input type="button" value="Disconnect" onclick="disconnect();" /></div>
+</div>
+ -->
+
+<div id="operation" class="box" style="clear: both;">
+<h3>Choose Your Function:</h3>
+<input type="button" value="Doctor" style="float: left;"
+	onclick="startOperation('doctor');" /> <input type="button"
+	value="MRI Center" style="float: left;"
+	onclick="startOperation('mri');" />
+<div style="clear: both;"></div>
+</div>
+
+<div id="doctor_box" class="box" style="display: none;">
+<h3>MRI Request</h3>
+Patient's Name: <input id="patient_input" type="text" /><input
+	type="button" value="Send Request" onclick="sendPatientName();" /></div>
+
+<div id="notifications" class="box"><span
+	style="font-weight: bold; font-size: 110%; margin: 0 10px 3px 0;">Notifications
+</span> <input type="button" value="Clear" onclick="clearNotifications();" />
+<div id="notify_area" style="height: 500px;"></div>
+</div>
+
+<script type="text/javascript">
+<!--
+connect();
+// style="width: 50%; border: 1px solid #ccc; background-color: #333; color: #fff; font-weight: bold; margin: 0 10px 3px 0;"
+//-->
+</script>

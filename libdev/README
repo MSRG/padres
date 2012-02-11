@@ -1,0 +1,2 @@
+This directory contains libraries used to build or test the code.
+These files do not need to be distributed in binary releases.

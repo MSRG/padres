@@ -1,0 +1,154 @@
+#!/bin/sh
+
+###############################################################################
+#
+# File:         getLogs
+# Description:  Executes scp on provided parameters in parallel with loose 
+#				number of threads
+# Author:		Alex Cheung (University of Toronto)
+#
+# Note:			You must execute this file prefixed with a "./" or else the
+#				options used for the SSH commands in this script will not 
+#				take effect.
+#				Remember to set environment variables for IDENTITY and SLICE.
+#
+# Copyright 2006, University of Toronto, all rights reserved.
+#
+###############################################################################
+
+# Program arguments
+CALLER=`basename $0`;
+if [[ $# == 1 ]]; then
+	ADDR_LIST=$1;
+elif [[ $# == 3 ]]; then
+	IP_ADDRESS=$1;
+	SLEEP_TIME=$2;
+	DEST_PATH=$3;
+else 
+	echo $@;
+	echo $#;
+	echo "Usage: $0 <address_list>";
+	exit 1;
+fi;
+
+
+# Logging
+LOG_PATH="log/";
+LOG_BASENAME=`basename ${CALLER}`;
+LOG_EXTNAME="log";
+OK_LOG_FILENAME="${LOG_BASENAME}.ok.${LOG_EXTNAME}";
+FAILED_LOG_FILENAME="${LOG_BASENAME}.failed.${LOG_EXTNAME}";
+OK_LOG_FILE="${LOG_PATH}${OK_LOG_FILENAME}";
+FAILED_LOG_FILE="${LOG_PATH}${FAILED_LOG_FILENAME}";
+OK_LOG_SEM="${TMP:-/tmp}/${OK_LOG_FILENAME}.lock";
+FAILED_LOG_SEM="${TMP:-/tmp}/${FAILED_LOG_FILENAME}.lock";
+
+# Some constants
+SCP="scp -o StrictHostKeyChecking=no -o ConnectTimeout=5 -i ${IDENTITY}";
+RM="rm -f";
+KILL="kill -n 9";
+
+# Clean up function
+DONE=0;
+function cleanUp()
+{
+	if [[ ${DONE} == 0 ]]; then
+		${KILL} 0;
+	fi;
+}
+
+
+IDENTITY=${IDENTITY:?"must be specified in environment variable"};
+SLICE=${SLICE:?"must be specified in environment variable"};
+
+if [ ! -r ${IDENTITY} ]; then
+	echo "${IDENTITY}: access denied";
+	exit 1;
+fi;
+
+trap 'cleanUp' EXIT || exit 1;
+
+
+
+# Main program starts here
+
+if [[ $# == 1 ]]; then
+	# Initialize logs
+	mkdir -p ${LOG_PATH}
+	${RM} ${OK_LOG_FILE};
+	${RM} ${FAILED_LOG_FILE};
+	${RM} ${OK_LOG_SEM};
+	${RM} ${FAILED_LOG_SEM};
+	
+	# Set up our destination directory that holds all the logs files
+	DEST_PATH=`date +%Y%m%d%H%M%S`;
+	DEST_PATH="LOGS-${DEST_PATH}";
+	mkdir ${DEST_PATH};
+
+	# Determine how much time for each thread to sleep before doing its job
+	CONCURRENT_PROCESSES=30
+	TIME_PER_PROCESS=5
+	TOTAL_PROCESSES=`sed -n '$=' ${ADDR_LIST}`;
+	(( MAX_SLEEP_TIME = ${TOTAL_PROCESSES} / (${CONCURRENT_PROCESSES} / ${TIME_PER_PROCESS}) ));
+	(( MAX_SLEEP_TIME += 1 ));	# Have random function include upper bound number
+
+	locks="";
+	sleepTime="";
+
+	# CALLER_SEM forces this parent process to wait until the child process 
+	# is finished execution
+	for ipAddress in $(< ${ADDR_LIST}); do
+		CALLER_SEM="${TMP:-/tmp}/${CALLER}.${ipAddress}.lock";
+		${RM} ${CALLER_SEM};
+		locks="${locks} ${CALLER_SEM}";
+		lockfile -1 ${CALLER_SEM};
+		(( sleepTime = ${RANDOM} % ${MAX_SLEEP_TIME} ));
+		./$0 ${ipAddress} ${sleepTime} ${DEST_PATH};
+	done;
+
+	lockfile -1 ${locks};
+	${RM} ${locks};		# clean up just in case child program terminated unexpectedly
+
+else
+	PADRES_PATH=${PADRES_PATH:-padres};
+
+	# Set up a separate destination path for each destination
+#	DEST_PATH=${DEST_PATH}/${IP_ADDRESS};
+#	mkdir ${DEST_PATH};
+
+	CALLER_SEM="${TMP:-/tmp}/${CALLER}.${IP_ADDRESS}.lock";
+
+	# Sleep for a while to avoid congestion
+	sleep ${SLEEP_TIME};
+
+	# Set up logging for SSH invocation
+	TMP_LOG=${TMP:-/tmp}/${CALLER}.${IP_ADDRESS}.log;
+	${RM} ${TMP_LOG};
+
+	# SCP get get necessary files from the remote node
+	${SCP} ${SLICE}@${IP_ADDRESS}:${PADRES_PATH}/build/*.log* ${DEST_PATH} >> ${TMP_LOG} 2>&1;
+	exit_code=$?;
+
+	# Get the logged message
+	logMsg="Message was: `cat ${TMP_LOG}`";
+	${RM} ${TMP_LOG};
+	
+	# Log to appropriate log file
+	if [[ $exit_code == 0 ]]; then
+		lockfile -1 ${OK_LOG_SEM};
+		echo -e "${IP_ADDRESS}\tOK\t${logMsg}" >> ${OK_LOG_FILE};
+		echo -e "${IP_ADDRESS}\tOK";
+		${RM} ${OK_LOG_SEM};
+	else
+		lockfile -1 ${FAILED_LOG_SEM};
+		echo -e "${IP_ADDRESS}\tFAILED\n${logMsg}" >> ${FAILED_LOG_FILE};
+		echo -e >> ${FAILED_LOG_FILE};
+		echo -e "${IP_ADDRESS}\tFAILED\t${logMsg}";
+		${RM} ${FAILED_LOG_SEM};
+	fi;
+	
+	# Unblock the caller when we are done
+	${RM} ${CALLER_SEM};
+fi;
+
+DONE=1;

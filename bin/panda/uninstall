@@ -1,0 +1,209 @@
+#!/bin/sh
+
+
+# Description:  Removes all custom packages installed by looking at the .rpm
+#               files still remaining in the node's /tmp directory
+# Author:		Alex Cheung (University of Toronto)
+# Note:			You must execute this file prefixed with a "./" or else the
+#				options used for the SSH commands in this script will not 
+#				take effect.
+#
+#				Remember to set environment variables for IDENTITY and SLICE.
+#
+#				Alternatively, it is possible to uninstall based on the rpms
+#				listed in the setup file.  However, if you remove
+#				certain rpms from the setup file, you will not be able to 
+#				uninstall those rpms using this script.
+
+# Program arguments
+if [[ $# == 1 ]]; then
+	NODE_ADDR_LIST=$1;
+elif [[ $# == 2 ]]; then
+	NODE_ADDR=$1;
+	SLEEP_TIME=$2;
+else 
+	echo "usage: $0 <node_address_list>";
+	exit 1;
+fi;
+
+# Logging
+LOG_PATH="log/";
+LOG_BASENAME=`basename $0`;
+LOG_EXTNAME="log"
+OK_LOG_FILENAME="${LOG_BASENAME}.ok.${LOG_EXTNAME}";
+FAILED_LOG_FILENAME="${LOG_BASENAME}.failed.${LOG_EXTNAME}";
+OK_LOG_FILE="${LOG_PATH}${OK_LOG_FILENAME}";
+FAILED_LOG_FILE="${LOG_PATH}${FAILED_LOG_FILENAME}";
+OK_LOG_SEM="${TMP:-/tmp}/${OK_LOG_FILENAME}.lock";
+FAILED_LOG_SEM="${TMP:-/tmp}/${FAILED_LOG_FILENAME}.lock";
+
+# Some constants
+SSH="ssh -o StrictHostKeyChecking=no -o ConnectTimeout=10 -i ${IDENTITY} -n -x -l ${SLICE}";
+RM="rm -f";
+KILL="kill -n 9";
+TIME="date +%s";
+RPM_REMOVE="sudo rpm -e";
+
+# Clean up function
+DONE=0;
+function cleanUp()
+{
+	${RM} ${TMP_LOG};
+	if [[ ${DONE} == 0 ]]; then
+		${KILL} 0;
+	fi;
+}
+
+IDENTITY=${IDENTITY:?"must be specified in environment variable"};
+SLICE=${SLICE:?"must be specified in environment variable"};
+
+if [ ! -r ${IDENTITY} ]; then
+	echo "${IDENTITY}: access denied";
+	exit 1;
+fi;
+
+trap 'cleanUp' EXIT || exit 1;
+
+# Parent code
+function runParent()
+{
+	# Initialize logs
+	mkdir -p ${LOG_PATH};
+	${RM} ${OK_LOG_FILE};
+	${RM} ${FAILED_LOG_FILE};
+	${RM} ${OK_LOG_SEM};
+	${RM} ${FAILED_LOG_SEM};
+	
+	# Determine how much time for each deployExecutor to sleep before doing its job
+	CONCURRENT_PROCESSES=20
+	TIME_PER_PROCESS=5
+	TOTAL_PROCESSES=`sed -n '$=' ${NODE_ADDR_LIST}`;
+	(( MAX_SLEEP_TIME = ${TOTAL_PROCESSES} / (${CONCURRENT_PROCESSES} / ${TIME_PER_PROCESS}) ));
+	(( MAX_SLEEP_TIME += 1 ));	# Have random function include upper bound number
+	
+	locks="";
+	sleepTime="";
+	
+	# CALLER_SEM forces this initiator program to wait until the child process
+	# is finished execution
+	for ipAddress in $(< ${NODE_ADDR_LIST}); do
+		CALLER_SEM="${TMP:-/tmp}/$0.${ipAddress}.lock"
+		${RM} ${CALLER_SEM};
+		locks="${locks} ${CALLER_SEM}";
+		lockfile -1 ${CALLER_SEM};
+		(( sleepTime = ${RANDOM} % ${MAX_SLEEP_TIME} ));
+		./$0 ${ipAddress} ${sleepTime} &
+	done;
+	
+	lockfile -1 ${locks};
+	${RM} ${locks};		# clean up just in case child program terminated unexpectedly
+}
+
+
+
+# SSHes into the machine, fetches the set of rpm files in the /tmp directory
+# sorted by descending modification time (assuming this is the reverse order
+# in which the rpms got installed), and uninstalls and removes those rpm files
+function craftUninstallCmd()
+{
+	cmd="";
+	${RM} ${TMP_LOG};
+	
+	# Must cd into /tmp or else we will have /tmp as prefix in the returned filenames
+	${SSH} ${NODE_ADDR} "cd /tmp && ls -tc *.rpm" >> ${TMP_LOG} 2>&1;
+	
+	# We will get an error when there are no rpm files to uninstall
+	if [[ $? != 0 ]]; then
+		return 1;
+	fi;
+	
+	local rpmNames;
+	local rpmFiles;
+	local rpm_list=`cat ${TMP_LOG}`;
+	for rpmFile in ${rpm_list}; do
+		# Assume rpm name is whatever text before the first '-' character
+		local rpmName=${rpmFile%%-*};
+		rpmNames="${rpmName} ${rpmNames}";
+		rpmFiles="${rpmFile} ${rpmFiles}";
+	done;
+
+	# Remove .rpm files in /tmp anyway since they are not useful anymore
+	# whether or not they got uninstalled
+	# UPDATE (july 10, 2007): delete jdk and javahome in the home directory as well
+	cmd="rm -fr * && cd /tmp && ${RM} ${rpmFiles} && ${RPM_REMOVE} ${rpmNames}";
+	
+	return 0;
+}
+
+
+# Child code
+function runChild()
+{
+	CALLER_SEM="${TMP:-/tmp}/$0.${NODE_ADDR}.lock"
+
+	# Sleep for random amount of time before doing work to avoid
+	# resource and network collision with other equivalent processes
+	sleep ${SLEEP_TIME};
+
+	# Set up logging for SSH invocation
+	TMP_LOG=${TMP:-/tmp}/$0.${NODE_ADDR}.log;
+	${RM} ${TMP_LOG};
+
+	# Test if node is reachable first
+	${SSH} ${NODE_ADDR} "ls" >> /dev/null 2>&1;
+	if [[ $? != 0 ]]; then
+		lockfile -1 ${FAILED_LOG_SEM};
+		echo -e "-----------------------------------------------" >> ${FAILED_LOG_FILE};
+		echo -e "${NODE_ADDR}\tFAILED:\nCannot connect to ${NODE_ADDR}" >> ${FAILED_LOG_FILE};
+		echo -e "${NODE_ADDR}\tFAILED:\nCannot connect to ${NODE_ADDR}";
+	
+		# Unblock the caller when we are done
+		${RM} ${CALLER_SEM};
+		
+		return 1;
+	fi;
+
+	logMsg="";
+	
+	# Formulate the command that uninstalls all rpms found in /tmp folder
+	craftUninstallCmd;
+	if [[ $? != 0 ]]; then
+		# There is no command to execute
+		logMsg="All rpms in /tmp were uninstalled already.";
+		exit_code=0;		# assume ok
+	else
+		# Execute the command and see what happens
+		${RM} ${TMP_LOG};
+		${SSH} ${NODE_ADDR} "${cmd}" >> ${TMP_LOG} 2>&1;
+		exit_code=$?;
+		logMsg=`cat ${TMP_LOG}`;
+		${RM} ${TMP_LOG};
+	fi;
+
+	# Log to appropriate log file depending on the exit code
+	if [[ ${exit_code} == 0 ]]; then
+		lockfile -1 ${OK_LOG_SEM};
+		echo -e "${NODE_ADDR}\tOK\t${logMsg}" >> ${OK_LOG_FILE};
+		echo -e "${NODE_ADDR}\tOK\t${logMsg}";
+		${RM} ${OK_LOG_SEM};
+	else
+		lockfile -1 ${FAILED_LOG_SEM};
+		echo -e "-----------------------------------------------" >> ${FAILED_LOG_FILE};
+		echo -e "${NODE_ADDR}\tFAILED:\n${logMsg}" >> ${FAILED_LOG_FILE};
+		echo -e "${NODE_ADDR}\tFAILED:\n${logMsg}";
+		${RM} ${FAILED_LOG_SEM};
+	fi;
+	
+	# Unblock the caller when we are done
+	${RM} ${CALLER_SEM};
+}
+
+
+# Main program starts here
+if [[ $# == 1 ]]; then
+	runParent;
+else
+	runChild;
+fi;
+
+DONE=1;

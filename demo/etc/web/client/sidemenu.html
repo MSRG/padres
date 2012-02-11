@@ -1,0 +1,22 @@
+<div id="left_panel_closed" class="panel" style="display: none">
+	<a href="#" class="hide" onclick="togglePanels(document.getElementById('left_panel_closed'), document.getElementById('left_panel_open'));"><img src="images/expand.png"></a>
+</div>
+<div id="left_panel_open" class="panel">
+	<a href="#" class="hide" onclick="togglePanels(document.getElementById('left_panel_closed'), document.getElementById('left_panel_open'));"><img src="images/collapse.png"></a>
+	<div id="left_content" class="content" onmousedown="startResize(this, document.getElementById('left_panel_open'), 4)">
+		<ul>
+		<li><a href="publish.html">Publish</a></li>
+		<li><a href="subscribe.html">Subscribe</a></li>
+		<li><a href="advertise.html">Advertise</a></li>
+		<li><a href="connect.html">Connect</a></li>
+		<li><a href="status.html">Status</a></li>
+		<!-- <li><a href="portal.html">Portal</a></li> -->
+		</ul>
+		
+		<br />
+		
+		<ul>
+		<li><a href="demo_ex.html">Demo Example</a></li>
+		</ul>
+	</div>
+</div>

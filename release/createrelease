@@ -1,0 +1,148 @@
+#!/bin/bash
+
+# This script creates a padres source or binary release package.
+
+# ---------------------------------------------------------------------------
+# The set of files to include in the source or binary release package.
+
+# Specify the files as a set of rsync filters:
+#   - "+ " prefix indicates files to include
+#   - "- " prefix indicates files to exclude
+#   - filters are processed in order (earlier ones take precedence)
+
+SOURCE_RELEASE_FILES='
++ /bin/
++ /demo/
++ /etc/
++ /lib/
++ /src/
++ /install.sh
++ /build.xml
++ /README
++ /LICENSE
++ /version.txt
+- CVS/
+- /lib/jess.jar
+- /lib/jess-src.jar
+'
+
+BINARY_RELEASE_FILES='
++ /bin/
++ /demo/
++ /etc/
++ /lib/
++ /build/
++ /install_binary.sh
++ /README
++ /LICENSE
++ /version.txt
+- CVS/
+- /lib/jess.jar
+- /lib/jess-src.jar
+'
+# ---------------------------------------------------------------------------
+
+
+SCRIPT_DIR="$(cd $(dirname "$0")/ && pwd)"
+TMP_FILE="$SCRIPT_DIR"/tmp.$$
+
+
+# Print the script usage information.
+function printusage() {
+	cat <<-EOF
+		Usage: $0 [COMMAND]
+		  COMMAND is one of:
+		    clean   Delete any source or binary package files.
+		    binary  Create a binary release package. 
+		    source  Create a source release package. 
+	EOF
+}
+
+
+# Rebuild the code.
+function buildcode() {
+	echo Building source code.
+
+	# Build the code.
+	(cd "$SCRIPT_DIR/.." && ant clean && ant) &> "$TMP_FILE"
+	status=$?
+
+	# Print output if there was a build error.
+	if [ $status -ne 0 ]; then
+		exec 0<"$TMP_FILE"
+		while read line; do
+			echo "	$line"
+		done
+	fi
+
+	rm "$TMP_FILE"
+	return $status
+}
+
+
+# Delete release package files.
+# Parameters are:
+#	$1 - package name
+function cleanpackage() {
+	local packagename="$1"
+	local packagedir="$SCRIPT_DIR/$packagename"
+	local packagetar="$SCRIPT_DIR/$packagename.tgz"
+	rm -rf "$packagedir" "$packagetar"
+}
+
+
+# Create a release package.
+# Parameters are:
+#	$1 - package name.
+#	$2 - package files specified as rsync include/exclude filters.
+function createpackage() {
+	local packagename="$1"
+	local packagefiles="$2"
+	local packagebasedir="$SCRIPT_DIR"
+	local packagedir="$packagebasedir/$packagename"
+	local packagetar="$SCRIPT_DIR/$packagename.tgz"
+
+	echo Creating padres package in $packagedir
+
+	# Copy the necessary files to a package directory.
+	# The copy uses rsync filters that:
+	#   - apply custom include/exclude filters
+	#   - exclude top level files/dirs unless specified above
+	#   - include everything not already matched above
+	echo "$packagefiles" > "$TMP_FILE"
+	rm -rf "$packagedir" 
+	rsync -a --delete --include-from "$TMP_FILE" --exclude '/*' --include '*' "$SCRIPT_DIR/../" "$packagedir/" \
+		
+
+	# Apply the license headers to most .java files.
+	find "$packagedir" -type f -name \*.java ! -name MessageQueue.java -print0 |xargs -0 "$SCRIPT_DIR/addlicense"
+
+	# Create the release tar file.
+	tar czf "$packagetar" -C "$packagebasedir" "$packagename"
+
+	# Cleanup
+	#rm -r "$packagedir" 
+	rm -f "$TMP_FILE"
+}
+
+
+# Parse command line.
+if [ $# -ne 1 ]; then
+	printusage
+	exit
+elif [ "$1" == "clean" ]; then
+	cleanpackage "padres"
+	cleanpackage "padres-src"
+elif [ "$1" == "binary" ]; then
+	buildcode
+	if [ $? -ne 0 ]; then
+		echo "Error building code"
+		exit
+	fi
+	createpackage "padres" "$BINARY_RELEASE_FILES"
+elif [ "$1" == "source" ]; then
+	createpackage "padres-src" "$SOURCE_RELEASE_FILES"
+else
+	printusage
+	exit
+fi

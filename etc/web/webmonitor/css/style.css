@@ -1,0 +1,93 @@
+/* general elements */
+
+/* background image currently not used */
+body {font: normal 82% sans-serif; background-image: url(background.jpg); background-attachment: fixed; background-color: #eeeeff;}
+h1 {margin: 0; margin-bottom: 5px; padding: 8px; color: #000066;}
+
+input[type="text"], input[type="label"], input[type="file"], select, textarea {width:100%;}
+input[type="text"], input[type="label"], input[type="file"], input[type="button"], select {height: 20px;}
+input[type="text"], input[type="checkbox"], input[type="file"], textarea {border: solid 1px #aaaaaa; background-color: #ffffff;}
+input[type="button"] {margin: 1px; border: solid 1px #000066; background-color: #6699ff; color: #ffffff; font-weight: bold;}
+input[type="label"] {margin: 1px; padding-right: 5px; border: solid 0px transparent; background-color: transparent; text-align: right;}
+select {border: solid 1px #aaaaaa; background-color: #ffffff;}
+textarea {margin: 0px;}
+
+form {margin: 10px; padding: 10px; border: solid 1px #cccccc; background-color: #eeeeee; font: normal 100% courier; color: #000000; overflow: hidden;}
+img {border: 0;}
+	
+/* classes */
+.panel {float: left; padding: 0; margin: 0; width: auto; height: auto; overflow: auto;}
+.panel a {border: 0; text-decoration: none;}	
+
+.content {margin: 1px; padding: 0; border: solid 1px #cccccc; background-color: #ffffff; overflow: hidden;}
+.content h3 {margin: 0; padding: 5px; color: #000066; border-bottom: solid 2px #000066;}
+.content p {margin: 5px; color: #000066;}
+.content a {border: 0; text-decoration: none;}	
+
+/* point class currently not used  but useful for highlighting things */
+.content .point {margin: 3%; padding: 0px; border: solid 1px #ffcc00; background-color: #ffffcc;}
+.content .point h3 {margin: 0; padding: 1px; border-bottom: solid 3px #ffcc00; color: #ffffff; background-color: #ffcc66;}
+
+.labels {width: 30%; float: left;}
+.delivery_labels {width: 45%; float: left;}
+.inputs {width: 70%; float: left;}
+.delivery_inputs {width: 55%; float: left;}
+.right_align {margin: 0px; padding: 0px; float: right;} 
+.message_list {margin: 0px; padding: 0px; overflow: auto;}
+.message_list_item {font-weight: bold; font-size: 12; color: #000066;}
+.order_list {height: 50%; margin: 0px; padding: 0px; overflow: auto;}
+.order_list_item {font-weight: bold; font-size: 12; color: #000066;}
+.query_list {height: 30%; margin: 0px; padding: 0px; overflow: auto;}
+.query_list_item {font-weight: bold; font-size: 12; color: #000066;}
+
+/* Specific elements by ID */
+
+#left_panel_open {width: 18%;}
+#left_content {border: solid 1px #cccccc; background-color: #ffffff;}
+#left_content ul {list-style: none; margin: 0; padding: 0;}
+#left_content li {margin: 1px; padding: 2px;}
+#left_content a	{display: block; width: 94%; margin: 1px; padding: 2px; border: solid 1px #cccccc; color: #0000ff; font-weight: bold; text-decoration: none;}
+#left_content a:hover {border: solid 1px #0000ff; background-color: #6699ff; color: #ffffff;}
+
+#monitor_panel_open {width: 20%;}
+#status_panel_open {width: 20%;}
+#notification_panel_open {width: 30%;}
+#messages_panel_open {width: 30%;}
+
+#advertisement_panel_open, #subscription_panel_open, #publication_panel_open {width: 30%;}
+#adv_advanced_panel_open, #sub_advanced_panel_open, #pub_advanced_panel_open {width: 40%;}
+#pub_streaming_panel_open {width: 30%;}
+#pub_notification_panel_open {width: 40%;}
+#pub_customized_panel_open, #order_panel_open {width: 40%;}
+#query_panel_open {width:25%;}
+#delivery_panel_open {width:25%;}
+#query_notification_panel_open {width:30%;}
+
+#connect_panel_open {width: 40%}
+
+#advertisement_text, #subscription_text, #publication_text, #query_text {height: 30%;}
+#notification_area {height: 40%; font-size: 14; font-weight: bold; color: #006600;}
+#publication_area {height: 30%; font-size: 14; font-weight: bold; color: #006600;}
+#order_notification_area {height: 30%; font-size: 14; font-weight: bold; color: #006600;}
+#order_area {height: 40%; font-size: 14; font-weight: bold; color: #006600;}
+#query_notification_area {height: 30%; font-size: 14; font-weight: bold; color: #006600;}
+#number_of_matches {height: 3%; font-size: 14; font-weight: bold; color: #006600; background-color: #eeeeee; border: 0;}
+
+#titlebox {margin: 0; padding: 0;}
+#logo {float: left;}
+#title {font-size:32; font-weight: bold; color: #000099;}
+#subtitle {font-size: 20; font-weight: bold; color: #000099;}
+#pagetitle, #title_spacing {font-size:30; font-weight: bold; color: #009900;}
+
+#titlebar {margin-top: 10px; margin-bottom: 10px; padding: 5px; border: solid 1px #cccccc; border-bottom: solid 3px #cccccc; color: #ffffff; background-color: #6699ff;}
+#titlebar {font-weight: bold; font-size: 16;}
+#titlebar a {margin-left: 5px; margin-right: 5px; color: #ffffff; text-decoration: none; font-weight: bold;}
+#titlebar a:hover {text-decoration: underline;}	
+
+#footer {clear: both; margin-top: 15px; padding: 5px; border: solid 1px #cccccc; background-color: #ffffff;}
+#footer h5 {margin: 0; text-align: right; color: #0000aa;}
+
+
+/* Monitor */
+
+#log_file_panel_open, #inject_msg_panel_open, #inject_cmd_panel_open, #queue_panel_open {width: 40%;}

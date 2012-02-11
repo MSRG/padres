@@ -1,0 +1,122 @@
+<script type="text/javascript">
+function _setClientName(e,nameStr) {
+	var key=e.keyCode || e.which;
+	if (key == 13) {
+		setClientName(nameStr);
+	}
+}
+</script>
+
+<div id="status_panel_closed" class="panel" style="display: none;">
+	<a href="#" class="hide" onclick="togglePanels(document.getElementById('status_panel_closed'), document.getElementById('status_panel_open'));"><img src="images/expand.png"></a>
+</div>
+<div id="status_panel_open" class="panel">
+	<a href="#" class="hide" onclick="togglePanels(document.getElementById('status_panel_closed'), document.getElementById('status_panel_open'));"><img src="images/collapse.png"></a>
+	<div id="status_content" class="content" onmousedown="startResize(document.getElementById('status_form'), document.getElementById('status_panel_open'), 46);">
+		<h3>
+		<img src="images/status.png" />
+		Client Status
+		</h3>
+		
+		<form id="status_form">
+			<div class="labels">
+				<!-- TODO: allow user to change client name -->
+				<input type="label" readonly="true" value="Name:"/> <br />
+				<input type="label" readonly="true" value="Status:" /> <br />
+				<input type="label" readonly="true" value="Brokers:" />
+			</div>
+			<div class="inputs">
+				<input type="text" id="name_text" onkeypress="_setClientName(event,this.value)"/> <br />
+				<input type="text" id="status_text" readonly="true" /> <br />
+				<select id="broker_option"></select>
+			</div>
+			<div class="right_align">
+				<input type="button" value="Refresh" onclick="loadBrokers()" />
+			</div>
+		</form>
+	</div>	
+</div>	
+
+
+<div id="notification_panel_closed" class="panel" style="display: none;">
+	<a href="#" class="hide" onclick="togglePanels(document.getElementById('notification_panel_closed'), document.getElementById('notification_panel_open'));"><img src="images/expand.png"></a>
+</div>
+<div id="notification_panel_open" class="panel">
+	<a href="#" class="hide" onclick="togglePanels(document.getElementById('notification_panel_closed'), document.getElementById('notification_panel_open'));"><img src="images/collapse.png"></a>
+	<div id="notification_content" class="content" onmousedown="startResize(document.getElementById('notification_area'), document.getElementById('notification_panel_open'), 46);">
+		<h3>
+		<img src="images/notification.png" />
+		Notifications
+		<input id="notification_count_label" type="label" value="(0)" />
+		</h3>
+		<form id="notification_form"
+			onmouseover="highlight(this);"
+			onmouseout="unhighlight(this);"
+		>
+			<textarea id="notification_area" readonly="true"></textarea> <br />
+			<div class="right_align">
+			<input type="button" value="Start" onclick="startEvents(DEFAULT_WEBUI_QID)" />
+			<input type="button" value="Stop" onclick="stopEvents()" />
+			<input type="button" value="Clear" onclick="clearText(document.getElementById('notification_area'));resetNotificationCount();" />
+			</div>
+		</form>
+	</div>
+</div>
+	
+<div id="messages_panel_closed" class="panel" style="display: none;">
+	<a href="#" class="hide" onclick="togglePanels(document.getElementById('messages_panel_closed'), document.getElementById('messages_panel_open'));"><img src="images/expand.png"></a>
+</div>
+<div id="messages_panel_open" class="panel">
+	<a href="#" class="hide" onclick="togglePanels(document.getElementById('messages_panel_closed'), document.getElementById('messages_panel_open'));"><img src="images/collapse.png"></a>
+	<div id="messages_content" class="content">
+		
+		<h3>
+		<img src="images/subscriptions.png" />
+		Active Subscriptions
+		<a href="#" class="hide" onclick="toggleCollapse(document.getElementById('subscription_list_form'), this)"><img src="images/mini_collapse.png"></a>
+		</h3>
+		
+		<form id="subscription_list_form" onmousedown="startResize(this, document.getElementById('messages_panel_open'), 46)"
+			onmouseover="highlight(this);"
+			onmouseout="unhighlight(this);"
+		>
+			<input type="button" value="Refresh" onclick="refreshActiveSubscriptions()" />
+			<div id="subscription_list" class="message_list">
+			</div>
+		</form>	
+		
+		<h3>
+		<img src="images/advertisements.png" />
+		Active Advertisements
+		<a href="#" class="hide" onclick="toggleCollapse(document.getElementById('advertisement_list_form'), this)"><img src="images/mini_collapse.png"></a>
+		</h3>
+		
+		<form id="advertisement_list_form" onmousedown="startResize(this, document.getElementById('messages_panel_open'), 46)"
+			onmouseover="highlight(this);"
+			onmouseout="unhighlight(this);"
+		>
+			<input type="button" value="Refresh" onclick="refreshActiveAdvertisements()" />
+			<div id="advertisement_list" class="message_list">
+			</div>
+		</form>	
+	</div>
+</div>
+
+<script type="text/javascript">
+	// initializations once divs are loaded
+	setAdvListElem(document.getElementById("advertisement_list"));
+	setSubListElem(document.getElementById("subscription_list"));
+	setBrokerOptionElem(document.getElementById("broker_option"));
+	setNotificationArea(document.getElementById("notification_area"), document.getElementById("notification_count_label"));
+
+	document.getElementById("name_text").value = getCookie(CK_CLIENT_NAME);
+
+	setPageTitleText("Status");
+
+	loadBrokers();
+	refreshActiveSubscriptions();
+	refreshActiveAdvertisements();
+
+	// start event listening
+	startEvents(DEFAULT_WEBUI_QID);
+</script>

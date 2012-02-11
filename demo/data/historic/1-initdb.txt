@@ -1,0 +1,3 @@
+a [class,eq,'DB_CONTROL'],[command,isPresent,'any'],[content_spec,isPresent,'any'],[database_id,isPresent,'any']
+p [class,'DB_CONTROL'],[command,'STORE'],[content_spec,'[class,eq,stock],[symbol,eq,IBM],[price,<,123.45],[volume,>,100]'],[database_id,'socket://${localhostIP}:2001/Broker1-DB']
+p [class,'DB_CONTROL'],[command,'STORE'],[content_spec,'[class,eq,stock],[symbol,eq,MS],[price,>,23.45],[volume,<,100]'],[database_id,'socket://${localhostIP}:2001/Broker1-DB']

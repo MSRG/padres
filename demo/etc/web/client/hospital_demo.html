@@ -1,0 +1,38 @@
+<script type="text/javascript">
+<!--
+function connectToBroker() {
+	opElem = document.getElementById("operation");
+	opElem.style.display = "none";
+	brokerAddr = "rmi://localhost:1099/Broker1";
+	connectElem = document.getElementById("broker_connect");
+	connectElem.innerHTML = "<h4>Connecting to Broker: " + brokerAddr + "...</h4>";
+	var xmlString = createXmlTag(PROP_BROKER_ADDRESS, brokerAddr);
+	alert(xmlString);
+	runMethod('ca.utoronto.msrg.padres.demo.webclient.demo.HospitalClient', 'handleConnect', 
+			xmlString, handleConnection);
+}
+
+function handleConnection() {
+	brokerAddr = "rmi://localhost:1099/Broker1";
+	connectElem = document.getElementById("broker_connect");
+	connectElem.innerHTML = '<h4 style="color: #ccc;">Connected to Broker: ' + brokerAddr + '</h4>';
+	opElem = document.getElementById("operation");
+	opElem.style.display = "block";
+}
+
+window.onload = connectToBroker
+//-->
+</script>
+
+<div id="broker_connect"></div>
+
+<div id="operation">
+<h3>Choose Your Function:</h3>
+<div
+	style="float: left; margin: 0 0 30px 10px; border: 1px solid #ccc; background-color: #fff; font-size: 120%; font-weight: bold;"><a
+	style="text-decoration: none; margin: 5px" href="doctor.html">Doctor</a></div>
+<div
+	style="float: left; margin: 0 0 30px 10px; border: 1px solid #ccc; background-color: #fff; font-size: 120%; font-weight: bold;"><a
+	style="text-decoration: none; margin: 5px" href="mri_center.html">MRI
+Center</a></div>
+</div>
