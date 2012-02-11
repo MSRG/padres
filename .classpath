@@ -2,7 +2,6 @@
 <classpath>
 	<classpathentry excluding="ca/utoronto/msrg/padres/test/junit/blackbox2/" kind="src" path="src"/>
 	<classpathentry kind="src" path="demo/src"/>
-	<classpathentry kind="lib" path="lib/jess.jar"/>
 	<classpathentry kind="lib" path="lib/pg73jdbc3.jar"/>
 	<classpathentry kind="lib" path="lib/log4j-1.2.13.jar"/>
 	<classpathentry kind="lib" path="lib/junit.jar"/>
