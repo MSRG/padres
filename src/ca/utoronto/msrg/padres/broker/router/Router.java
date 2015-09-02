@@ -582,4 +582,28 @@ public abstract class Router {
 	public String getBrokerId() {
 		return brokerCore.getBrokerID();
 	}
+	
+	public int getPublicationReceived() {
+		return postprocessor.getPublicationReceived();
+	}
+	
+	public int getPublicationSent() {
+		return postprocessor.getPublicationSent();
+	}
+	
+	public int getSubscriptionReceived() {
+		return postprocessor.getSubscriptionReceived();
+	}
+	
+	public int getSubscriptionSent() {
+		return postprocessor.getSubscriptionSent();
+	}
+	
+	public int getAdvertisementReceived() {
+		return postprocessor.getAdvertisementReceived();
+	}
+	
+	public int getAdvertisementSent() {
+		return postprocessor.getAdvertisementSent();
+	}
 }

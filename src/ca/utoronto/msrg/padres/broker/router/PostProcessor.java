@@ -12,5 +12,10 @@ public interface PostProcessor {
 
 	public void initialize();
 
-
+	public int getPublicationSent();
+	public int getPublicationReceived();
+	public int getSubscriptionSent();
+	public int getSubscriptionReceived();
+	public int getAdvertisementSent();
+	public int getAdvertisementReceived();
 }

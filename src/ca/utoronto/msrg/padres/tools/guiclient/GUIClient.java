@@ -333,7 +333,7 @@ public class GUIClient extends Client implements ActionListener {
 
 				public void windowClosing(WindowEvent e) {
 					guiClient.exitClient();
-					System.exit(0);
+//					System.exit(0);
 				}
 			});
 			// display the GUI

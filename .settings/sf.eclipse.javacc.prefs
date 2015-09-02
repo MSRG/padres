@@ -1,11 +1,13 @@
-#Wed Mar 04 20:58:57 EST 2009
 CLEAR_CONSOLE=true
 JAVACC_OPTIONS=-STATIC\=false
 JJDOC_OPTIONS=
 JJTREE_OPTIONS=
 JJ_NATURE=true
-JTB_OPTIONS=
+JTB_OPTIONS=-ia -jd -tk
+MARK_GEN_FILES_AS_DERIVED=true
 RUNTIME_JAR=
+RUNTIME_JJJAR=D\:/Dls/Tools/eclipse-java-luna-SR1-win32-x86_64/eclipse/plugins/sf.eclipse.javacc_1.5.27/javacc.jar
+RUNTIME_JTBJAR=D\:/Dls/Tools/eclipse-java-luna-SR1-win32-x86_64/eclipse/plugins/sf.eclipse.javacc_1.5.27/jtb-1.4.7.jar
 SHOW_CONSOLE=true
 SUPPRESS_WARNINGS=false
 eclipse.preferences.version=1

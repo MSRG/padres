@@ -16,11 +16,22 @@ package ca.utoronto.msrg.padres.broker.brokercore;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Random;
+import java.util.Set;
 
 import javax.swing.Timer;
 
+import no.uio.ifi.vizpub.Reportable;
+import no.uio.ifi.vizpub.reporter.Reporter;
+import no.uio.ifi.vizpub.reporter.ReporterService;
+import no.uio.ifi.vizpub.reports.PubMessage;
+
 import org.apache.log4j.Logger;
+
+import com.esotericsoftware.minlog.Log;
+import com.google.common.collect.Multimap;
 
 import ca.utoronto.msrg.padres.broker.brokercore.BrokerConfig.CycleType;
 import ca.utoronto.msrg.padres.broker.controller.Controller;
@@ -62,7 +73,7 @@ import ca.utoronto.msrg.padres.common.util.timer.TimerThread;
  * @author eli
  * 
  */
-public class BrokerCore {
+public class BrokerCore implements Reportable {
 
 	protected BrokerConfig brokerConfig;
 
@@ -158,8 +169,9 @@ public class BrokerCore {
 		}
 		// initialize the message sequence counter
 		currentMessageID = 0;
+
 	}
-	
+
 	/**
 	 * Constructor
 	 * 
@@ -224,8 +236,19 @@ public class BrokerCore {
 		initNeighborConnections();
 		initManagementInterface();
 		initConsoleInterface();
+		initVizpub();
 		running = true;
 		brokerCoreLogger.info("BrokerCore is started.");
+		
+
+	}
+
+	private void initVizpub() {
+		if(brokerConfig.isVizpub()){
+			Log.NONE();
+			ReporterService.initialize();
+			Reporter.initialize(this);
+		}
 	}
 
 	/**
@@ -299,15 +322,15 @@ public class BrokerCore {
 		}
 		brokerCoreLogger.info("InputQueueHandler is started.");
 	}
-	
+
 	protected InputQueueHandler createInputQueueHandler() {
 		return new InputQueueHandler(this);
 	}
-	
+
 	protected Controller createController() {
 		return new Controller(this);
 	}
-	
+
 	protected CommSystem createCommSystem() throws CommunicationException {
 		return new CommSystem();
 	}
@@ -523,7 +546,7 @@ public class BrokerCore {
 	 */
 	public String getBrokerURI() {
 		try {
-//			return commSystem.getServerURI();
+			//			return commSystem.getServerURI();
 			return NodeAddress.getAddress(brokerConfig.brokerURI).getNodeURI();
 		} catch (CommunicationException e) {
 			e.printStackTrace();
@@ -648,30 +671,34 @@ public class BrokerCore {
 	 * Shuts down this broker along with all services under this broker
 	 */
 	public void shutdown() {
-		
+
 		if(isShutdown)
 			return;
-		
+
 		isShutdown  = true;
 		systemMonitor.shutdownBroker();
-		
+
+		//Reporter.getInstance().removeReportable(this);
+		Reporter.getInstance().stop();
+		ReporterService.getInstance().triggerShutdown();
+
 		// Let's be nice
 		try {
-//			stop();
+			// stop();
 			brokerCoreLogger.info("BrokerCore is shutting down.");
-//			orderQueuesTo("SHUTDOWN");
+			// orderQueuesTo("SHUTDOWN");
 			if (commSystem != null)
 				commSystem.shutDown();
 		} catch (CommunicationException e) {
 			e.printStackTrace();
 			exceptionLogger.error(e.getMessage());
 		}
-		
+
 		controller.shutdown();
 		inputQueue.shutdown(); 
 		timerThread.shutdown(); 
 		heartbeatPublisher.shutdown();
-		heartbeatSubscriber.shutdown();	
+		heartbeatSubscriber.shutdown();
 	}
 
 	/**
@@ -787,7 +814,7 @@ public class BrokerCore {
 		try {
 			BrokerCore brokerCore = new BrokerCore(args);
 			brokerCore.initialize();
-//			brokerCore.shutdown();
+			// brokerCore.shutdown();
 		} catch (Exception e) {
 			// log the error the system error log file and exit
 			Logger sysErrLogger = Logger.getLogger("SystemError");
@@ -802,4 +829,126 @@ public class BrokerCore {
 		return isShutdown;
 	}
 
+	@Override
+	public String reportId() {
+		return this.getBrokerID();
+	}
+
+	@Override
+	public Set<String> reportNeighborIds() {
+		HashSet<String> set = new HashSet<String>();
+		for (String s : brokerConfig.getNeighborURIs()) {
+			try {
+				set.add(NodeAddress.getAddress(s).getNodeURI());
+			} catch (CommunicationException e) {
+				e.printStackTrace();
+			}
+		}
+		return set;
+	}
+
+	@Override
+	public Set<String> reportTopicNeighborIds(int topic) {
+		return null;
+	}
+
+	@Override
+	public Set<String> reportTopics() {
+		return null;
+	}
+
+	@Override
+    public int reportControlMsgsReceived() {
+    	return 0;
+    }
+
+    @Override
+    public int reportControlMsgsSent() {
+    	return 0;
+    }
+
+    @Override
+    public int reportControlBytesSent() {
+        return 0;
+    }
+
+    @Override
+    public int reportControlBytesReceived() {
+    	return 0;
+    }
+
+    @Override
+    public int reportSubscriptionSize() {
+    	return 0;
+    }
+
+    @Override
+    public Map<String, Integer> reportControlMsgsEdge() {
+        return null;
+    }
+
+    @Override
+    public Map<String, PubMessage> reportPubMsgsSent() {
+        return null;
+    }
+
+    @Override
+    public Map<String, PubMessage> reportPubMsgsReceived() {
+        return null;
+    }
+
+    @Override
+    public int reportDuplicatePubMsgs() {
+    	return 0;
+    }
+
+    @Override
+    public boolean subscribesTo(int topic) {
+        return false;
+    }
+
+    @Override
+    public Multimap<String, String> reportTopicNeighbors() {
+        return null;
+    }
+
+    @Override
+    public void clearPublications() {
+
+    }
+
+	@Override
+	public int reportPublicationsSent() {
+		return router.getPublicationSent();
+	}
+
+	@Override
+	public int reportPublicationsReceived() {
+		return router.getPublicationReceived();
+	}
+
+	@Override
+	public int reportSubscriptionsSent() {
+		return router.getSubscriptionSent();
+	}
+
+	@Override
+	public int reportSubscriptionsReceived() {
+		return router.getSubscriptionReceived();
+	}
+
+	@Override
+	public int reportAdvertisementsSent() {
+		return router.getAdvertisementSent();
+	}
+
+	@Override
+	public int reportAdvertisementsReceived() {
+		return router.getAdvertisementReceived();
+	}
+
+	@Override
+	public int reportInputQueueSize() {
+		return inputQueue.getInputQueueSize();
+	}
 }

@@ -137,6 +137,8 @@ public class BrokerConfig {
 	protected boolean totalOrder = false;
 
 	private boolean topk = false;
+	
+	private boolean vizpub = false;
 
 	private TopkInfo topkInfo = null;
 
@@ -199,6 +201,7 @@ public class BrokerConfig {
 		this.totalOrder = origConfig.totalOrder;
 		this.topk = origConfig.topk;
 		this.topkInfo = origConfig.topkInfo;
+		this.vizpub = origConfig.vizpub;
 	}
 
 
@@ -292,6 +295,8 @@ public class BrokerConfig {
 								Integer.parseInt(properties.getProperty("padres.W", "0")),
 								Integer.parseInt(properties.getProperty("padres.shift", "0")),
 								Integer.parseInt(properties.getProperty("padres.chunk", "0")));
+		
+		vizpub = properties.getProperty("padres.vizpub").equals("ON") ? true : false;
 	}
 
 	public static String[] getCommandLineKeys() {
@@ -574,5 +579,9 @@ public class BrokerConfig {
 
 	public TopkInfo getTopk() {
 		return topkInfo ;
+	}
+	
+	public boolean isVizpub(){
+		return vizpub;
 	}
 }

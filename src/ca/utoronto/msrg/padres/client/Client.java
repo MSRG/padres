@@ -9,10 +9,19 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+import no.uio.ifi.vizpub.Reportable;
+import no.uio.ifi.vizpub.reporter.Reporter;
+import no.uio.ifi.vizpub.reporter.ReporterService;
+import no.uio.ifi.vizpub.reports.PubMessage;
+
 import org.apache.log4j.Logger;
+
+import com.esotericsoftware.minlog.Log;
+import com.google.common.collect.Multimap;
 
 import ca.utoronto.msrg.padres.common.comm.CommSystem;
 import ca.utoronto.msrg.padres.common.comm.CommSystem.HostType;
@@ -51,7 +60,7 @@ import ca.utoronto.msrg.padres.common.util.LogSetup;
  *         that implements any type of communication protocol (e.g. RMI, socket, etc.) All the
  *         future clients must to be extended from this class or use this underneath.
  */
-public class Client {
+public class Client implements Reportable {
 
 	/**
 	 * Configuration object of the client
@@ -106,7 +115,11 @@ public class Client {
 	/**
 	 * Total number of publications sent from this client
 	 */
-	protected long pubCount = 0;
+	protected long pubSentCount = 0;
+	protected long subSentCount = 0;
+	protected long advSentCount = 0;
+	protected long pubReceivedCount = 0;
+	
 
 	protected PublicationMessage receivedPubMsg;
 
@@ -181,6 +194,10 @@ public class Client {
 		initLog(clientConfig.logLocation);
 		// start a message listener in a thread who listens to messages from server
 		msgListener = new MessageQueueManager(this);
+		
+		// VizPub
+		//Reporter.getInstance().addReportable(this);
+		
 		if (clientID == null)
 			clientID = clientConfig.clientID;
 		try {
@@ -192,6 +209,12 @@ public class Client {
 				for (String brokerURI : brokerList) {
 					connect(brokerURI);
 				}
+			}
+			
+			if(clientConfig.vizpub){
+				Log.NONE();
+				ReporterService.initialize();
+				Reporter.initialize(this);
 			}
 		} catch (CommunicationException e) {
 			throw new ClientException(e.getMessage());
@@ -284,8 +307,13 @@ public class Client {
 			disconnect(brokerState);
 		}
 		
+		//Reporter.getInstance().removeReportable(this);
+//		Reporter.getInstance().stop();
+//		ReporterService.getInstance().triggerShutdown();
+		
 		try {
 			commSystem.shutDown();
+			
 		} catch (CommunicationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -518,8 +546,10 @@ public class Client {
 			// broker. Modify this so that the received publication is added to the correct
 			// broker state.
 			BrokerState bState = brokerStates.get(defaultBrokerAddress);
-			if(bState != null)
+			if(bState != null) {
 				bState.addReceivedPub(receivedPubMsg);
+				pubReceivedCount++;
+			}
 		}
 		messageLogger.info("Message received at Client " + clientID + ": " + msg);
 	}
@@ -763,10 +793,14 @@ public class Client {
 					brokerState.getBrokerAddress().getNodeURI());
 			AdvertisementMessage advMsg = new AdvertisementMessage(adv,
 					getNextMessageID(brokerState.getBrokerAddress().getNodeURI()), clientDest);
+			advSentCount++;
 			String msgID = brokerState.getMsgSender().send(advMsg, HostType.CLIENT);
 			advMsg.setMessageID(msgID);
 			if (clientConfig.detailState)
 				brokerState.addAdvMsg(advMsg);
+			
+			
+			
 			return advMsg;
 		} catch (CommunicationException e) {
 			throw new ClientException(e.getMessage());
@@ -862,6 +896,8 @@ public class Client {
 					exceptionLogger.error("Fail to convert Date format : " + e);
 				}
 			}
+			
+			subSentCount++;
 			
 			String msgID = brokerState.getMsgSender().send(subMsg, HostType.CLIENT);
 			subMsg.setMessageID(msgID);
@@ -962,7 +998,7 @@ public class Client {
 					brokerState.getBrokerAddress().getNodeURI());
 			PublicationMessage pubMsg = new PublicationMessage(pub,
 					getNextMessageID(brokerState.getBrokerAddress().getNodeURI()), clientDest);
-			pubCount++;
+			pubSentCount++;
 			String msgID = brokerState.getMsgSender().send(pubMsg, HostType.CLIENT);
 			pubMsg.setMessageID(msgID);
 			return pubMsg;
@@ -1275,5 +1311,126 @@ public class Client {
 	public String toString() {
 		return "Client-" + clientID;
 	}
+
+	@Override
+	public String reportId() {
+		return this.getClientID();
+	}
+
+	@Override
+	public Set<String> reportNeighborIds() {
+		HashSet<String> set = new HashSet<String>();
+		for (String s : this.getBrokerURIList())
+			set.add(s);
+		return set;
+	}
+
+	@Override
+	public Set<String> reportTopicNeighborIds(int topic) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Set<String> reportTopics() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+    public int reportControlMsgsReceived() {
+    	return 0;
+    }
+
+    @Override
+    public int reportControlMsgsSent() {
+    	return 0;
+    }
+
+    @Override
+    public int reportControlBytesSent() {
+        return 0;
+    }
+
+    @Override
+    public int reportControlBytesReceived() {
+    	return 0;
+    }
+
+    @Override
+    public int reportSubscriptionSize() {
+    	return 0;
+    }
+
+    @Override
+    public Map<String, Integer> reportControlMsgsEdge() {
+        return null;
+    }
+
+    @Override
+    public Map<String, PubMessage> reportPubMsgsSent() {
+        return null;
+    }
+
+    @Override
+    public Map<String, PubMessage> reportPubMsgsReceived() {
+        return null;
+    }
+
+    @Override
+    public int reportDuplicatePubMsgs() {
+    	return 0;
+    }
+
+    @Override
+    public boolean subscribesTo(int topic) {
+        return false;
+    }
+
+    @Override
+    public Multimap<String, String> reportTopicNeighbors() {
+        return null;
+    }
+
+    @Override
+    public void clearPublications() {
+
+    }
+
+	@Override
+	public int reportPublicationsSent() {
+		return (int)pubSentCount;
+	}
+
+	@Override
+	public int reportPublicationsReceived() {
+		return (int)pubReceivedCount;
+	}
+
+	@Override
+	public int reportSubscriptionsSent() {
+		return (int)subSentCount;
+	}
+
+	@Override
+	public int reportSubscriptionsReceived() {
+		return 0;
+	}
+
+	@Override
+	public int reportAdvertisementsSent() {
+		return (int)advSentCount;
+	}
+
+	@Override
+	public int reportAdvertisementsReceived() {
+		return 0;
+	}
+
+	@Override
+	public int reportInputQueueSize() {
+		return 0;
+	}
+
 
 }

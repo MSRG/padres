@@ -32,7 +32,11 @@ public class PostProcessorImpl implements PostProcessor {
 	private final boolean topkIsOn;
 	
 	private TopkEngine topkEngine;
+	
+	private int numPubsIn = 0, numAdsIn = 0, numSubsIn = 0;
 
+	private int numPubsOut = 0, numAdsOut = 0, numSubsOut = 0;
+	
 	public PostProcessorImpl(BrokerCore broker) {
 		brokerCore = broker;
 		// Covering-related code
@@ -62,6 +66,9 @@ public class PostProcessorImpl implements PostProcessor {
 			if(topkIsOn){
 				topkEngine.processMessage((PublicationMessage) msg, messageSet);
 			}
+			numPubsIn++;
+			numPubsOut += messageSet.size();
+			
 		} else if (type.equals(MessageType.SUBSCRIPTION)) {
 			if (subCoveringIsOn) {
 				// Do not forward subscriptions that were covered by previously sent out
@@ -72,6 +79,10 @@ public class PostProcessorImpl implements PostProcessor {
 				SenderTagger.processMessage((SubscriptionMessage) msg);
 			if (topkIsOn)
 				topkEngine.processMessage((SubscriptionMessage) msg);
+			// add count of received/sent subs
+			numSubsIn++;
+			numSubsOut += messageSet.size();
+			
 		} else if (type.equals(MessageType.COMPOSITESUBSCRIPTION)) {
 
 		} else if (type.equals(MessageType.ADVERTISEMENT)) {
@@ -84,6 +95,15 @@ public class PostProcessorImpl implements PostProcessor {
 				// subscriptions Advertisement messages are untouched
 				subFilter.removeCoveredSubscriptions(messageSet);
 			}
+			numAdsIn++;
+			for(Message message : messageSet) {
+				// if check on type for ads or subs, increment each variable separately
+				if (message.getType().equals(MessageType.ADVERTISEMENT))
+					numAdsOut++;
+				else if (message.getType().equals(MessageType.SUBSCRIPTION))
+					numSubsOut++;
+			}
+			
 		} else if (type.equals(MessageType.UNSUBSCRIPTION)) {
 			if (subCoveringIsOn) {
 				// We may need to forward previously suppressed subscriptions that were not part of
@@ -100,5 +120,36 @@ public class PostProcessorImpl implements PostProcessor {
 
 		}
 	}
+
+	@Override
+	public int getPublicationSent() {
+		return numPubsOut;
+	}
+
+	@Override
+	public int getPublicationReceived() {
+		return numPubsIn;
+	}
+
+	@Override
+	public int getSubscriptionSent() {
+		return numSubsOut;
+	}
+
+	@Override
+	public int getSubscriptionReceived() {
+		return numSubsIn;
+	}
+
+	@Override
+	public int getAdvertisementSent() {
+		return numAdsOut;
+	}
+
+	@Override
+	public int getAdvertisementReceived() {
+		return numAdsIn;
+	}
+	
 
 }

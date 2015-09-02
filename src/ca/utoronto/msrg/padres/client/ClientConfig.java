@@ -66,6 +66,8 @@ public class ClientConfig {
 
 	public String logLocation = LOG_LOCATION_PATH;
 
+	public boolean vizpub = false;
+	
 	public ClientConfig() throws ClientException {
 		this(CONFIG_FILE_PATH);
 	}
@@ -87,6 +89,7 @@ public class ClientConfig {
 			detailState = clientProps.getProperty("client.store_detail_state", "OFF").toLowerCase().trim().equals(
 					"on");
 			logPeriod = Integer.parseInt(clientProps.getProperty("log.period"));
+			vizpub = clientProps.getProperty("padres.vizpub").equals("ON") ? true : false;
 		} catch (FileNotFoundException e) {
 			throw new ClientException("Config file not found: " + this.configFile, e);
 		} catch (IOException e) {
@@ -107,6 +110,7 @@ public class ClientConfig {
 		logPeriod = origConfig.logPeriod;
 		logPropertyFile = origConfig.logPropertyFile;
 		logLocation = origConfig.logLocation;
+		vizpub = origConfig.vizpub;
 	}
 
 	public static String[] getCommandLineKeys() {
