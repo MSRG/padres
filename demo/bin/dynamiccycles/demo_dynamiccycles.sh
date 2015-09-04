@@ -9,7 +9,7 @@ fi
 ETC_DIR=${PADRES_HOME}/demo/etc/dynamiccycles
 
 echo "Starting Broker A"
-${PADRES_HOME}/bin/startbroker  -uri rmi://localhost:1099/BrokerA A -c ${ETC_DIR}/brokerA_dynamiccycles.properties
+${PADRES_HOME}/bin/startbroker  -uri rmi://localhost:1099/BrokerA -c ${ETC_DIR}/brokerA_dynamiccycles.properties
 echo "Starting Broker B"
 ${PADRES_HOME}/bin/startbroker  -uri rmi://localhost:1098/BrokerB -n rmi://localhost:1099/BrokerA -c ${ETC_DIR}/brokerB_dynamiccycles.properties
 echo "Starting Broker C"
