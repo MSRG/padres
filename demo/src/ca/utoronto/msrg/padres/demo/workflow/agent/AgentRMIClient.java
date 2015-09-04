@@ -562,7 +562,7 @@ public class AgentRMIClient extends UnicastRemoteObject implements RMIMessageLis
 			}
 		}
 
-		initialize(args[2]);
+		initialize(args[1]);
 	}
 
 	/**
