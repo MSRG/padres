@@ -1,6 +1,6 @@
-install: ./install-maven-dependencies.sh
-
 language: java
 
 jdk:
   - oraclejdk8
+
+install: ./install-maven-dependencies.sh
