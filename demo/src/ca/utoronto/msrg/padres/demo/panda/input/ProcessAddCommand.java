@@ -4,7 +4,7 @@
  * To change the template for this generated file go to
  * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
  */
-package ca.utoronto.msrg.padres.tools.panda.input;
+package ca.utoronto.msrg.padres.demo.panda.input;
 
 /**
  * @author Alex
@@ -19,7 +19,7 @@ import java.util.Map;
 import ca.utoronto.msrg.padres.common.util.TypeChecker;
 import ca.utoronto.msrg.padres.common.util.datastructure.DataTypeException;
 import ca.utoronto.msrg.padres.common.util.datastructure.ParseException;
-import ca.utoronto.msrg.padres.tools.panda.CommandGenerator;
+import ca.utoronto.msrg.padres.demo.panda.CommandGenerator;
 
 
 public class ProcessAddCommand extends InputCommand {

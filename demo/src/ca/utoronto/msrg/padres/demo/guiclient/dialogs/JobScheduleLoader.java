@@ -4,7 +4,7 @@
  * To change the template for this generated file go to
  * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
  */
-package ca.utoronto.msrg.padres.tools.guiclient.dialogs;
+package ca.utoronto.msrg.padres.demo.guiclient.dialogs;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -13,7 +13,7 @@ import java.io.FileReader;
 import java.io.IOException;
 
 import ca.utoronto.msrg.padres.common.message.parser.ParseException;
-import ca.utoronto.msrg.padres.tools.guiclient.SwingRMIDeployer;
+import ca.utoronto.msrg.padres.demo.guiclient.SwingRMIDeployer;
 
 import javax.swing.JFileChooser;
 

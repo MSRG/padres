@@ -11,7 +11,7 @@
  * Created on 06-Mar-2004
  *
  */
-package ca.utoronto.msrg.padres.tools.guiclient;
+package ca.utoronto.msrg.padres.demo.guiclient;
 
 /**
  * @author Guoli Li
@@ -63,8 +63,8 @@ import ca.utoronto.msrg.padres.common.message.SubscriptionMessage;
 import ca.utoronto.msrg.padres.common.message.parser.MessageFactory;
 import ca.utoronto.msrg.padres.common.message.parser.ParseException;
 import ca.utoronto.msrg.padres.demo.workflow.resources.JobSchedulerResources;
-import ca.utoronto.msrg.padres.tools.guiclient.dialogs.IssueTrigger;
-import ca.utoronto.msrg.padres.tools.guiclient.dialogs.JobScheduleLoader;
+import ca.utoronto.msrg.padres.demo.guiclient.dialogs.IssueTrigger;
+import ca.utoronto.msrg.padres.demo.guiclient.dialogs.JobScheduleLoader;
 
 /**
  * @author gli

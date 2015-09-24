@@ -18,4 +18,4 @@ case "`uname`" in
 esac
 
 java -cp ${PADRES_HOME}/build/ -Djava.ext.dirs=${JAVA_HOME}/jre/lib/ext${PATHSEP}${PADRES_HOME}/lib \ 
-	 ca.utoronto.msrg.padres.tools.panda.TopologyGenerator $*
+	 ca.utoronto.msrg.padres.demo.panda.TopologyGenerator $*

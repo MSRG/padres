@@ -46,7 +46,7 @@ esac
 # default values
 MEMORY_MIN=16  
 MEMORY_MAX=64 
-CLIENT="ca.utoronto.msrg.padres.tools.guiclient.GUIClient"
+CLIENT="ca.utoronto.msrg.padres.demo.guiclient.GUIClient"
 CLIENT_PATH=""
 CLIENT_ID=""
 CLIENT_IP=""

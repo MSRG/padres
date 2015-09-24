@@ -5,7 +5,7 @@
  * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
  */
 
-package ca.utoronto.msrg.padres.tools.panda;
+package ca.utoronto.msrg.padres.demo.panda;
 
 /**
  * @author Alex

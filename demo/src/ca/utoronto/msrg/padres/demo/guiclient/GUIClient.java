@@ -1,4 +1,4 @@
-package ca.utoronto.msrg.padres.tools.guiclient;
+package ca.utoronto.msrg.padres.demo.guiclient;
 
 import java.awt.BorderLayout;
 import java.awt.Color;

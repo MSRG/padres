@@ -4,7 +4,7 @@
  * To change the template for this generated file go to
  * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
  */
-package ca.utoronto.msrg.padres.tools.panda.input;
+package ca.utoronto.msrg.padres.demo.panda.input;
 
 /**
  * @author cheung
@@ -16,7 +16,7 @@ package ca.utoronto.msrg.padres.tools.panda.input;
 import java.util.StringTokenizer;
 import java.util.Map;
 
-import ca.utoronto.msrg.padres.tools.panda.CommandGenerator;
+import ca.utoronto.msrg.padres.demo.panda.CommandGenerator;
 
 public class ProcessRemoveCommand extends InputCommand {
 

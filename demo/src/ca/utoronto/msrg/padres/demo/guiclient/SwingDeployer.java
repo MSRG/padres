@@ -1,4 +1,4 @@
-package ca.utoronto.msrg.padres.tools.guiclient;
+package ca.utoronto.msrg.padres.demo.guiclient;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -34,7 +34,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.text.BadLocationException;
@@ -50,9 +49,7 @@ import ca.utoronto.msrg.padres.common.message.parser.MessageFactory;
 import ca.utoronto.msrg.padres.common.message.parser.ParseException;
 import ca.utoronto.msrg.padres.common.util.CommandLine;
 import ca.utoronto.msrg.padres.demo.workflow.resources.JobSchedulerResources;
-import ca.utoronto.msrg.padres.tools.guiclient.dialogs.ConstraintsPanel;
-import ca.utoronto.msrg.padres.tools.guiclient.dialogs.IssueTrigger;
-import ca.utoronto.msrg.padres.tools.guiclient.dialogs.JobScheduleLoader;
+import ca.utoronto.msrg.padres.demo.guiclient.dialogs.ConstraintsPanel;
 
 public class SwingDeployer extends GUIClient{
 

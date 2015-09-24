@@ -1,4 +1,4 @@
-package ca.utoronto.msrg.padres.tools.panda;
+package ca.utoronto.msrg.padres.demo.panda;
 
 /*
  * Created on May 5, 2006
@@ -33,10 +33,10 @@ import java.util.Set;
 import ca.utoronto.msrg.padres.client.ClientException;
 import ca.utoronto.msrg.padres.common.message.parser.ParseException;
 import ca.utoronto.msrg.padres.common.util.io.FileOperation;
-import ca.utoronto.msrg.padres.tools.panda.input.InputCommand;
-import ca.utoronto.msrg.padres.tools.panda.input.InputCommandComparator;
-import ca.utoronto.msrg.padres.tools.panda.input.ProcessAddCommand;
-import ca.utoronto.msrg.padres.tools.panda.input.ProcessRemoveCommand;
+import ca.utoronto.msrg.padres.demo.panda.input.InputCommand;
+import ca.utoronto.msrg.padres.demo.panda.input.InputCommandComparator;
+import ca.utoronto.msrg.padres.demo.panda.input.ProcessAddCommand;
+import ca.utoronto.msrg.padres.demo.panda.input.ProcessRemoveCommand;
 
 public class CommandGenerator {
 	private final Panda panda;

@@ -1,4 +1,4 @@
-package ca.utoronto.msrg.padres.tools.panda.input;
+package ca.utoronto.msrg.padres.demo.panda.input;
 
 /*
  * Created on May 6, 2006
@@ -20,7 +20,7 @@ import java.util.Map;
 import ca.utoronto.msrg.padres.common.util.TypeChecker;
 import ca.utoronto.msrg.padres.common.util.datastructure.DataTypeException;
 import ca.utoronto.msrg.padres.common.util.datastructure.ParseException;
-import ca.utoronto.msrg.padres.tools.panda.CommandGenerator;
+import ca.utoronto.msrg.padres.demo.panda.CommandGenerator;
 
 public abstract class InputCommand {
 	protected final double time;

@@ -4,7 +4,7 @@
  * To change the template for this generated file go to
  * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
  */
-package ca.utoronto.msrg.padres.tools.guiclient.dialogs;
+package ca.utoronto.msrg.padres.demo.guiclient.dialogs;
 
 import java.awt.BorderLayout;
 import java.awt.Container;
@@ -16,7 +16,7 @@ import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
-import ca.utoronto.msrg.padres.tools.guiclient.SwingRMIDeployer;
+import ca.utoronto.msrg.padres.demo.guiclient.SwingRMIDeployer;
 
 /**
  * @author Li Guoli

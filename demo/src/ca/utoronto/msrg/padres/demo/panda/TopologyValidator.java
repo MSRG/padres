@@ -1,4 +1,4 @@
-package ca.utoronto.msrg.padres.tools.panda;
+package ca.utoronto.msrg.padres.demo.panda;
 
 /*
  * Created on May 7, 2006
@@ -33,8 +33,8 @@ package ca.utoronto.msrg.padres.tools.panda;
 import java.util.HashSet;
 import java.util.Set;
 
-import ca.utoronto.msrg.padres.tools.panda.input.InputCommand;
-import ca.utoronto.msrg.padres.tools.panda.input.ProcessRemoveCommand;
+import ca.utoronto.msrg.padres.demo.panda.input.InputCommand;
+import ca.utoronto.msrg.padres.demo.panda.input.ProcessRemoveCommand;
 
 public class TopologyValidator {
 

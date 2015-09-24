@@ -12,8 +12,8 @@ ${PADRES_HOME}/bin/stopbroker Broker2
 
 # Stop the clients and monitor
 echo Stopping clients
-pkill -u $(whoami) -f 'ca.utoronto.msrg.padres.tools.guiclient.GUIClient.* -i Publisher '
-pkill -u $(whoami) -f 'ca.utoronto.msrg.padres.tools.guiclient.GUIClient.* -i Subscriber '
+pkill -u $(whoami) -f 'ca.utoronto.msrg.padres.demo.guiclient.GUIClient.* -i Publisher '
+pkill -u $(whoami) -f 'ca.utoronto.msrg.padres.demo.guiclient.GUIClient.* -i Subscriber '
 pkill -u $(whoami) -f 'ca.utoronto.msrg.padres.tools.padresmonitor.MonitorFrame'
 
 # Stop the clients and monitor under cygwin
