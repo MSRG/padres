@@ -143,10 +143,10 @@ public class StockPublisher extends StockClient implements Runnable {
 				lastPublished = pub;
 				pubId = null;
 				pubId = super.publish(pub, brokerURI);
-				exceptionLogger.debug("Sent publication (" + pubId + "): " + pub);
+                exceptionLogger.debug("Sent publication (" + pubId + "): " + pub);
 				pubCount++;
 			} catch (ClientException e) {
-				exceptionLogger.error(e.getMessage());
+                exceptionLogger.error(e.getMessage());
 			} catch (ParseException e){
 				exceptionLogger.error(e.getMessage());
 			}
