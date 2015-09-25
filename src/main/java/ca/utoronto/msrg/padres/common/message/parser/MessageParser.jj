@@ -3,7 +3,7 @@
  */
  
 options {
-  JDK_VERSION = "1.4";
+  JDK_VERSION = "1.5";
 }
 PARSER_BEGIN(MessageParser)
 package ca.utoronto.msrg.padres.common.message.parser;
@@ -15,7 +15,8 @@ import java.text.*;
 import java.lang.UnsupportedOperationException;
 
 public class MessageParser {
-  public enum ParserType  {
+  public enum ParserType
+  {
     UNINITIALIZED,
     ADV_PARSER,
     SUB_PARSER,
@@ -119,7 +120,9 @@ CompositeSubscription CompositeSubscription(CompositeSubscription comsubparamete
 {
   Token t;
   CompositeSubscription comsubreturn;
-  if (comsubparameter == null)    comsubparameter = new CompositeSubscription();}
+  if (comsubparameter == null)
+    comsubparameter = new CompositeSubscription();
+}
 {
   comsubreturn = Term(comsubparameter)
   (
@@ -141,7 +144,9 @@ CompositeSubscription Term(CompositeSubscription comsubparameter) throws ParseEx
 // If the next token is a "[" the input is a subscription,
 // otherwise it is still a composite subscription.
   LOOKAHEAD(2)
-  "{"  {    Subscription sub;
+  "{"
+  {
+    Subscription sub;
   }
   sub = SubCompositeSubscription()
   "}"
@@ -149,7 +154,8 @@ CompositeSubscription Term(CompositeSubscription comsubparameter) throws ParseEx
     sNum++;
     String key = "s" + sNum;
 	comsubparameter.addSubscription(key, sub);
-	if (comsubparameter.getRoot() == null)	{ 
+	if (comsubparameter.getRoot() == null)
+	{ 
       CompositeNode cn = new CompositeNode(key, null, null, null);
 	  comsubparameter.setRoot(cn);	  
 	}
@@ -158,14 +164,17 @@ CompositeSubscription Term(CompositeSubscription comsubparameter) throws ParseEx
       CompositeNode cn = new CompositeNode("s" + sNum, null, null, comsubparameter.getRoot());
 	  comsubparameter.getRoot().setRightNode(cn);
 	}
-    return comsubparameter;  }
+    return comsubparameter;
+  }
   |
   "{"
-  {    CompositeSubscription comsub;
+  {
+    CompositeSubscription comsub;
   }
   comsub = CompositeSubscription(comsubparameter)
   "}"
-  {    return comsub;
+  {
+    return comsub;
   }
 }
 
@@ -181,7 +190,9 @@ TokenReturner a;
   a = ClassAttributeOperatorValueTriple()
   {
     Object obj = null;
-    switch(_parsertype) {    case SUB_PARSER:    {
+    switch(_parsertype) {
+    case SUB_PARSER:
+    {
       obj = new Subscription();
       if (a.val.image.charAt(0) == '\'' || a.val.image.charAt(0) == '\"')
       {
@@ -353,7 +364,11 @@ Subscription SubCompositeSubscription() throws ParseException:
       default:
         throw new UnsupportedOperationException("Unknown parser type: " + _parsertype);
       }
-//      if (a.val.image.charAt(0) == '\'' || a.val.image.charAt(0) == '\"') {//        sub.addPredicate(a.attr.image, new Predicate(a.op.image, a.val.image.substring(1,a.val.image.length()-1))); //      } else {//        sub.addPredicate(a.attr.image, new Predicate(a.op.image, a.val.image));//      }
+//      if (a.val.image.charAt(0) == '\'' || a.val.image.charAt(0) == '\"') {
+//        sub.addPredicate(a.attr.image, new Predicate(a.op.image, a.val.image.substring(1,a.val.image.length()-1))); 
+//      } else {
+//        sub.addPredicate(a.attr.image, new Predicate(a.op.image, a.val.image));
+//      }
     }
   )*
   {
@@ -474,8 +489,10 @@ TokenReturner AttributeOperatorValueTriple() throws ParseException :
         a.val = <ANAME>
       )
       |
-      (	      a.op = <IOPERATOR> <COMMA>
-	      (	          a.val = <IVARIABLE>
+      (
+	      a.op = <IOPERATOR> <COMMA>
+	      (
+	          a.val = <IVARIABLE>
 	          { a.valtype = TokenReturner.ValueType.STRING; }
 	          |
 	          a.val = <AVALLONG>
@@ -487,7 +504,8 @@ TokenReturner AttributeOperatorValueTriple() throws ParseException :
 	      |
 	      a.op = <ISPRESENT> <COMMA>
 	        (
-	          a.val = SVALUE()	          { a.valtype = TokenReturner.ValueType.STRING; }
+	          a.val = SVALUE()
+	          { a.valtype = TokenReturner.ValueType.STRING; }
 	          |
 	          a.val = <ANAME>
 	          { a.valtype = TokenReturner.ValueType.STRING; }
@@ -538,7 +556,8 @@ Publication Publication() throws ParseException:
        else
        {
          switch(a.valtype)
-         {           case LONG:
+         {
+           case LONG:
              Long l = new Long(a.val.image.startsWith("+") ? a.val.image.substring(1) : a.val.image);
              pub.addPair(a.attr.image, new Long(l));
              break;
@@ -550,7 +569,8 @@ Publication Publication() throws ParseException:
              break;
            default:
              throw new UnsupportedOperationException(
-               "Unknown value type: " + a.val + "(" + a.valtype + ")");         }
+               "Unknown value type: " + a.val + "(" + a.valtype + ")");
+         }
        }
      }
    )*
@@ -562,15 +582,19 @@ Publication Publication() throws ParseException:
    (
      val = <TIMEFORMAT> <SEMICOLON>
      {
-       try       {         DateFormat df = new SimpleDateFormat ("EEE MMM dd kk:mm:ss zzz yyyy");
+       try
+       {
+         DateFormat df = new SimpleDateFormat ("EEE MMM dd kk:mm:ss zzz yyyy");
          pub.setTimeStamp(df.parse(val.image));
-       }catch(java.text.ParseException e)       {
+       }catch(java.text.ParseException e)
+       {
          throw new ParseException(e.toString());    
        }
      }
    )?
    {
-     if (pub.getTimeStamp() == null)       pub.setTimeStamp(new Date());
+     if (pub.getTimeStamp() == null)
+       pub.setTimeStamp(new Date());
      return pub;
    }
 }
@@ -637,7 +661,8 @@ TokenReturner AttributeValuePair() throws ParseException:
       }
     )
     "]"
-    {      if (!attrlist.add(a.attr.image))
+    {
+      if (!attrlist.add(a.attr.image))
          throw new ParseException("Attribute " + a.attr.image + " exists multiple times" + attrlist);
       return a;
     }
@@ -654,7 +679,8 @@ Token SVALUE():
     |
     a = <SVARIABLE>
   )
-  {    return a;
+  {
+    return a;
   }
 }
 
