@@ -1,5 +1,6 @@
 package ca.utoronto.msrg.padres;
 
+import ca.utoronto.msrg.padres.common.comm.ConnectionHelper;
 import junit.framework.TestCase;
 
 import org.apache.log4j.Level;
@@ -14,7 +15,6 @@ import ca.utoronto.msrg.padres.broker.monitor.SystemMonitor;
 import ca.utoronto.msrg.padres.broker.router.Router;
 import ca.utoronto.msrg.padres.broker.router.matching.PubMsgNotConformedException;
 import ca.utoronto.msrg.padres.common.comm.CommunicationException;
-import ca.utoronto.msrg.padres.common.comm.NodeAddress;
 import ca.utoronto.msrg.padres.common.message.Advertisement;
 import ca.utoronto.msrg.padres.common.message.AdvertisementMessage;
 import ca.utoronto.msrg.padres.common.message.MessageDestination;
@@ -292,8 +292,8 @@ public class TestBrokerException extends TestCase {
 	public void testBrokerConnectUnroutableIP() throws ParseException, InterruptedException {
 		String ipStr = "142.150.237.234";
 		String brokerURI =
-			NodeAddress.makeURI(AllTests.commProtocol, ipStr, 1100,
-					"BrokerNull");
+			ConnectionHelper.makeURI(AllTests.commProtocol, ipStr, 1100,
+                    "BrokerNull");
 		Publication olConnectPub =
 			MessageFactory.createPublicationFromString("[class,'BROKER_CONTROL'],[brokerID,'"
 				+ brokerCore.getBrokerID() + "'],[command,'OVERLAY-CONNECT'],[broker,'"
@@ -313,8 +313,8 @@ public class TestBrokerException extends TestCase {
 		// Invalid IP address includes a value of 400 for the last byte.
 		String ipStr = "142.150.237.400";
 		String brokerURI =
-			NodeAddress.makeURI(AllTests.commProtocol, ipStr, 1100,
-					"BrokerNull");
+			ConnectionHelper.makeURI(AllTests.commProtocol, ipStr, 1100,
+                    "BrokerNull");
 		Publication olConnectPub =
 			MessageFactory.createPublicationFromString("[class,'BROKER_CONTROL'],[brokerID,'"
 				+ brokerCore.getBrokerID() + "'],[command,'OVERLAY-CONNECT'],[broker,'"
@@ -335,8 +335,8 @@ public class TestBrokerException extends TestCase {
 		// No broker listening at this port.
 		int port = 4000;
 		String brokerURI =
-			NodeAddress.makeURI(AllTests.commProtocol, ipStr, port,
-					"BrokerNull");
+			ConnectionHelper.makeURI(AllTests.commProtocol, ipStr, port,
+                    "BrokerNull");
 		Publication olConnectPub =
 			MessageFactory.createPublicationFromString("[class,'BROKER_CONTROL'],[brokerID,'"
 				+ brokerCore.getBrokerID() + "'],[command,'OVERLAY-CONNECT'],[broker,'"

@@ -6,6 +6,9 @@ import java.util.regex.Pattern;
 import ca.utoronto.msrg.padres.common.comm.CommSystem.CommSystemType;
 import ca.utoronto.msrg.padres.common.comm.rmi.RMIAddress;
 import ca.utoronto.msrg.padres.common.comm.socket.SocketAddress;
+import ca.utoronto.msrg.padres.common.comm.zero.ZeroAddress;
+
+import static ca.utoronto.msrg.padres.common.comm.ConnectionHelper.getLocalIPAddr;
 
 /**
  * @author Bala Maniymaran
@@ -48,7 +51,7 @@ public abstract class NodeAddress {
 		// if the host component refers to a loopback address, convert it to the local IP address.
 		// this is necessary for making the URI universally accessible (in other machines)
 		if (CommSystem.isLocalAddress(host)) {
-			host = CommSystem.getLocalIPAddr();
+			host = getLocalIPAddr(host);
 		}
 	}
 
@@ -58,94 +61,6 @@ public abstract class NodeAddress {
 
 	public String getNodeURI() {
 		return toString();
-	}
-
-	public void convertLocalhostToIPAddress() throws CommunicationException {
-		if (CommSystem.isLocalAddress(host))
-			host = CommSystem.getLocalIPAddr();
-	}
-
-	/**
-	 * Build a node URI string with the given parameters
-	 * 
-	 * @param commProtocol
-	 *            communication protocol
-	 * @param hostname
-	 *            hostname of the node
-	 * @param port
-	 *            port number of the server running at the node
-	 * @param nodeID
-	 *            the ID of the node
-	 * @return The node URI
-	 */
-	public static String makeURI(String commProtocol, String hostname, int port, String nodeID) {
-		return String.format("%s://%s:%d/%s", commProtocol, hostname, port, nodeID);
-	}
-
-	/**
-	 * Similar to the constructor {@link #NodeAddress(String)}, but implemented to be called
-	 * statically.
-	 * 
-	 * @param nodeURI
-	 *            A protocol-specific server URI
-	 * @return A protocol-specific node address, subclass of NodeAddress
-	 * @throws CommunicationException
-	 *             When there is an error parsing the URI
-	 * @see CommSystemType
-	 */
-	public static NodeAddress getAddress(String nodeURI) throws CommunicationException {
-		if (nodeURI == null) {
-			throw new CommunicationException("Null URI given");
-		}
-		CommSystemType commType = CommSystemType.getType(nodeURI);
-		switch (commType) {
-		case RMI:
-			return new RMIAddress(nodeURI);
-		case SOCKET:
-			return new SocketAddress(nodeURI);
-		default:
-			throw new CommunicationException("Communication system type not recognized");
-		}
-	}
-
-	/**
-	 * This is a helper method to parse a protocol-specific URI. To be used by {@link #parseURI()}
-	 * 
-	 * @param nodeURI
-	 *            protocol-specific URI
-	 * @return A matcher object, which can be used in parsing.
-	 * @throws CommunicationException
-	 *             If the nodeURI type is not recognized
-	 */
-	protected static Matcher getMatch(String nodeURI) throws CommunicationException {
-		String addressFormat = null;
-		CommSystemType commType = CommSystemType.getType(nodeURI);
-		switch (commType) {
-		case RMI:
-			addressFormat = RMIAddress.RMI_REG_EXP;
-			break;
-		case SOCKET:
-			addressFormat = SocketAddress.SOCKET_REG_EXP;
-			break;
-		default:
-			throw new CommunicationException("Address format not recognized");
-		}
-		Pattern addrPattern = Pattern.compile(addressFormat);
-		return addrPattern.matcher(nodeURI);
-	}
-
-	/**
-	 * Checks whether a given server URI follows the protocol-specific format
-	 * 
-	 * @param nodeURI
-	 *            The server URI to be checked for format
-	 * @return true if the format is verified correct; false otherwise
-	 * @throws CommunicationException
-	 *             if nodeURI communication type is not recognized
-	 * @see #getMatch(String)
-	 */
-	public static boolean checkFormat(String nodeURI) throws CommunicationException {
-		return getMatch(nodeURI).find();
 	}
 
 	/**

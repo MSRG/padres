@@ -43,7 +43,7 @@ public abstract class CommServer {
 	 *            The URI of the server
 	 * @throws CommunicationException
 	 *             When there is error is parsing the given URI
-	 * @see NodeAddress#getAddress(String)
+	 * @see ConnectionHelper#getAddress(String)
 	 */
 	public CommServer(NodeAddress serverAddress) throws CommunicationException {
 		this.serverAddress = serverAddress;
@@ -60,7 +60,7 @@ public abstract class CommServer {
 	}
 
 	public boolean isSameURI(String tempURI) throws CommunicationException {
-		NodeAddress tempAddress = NodeAddress.getAddress(tempURI);
+		NodeAddress tempAddress = ConnectionHelper.getAddress(tempURI);
 		return serverAddress.equals(tempAddress);
 	}
 

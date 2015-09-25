@@ -3,6 +3,7 @@ package ca.utoronto.msrg.padres.common.comm.socket;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import ca.utoronto.msrg.padres.common.comm.CommSystem.CommSystemType;
 import ca.utoronto.msrg.padres.common.comm.CommunicationException;
@@ -24,7 +25,7 @@ public class SocketAddress extends NodeAddress {
 		port = 1099;
 		remoteID = null;
 		// get the actual values from the input string
-		Matcher socketMatcher = getMatch(nodeURI);
+		Matcher socketMatcher = Pattern.compile(SOCKET_REG_EXP).matcher(nodeURI);
 		if (socketMatcher.find()) {
 			host = socketMatcher.group(1);
 			if (socketMatcher.group(3) != null) {

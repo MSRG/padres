@@ -38,8 +38,7 @@ public class SocketConnectionListener extends Thread {
 			try {
 				SocketPipe clientPipe = new SocketPipe(serverSocket.accept());
 				// create a thread to handle communication with incoming connection
-				SocketClientConnection clientConnection = createSocketClientConnection(parentServer,
-						clientPipe, connectionGroup);
+				SocketClientConnection clientConnection = createSocketClientConnection(parentServer, clientPipe, connectionGroup);
 				clientConnection.start();
 			} catch (IOException e) {
 				// it is ok to get this exception if the thread is interrupted

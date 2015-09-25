@@ -17,6 +17,8 @@ import ca.utoronto.msrg.padres.common.message.UnsubscriptionMessage;
 import ca.utoronto.msrg.padres.common.message.parser.ParseException;
 import ca.utoronto.msrg.padres.common.util.Utils;
 
+import static ca.utoronto.msrg.padres.common.comm.ConnectionHelper.getLocalIPAddr;
+
 public class BaseCommandHandler extends CommandHandler {
 
 	String localhostIPAddr = null;
@@ -24,7 +26,7 @@ public class BaseCommandHandler extends CommandHandler {
 	public BaseCommandHandler(Client client) {
 		super(client);
 		try {
-			localhostIPAddr = CommSystem.getLocalIPAddr();
+			localhostIPAddr = getLocalIPAddr(this.localhostIPAddr);
 		} catch (CommunicationException e) {
 			// Do nothing.  localhostIPAddr remains null.
 		}

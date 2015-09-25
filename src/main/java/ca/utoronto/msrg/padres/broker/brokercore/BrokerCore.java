@@ -20,6 +20,7 @@ import java.util.Map;
 
 import javax.swing.Timer;
 
+import ca.utoronto.msrg.padres.common.comm.*;
 import org.apache.log4j.Logger;
 
 import ca.utoronto.msrg.padres.broker.brokercore.BrokerConfig.CycleType;
@@ -34,13 +35,6 @@ import ca.utoronto.msrg.padres.broker.router.Router;
 import ca.utoronto.msrg.padres.broker.router.RouterFactory;
 import ca.utoronto.msrg.padres.broker.router.matching.MatcherException;
 import ca.utoronto.msrg.padres.broker.webmonitor.monitor.WebUIMonitor;
-import ca.utoronto.msrg.padres.common.comm.CommSystem;
-import ca.utoronto.msrg.padres.common.comm.CommunicationException;
-import ca.utoronto.msrg.padres.common.comm.MessageListenerInterface;
-import ca.utoronto.msrg.padres.common.comm.MessageQueue;
-import ca.utoronto.msrg.padres.common.comm.NodeAddress;
-import ca.utoronto.msrg.padres.common.comm.OutputQueue;
-import ca.utoronto.msrg.padres.common.comm.QueueHandler;
 import ca.utoronto.msrg.padres.common.message.AdvertisementMessage;
 import ca.utoronto.msrg.padres.common.message.Message;
 import ca.utoronto.msrg.padres.common.message.MessageDestination;
@@ -524,7 +518,7 @@ public class BrokerCore {
 	public String getBrokerURI() {
 		try {
 //			return commSystem.getServerURI();
-			return NodeAddress.getAddress(brokerConfig.brokerURI).getNodeURI();
+			return ConnectionHelper.getAddress(brokerConfig.brokerURI).getNodeURI();
 		} catch (CommunicationException e) {
 			e.printStackTrace();
 			System.exit(1);

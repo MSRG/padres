@@ -11,6 +11,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import ca.utoronto.msrg.padres.common.comm.zero.ZeroAddress;
+import ca.utoronto.msrg.padres.common.comm.zero.ZeroSocketServer;
 import org.apache.log4j.Logger;
 
 import ca.utoronto.msrg.padres.common.comm.rmi.RMIAddress;
@@ -44,7 +46,7 @@ public class CommSystem {
 	 * 
 	 */
 	public enum CommSystemType {
-		RMI, SOCKET;
+		RMI, SOCKET, ZERO;
 
 		/**
 		 * Given a URI string, it returns the communication sytsem type.
@@ -61,6 +63,8 @@ public class CommSystem {
 				return RMI;
 			else if (uri.toLowerCase().startsWith("socket"))
 				return SOCKET;
+            else if (uri.toLowerCase().startsWith("zero"))
+                return ZERO;
 			else
 				throw new CommunicationException("Unrecognized communication protocol: " + uri);
 		}
@@ -180,9 +184,6 @@ public class CommSystem {
 	/**
 	 * To create a server that listens for connections and messages from other entities.
 	 * 
-	 * @param serverID
-	 *            A unique identifier for the server. It must be unique in the whole system, but the
-	 *            uniqueness is not verified by the system.
 	 * @param serverURI
 	 *            URI of the server. It should specify the communication protocol type, IP address,
 	 *            and port number
@@ -196,19 +197,23 @@ public class CommSystem {
 	 * @see CommSystemType
 	 */
 	public void createListener(String serverURI) throws CommunicationException {
-		NodeAddress serverAddress = NodeAddress.getAddress(serverURI);
+		NodeAddress serverAddress = ConnectionHelper.getAddress(serverURI);
 		if (listenServers.containsKey(serverAddress)) {
 			throw new CommunicationException("A server with the URI " + serverAddress.toString()
 					+ " already exists");
 		}
-		CommServer server = null;
+        CommServer server = null;
 		switch (serverAddress.getType()) {
 		case RMI:
-			server = createNewRMIServer((RMIAddress) serverAddress);
+			server = createNewRMIServer((RMIAddress) serverAddress); //TODO: Refactor Socketaddress, there is no need for casts
 			break;
 		case SOCKET:
 			server = createNewSocketServer((SocketAddress) serverAddress);
 			break;
+        case ZERO:
+            server = createNewZeroServer((ZeroAddress) serverAddress);
+            break;
+
 		default:
 			throw new CommunicationException("Communication system type not recognized");
 		}
@@ -231,7 +236,7 @@ public class CommSystem {
 	 */
 	public void addMessageListener(String serverURI, MessageListenerInterface msgListener)
 			throws CommunicationException {
-		NodeAddress serverAddress = NodeAddress.getAddress(serverURI);
+		NodeAddress serverAddress = ConnectionHelper.getAddress(serverURI);
 		listenServers.get(serverAddress).addMessageListener(msgListener);
 	}
 
@@ -261,7 +266,7 @@ public class CommSystem {
 	 */
 	public void addConnectionListener(String serverURI, ConnectionListenerInterface connectListener)
 			throws CommunicationException {
-		NodeAddress serverAddress = NodeAddress.getAddress(serverURI);
+		NodeAddress serverAddress = ConnectionHelper.getAddress(serverURI);
 		listenServers.get(serverAddress).addConnectionListener(connectListener);
 	}
 
@@ -293,7 +298,7 @@ public class CommSystem {
 	 * @see CommSystemType
 	 */
 	public MessageSender getMessageSender(String remoteServerURI) throws CommunicationException {
-		NodeAddress remoteServerAddress = NodeAddress.getAddress(remoteServerURI);
+		NodeAddress remoteServerAddress = ConnectionHelper.getAddress(remoteServerURI);
 		switch (remoteServerAddress.getType()) {
 		case RMI:
 			return createRMIMessageSender((RMIAddress) remoteServerAddress);
@@ -302,45 +307,6 @@ public class CommSystem {
 		default:
 			throw new CommunicationException("Communication system type not recognized");
 		}
-	}
-
-	/**
-	 * Check whether a given string has the format of an IP address
-	 * 
-	 * @param addr
-	 *            The string to be checked
-	 * @return true if the string is an IP address; false otherwise
-	 */
-	public static boolean isIPAddress(String addr) {
-		return addr.matches("\\d+(\\.\\d+)+");
-	}
-
-	public static String getLocalIPAddr() throws CommunicationException {
-		if (localIPAddress != null && localIPAddress.length() != 0)
-			return localIPAddress;
-		try {
-			InetAddress localaddr = InetAddress.getLocalHost();
-			localIPAddress = localaddr.getHostAddress();
-			if (!localIPAddress.startsWith("127")) {
-				return localIPAddress;
-			} else {
-				for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements();) {
-					NetworkInterface iface = en.nextElement();
-					for (InterfaceAddress inAddr : iface.getInterfaceAddresses()) {
-						InetAddress addr = inAddr.getAddress();
-						if (addr.getAddress().length == 4 && !addr.isLoopbackAddress())
-							localIPAddress = addr.getHostAddress();
-					}
-				}
-			}
-		} catch (UnknownHostException e) {
-			throw new CommunicationException("Error in getting local IP: " + e.getMessage(), e);
-		} catch (SocketException e) {
-			throw new CommunicationException("Error in getting local IP: " + e.getMessage(), e);
-		}
-		if (localIPAddress.length() == 0)
-			throw new CommunicationException("Could not find local IP address");
-		return localIPAddress;
 	}
 
 	/**
@@ -393,6 +359,10 @@ public class CommSystem {
 		return new SocketServer(serverAddress, this);
 	}
 
+    protected ZeroSocketServer createNewZeroServer(ZeroAddress serverAddress) throws CommunicationException {
+        return new ZeroSocketServer(serverAddress, this);
+    }
+
 	protected RMIMessageSender createRMIMessageSender(
 			RMIAddress remoteServerAddress) throws CommunicationException {
 		return new RMIMessageSender(remoteServerAddress);
@@ -400,6 +370,6 @@ public class CommSystem {
 
 	protected SocketMessageSender createSocketMessageSender(
 			SocketAddress remoteServerAddress) {
-		return new SocketMessageSender(remoteServerAddress);
-	}
+        return new SocketMessageSender(remoteServerAddress);
+    }
 }

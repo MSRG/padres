@@ -52,7 +52,7 @@
 			<sysproperty key="test.comm_protocol" value="${comm}" />
 			<classpath refid="classpath" />
 			<formatter type="plain" />
-			<test name="ca.utoronto.msrg.padres.test.junit.AllTests" outfile="AllTests-${comm}-${test}.junit" />
+			<test name="ca.utoronto.msrg.padres.AllTests" outfile="AllTests-${comm}-${test}.junit" />
 		</junit>
 	</target>
 

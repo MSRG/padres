@@ -9,6 +9,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import ca.utoronto.msrg.padres.broker.monitor.SystemMonitor;
 import ca.utoronto.msrg.padres.common.comm.CommSystem.CommSystemType;
 import ca.utoronto.msrg.padres.common.comm.CommunicationException;
+import ca.utoronto.msrg.padres.common.comm.ConnectionHelper;
 import ca.utoronto.msrg.padres.common.comm.NodeAddress;
 import ca.utoronto.msrg.padres.common.comm.rmi.RMIAddress;
 import ca.utoronto.msrg.padres.common.comm.socket.SocketAddress;
@@ -163,7 +164,7 @@ public class BrokerUI {
 		mPort = "undefined";
 		mHostName = "undefined";
 		try {
-			NodeAddress brokerAddr = NodeAddress.getAddress(uri);
+			NodeAddress brokerAddr = ConnectionHelper.getAddress(uri);
 			if (brokerAddr.getType() == CommSystemType.RMI) {
 				mPort = String.valueOf(((RMIAddress) brokerAddr).getPort());
 				mHostName = ((RMIAddress) brokerAddr).getHost();

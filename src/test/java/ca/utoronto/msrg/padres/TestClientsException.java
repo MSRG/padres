@@ -1,5 +1,6 @@
 package ca.utoronto.msrg.padres;
 
+import ca.utoronto.msrg.padres.common.comm.ConnectionHelper;
 import junit.framework.TestCase;
 
 import org.apache.log4j.Level;
@@ -13,7 +14,6 @@ import ca.utoronto.msrg.padres.broker.router.matching.PubMsgNotConformedExceptio
 import ca.utoronto.msrg.padres.broker.router.matching.SubMsgNotFoundException;
 import ca.utoronto.msrg.padres.client.Client;
 import ca.utoronto.msrg.padres.client.ClientException;
-import ca.utoronto.msrg.padres.common.comm.NodeAddress;
 import ca.utoronto.msrg.padres.common.message.Advertisement;
 import ca.utoronto.msrg.padres.common.message.AdvertisementMessage;
 import ca.utoronto.msrg.padres.common.message.MessageDestination;
@@ -118,7 +118,7 @@ public class TestClientsException extends TestCase {
 		// start the ClientB and give a fake URI to connect to
 		clientB = createNewClient("B");
 		String tempAddress =
-			NodeAddress.makeURI(AllTests.commProtocol, "localhost", 1500, "BrokerNull");
+			ConnectionHelper.makeURI(AllTests.commProtocol, "localhost", 1500, "BrokerNull");
 		_brokerTester.clearAll().
 			expectConnectionFail(clientB.getClientID(), tempAddress);
 		try { clientB.connect(tempAddress); } catch (ClientException e) { }

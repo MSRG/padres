@@ -12,14 +12,10 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+import ca.utoronto.msrg.padres.common.comm.*;
 import org.apache.log4j.Logger;
 
-import ca.utoronto.msrg.padres.common.comm.CommSystem;
 import ca.utoronto.msrg.padres.common.comm.CommSystem.HostType;
-import ca.utoronto.msrg.padres.common.comm.CommunicationException;
-import ca.utoronto.msrg.padres.common.comm.MessageQueue;
-import ca.utoronto.msrg.padres.common.comm.MessageSender;
-import ca.utoronto.msrg.padres.common.comm.NodeAddress;
 import ca.utoronto.msrg.padres.common.message.Advertisement;
 import ca.utoronto.msrg.padres.common.message.AdvertisementMessage;
 import ca.utoronto.msrg.padres.common.message.CompositeSubscription;
@@ -375,7 +371,7 @@ public class Client {
 	 */
 	public BrokerState getBrokerState(String brokerURI) throws ClientException {
 		try {
-			NodeAddress brokerAddress = NodeAddress.getAddress(brokerURI);
+			NodeAddress brokerAddress = ConnectionHelper.getAddress(brokerURI);
 			return brokerStates.get(brokerAddress);
 		} catch (CommunicationException e) {
 			throw new ClientException("Could not get broker status: " + e.getMessage(), e);
@@ -578,7 +574,7 @@ public class Client {
 	 */
 	public BrokerState connect(String brokerURI) throws ClientException {
 		try {
-			NodeAddress brokerAddr = NodeAddress.getAddress(brokerURI);
+			NodeAddress brokerAddr = ConnectionHelper.getAddress(brokerURI);
 			if (brokerStates.containsKey(brokerAddr)) {
 				throw new ClientException("Server connection already exists");
 			} else {
@@ -620,7 +616,7 @@ public class Client {
 	 */
 	public boolean connectionIsActive(String brokerURI) throws ClientException {
 		try {
-			NodeAddress brokerAddr = NodeAddress.getAddress(brokerURI);
+			NodeAddress brokerAddr = ConnectionHelper.getAddress(brokerURI);
 			return brokerStates.containsKey(brokerAddr);
 		} catch (CommunicationException e) {
 			throw new ClientException(e.getMessage(), e);

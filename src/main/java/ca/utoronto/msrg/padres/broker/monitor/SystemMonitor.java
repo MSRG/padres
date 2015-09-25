@@ -337,8 +337,9 @@ public class SystemMonitor extends Thread {
 	private void sendSubscriptionForMsgQueue() {
 		Subscription monitorSub;
 		try {
-			monitorSub = MessageFactory.createSubscriptionFromString("[class,eq," + MESSAGE_CLASS
-					+ "],[brokerID,eq,'" + getBrokerID() + "']");
+            String brokerId = getBrokerID();
+            monitorSub = MessageFactory.createSubscriptionFromString("[class,eq," + MESSAGE_CLASS
+					+ "],[brokerID,eq,'" + brokerId + "']");
 		} catch (ParseException e) {
 			exceptionLogger.error(e.getMessage());
 			return;

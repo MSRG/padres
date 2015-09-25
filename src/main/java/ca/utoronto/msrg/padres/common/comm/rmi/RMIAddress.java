@@ -3,6 +3,7 @@ package ca.utoronto.msrg.padres.common.comm.rmi;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import ca.utoronto.msrg.padres.common.comm.CommSystem.CommSystemType;
 import ca.utoronto.msrg.padres.common.comm.CommunicationException;
@@ -24,7 +25,7 @@ public class RMIAddress extends NodeAddress {
 		port = 1099;
 		remoteID = null;
 		// get the actual values from the input string
-		Matcher rmiMatcher = getMatch(nodeURI);
+		Matcher rmiMatcher = Pattern.compile(RMI_REG_EXP).matcher(nodeURI);
 		if (rmiMatcher.find()) {
 			host = rmiMatcher.group(1);
 			if (rmiMatcher.group(3) != null) {
