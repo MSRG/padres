@@ -1,19 +1,17 @@
 package ca.utoronto.msrg.padres.tools.padresmonitor;
 
+import ca.utoronto.msrg.padres.broker.monitor.SystemMonitor;
+import ca.utoronto.msrg.padres.common.comm.CommSystem.CommSystemType;
+import ca.utoronto.msrg.padres.common.comm.CommunicationException;
+import ca.utoronto.msrg.padres.common.comm.ConnectionHelper;
+import ca.utoronto.msrg.padres.common.comm.INodeAddress;
+import ca.utoronto.msrg.padres.common.message.MessageDestination;
+
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-
-import ca.utoronto.msrg.padres.broker.monitor.SystemMonitor;
-import ca.utoronto.msrg.padres.common.comm.CommSystem.CommSystemType;
-import ca.utoronto.msrg.padres.common.comm.CommunicationException;
-import ca.utoronto.msrg.padres.common.comm.ConnectionHelper;
-import ca.utoronto.msrg.padres.common.comm.NodeAddress;
-import ca.utoronto.msrg.padres.common.comm.rmi.RMIAddress;
-import ca.utoronto.msrg.padres.common.comm.socket.SocketAddress;
-import ca.utoronto.msrg.padres.common.message.MessageDestination;
 
 /**
  * This class encapsulates all the properties of a BrokerUI element. This class has package level
@@ -164,13 +162,13 @@ public class BrokerUI {
 		mPort = "undefined";
 		mHostName = "undefined";
 		try {
-			NodeAddress brokerAddr = ConnectionHelper.getAddress(uri);
+			INodeAddress brokerAddr = ConnectionHelper.getAddress(uri);
 			if (brokerAddr.getType() == CommSystemType.RMI) {
-				mPort = String.valueOf(((RMIAddress) brokerAddr).getPort());
-				mHostName = ((RMIAddress) brokerAddr).getHost();
+				mPort = String.valueOf(brokerAddr.getPort());
+				mHostName = brokerAddr.getHost();
 			} else if (brokerAddr.getType() == CommSystemType.SOCKET) {
-				mPort = String.valueOf(((SocketAddress) brokerAddr).getPort());
-				mHostName = ((SocketAddress) brokerAddr).getHost();
+				mPort = String.valueOf(brokerAddr.getPort());
+				mHostName = brokerAddr.getHost();
 			}
 		} catch (CommunicationException e) {
 			e.printStackTrace();

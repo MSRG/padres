@@ -1,7 +1,7 @@
 package ca.utoronto.msrg.padres.tester;
 
 import ca.utoronto.msrg.padres.client.BrokerState;
-import ca.utoronto.msrg.padres.common.comm.NodeAddress;
+import ca.utoronto.msrg.padres.common.comm.INodeAddress;
 import ca.utoronto.msrg.padres.common.message.PublicationMessage;
 
 /**
@@ -23,7 +23,7 @@ public class TesterBrokerState extends BrokerState {
 	public final IBrokerTester _brokerTester;
 	public final String _clientID;
 
-	public TesterBrokerState(IBrokerTester brokerTester, String clientID, NodeAddress brokerAddress) {
+	public TesterBrokerState(IBrokerTester brokerTester, String clientID, INodeAddress brokerAddress) {
 		super(brokerAddress);
 		
 		_brokerTester = brokerTester;

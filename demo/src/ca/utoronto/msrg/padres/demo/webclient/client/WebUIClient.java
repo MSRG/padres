@@ -1,21 +1,19 @@
 package ca.utoronto.msrg.padres.demo.webclient.client;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
 import ca.utoronto.msrg.padres.client.BrokerState;
 import ca.utoronto.msrg.padres.client.Client;
 import ca.utoronto.msrg.padres.client.ClientException;
-import ca.utoronto.msrg.padres.common.comm.NodeAddress;
-import ca.utoronto.msrg.padres.common.message.Advertisement;
+import ca.utoronto.msrg.padres.common.comm.INodeAddress;
 import ca.utoronto.msrg.padres.common.message.CompositeSubscription;
 import ca.utoronto.msrg.padres.common.message.Publication;
-import ca.utoronto.msrg.padres.common.message.Subscription;
 import ca.utoronto.msrg.padres.common.message.parser.MessageFactory;
 import ca.utoronto.msrg.padres.common.message.parser.MessageParser;
 import ca.utoronto.msrg.padres.common.message.parser.ParseException;
 import ca.utoronto.msrg.padres.demo.webclient.services.PageService;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /*
  * Just run this class as a normal Java application to start the client.
@@ -144,7 +142,7 @@ public class WebUIClient extends Client {
 		return unadvId;
 	}
 
-	public NodeAddress handleConnect(String addr) throws ClientException {
+	public INodeAddress handleConnect(String addr) throws ClientException {
 		// The second argument was originally for use with the client names
 		// patch, which allows clients to specify a "human readable" client
 		// name on connection. This patch is not included in the main branch

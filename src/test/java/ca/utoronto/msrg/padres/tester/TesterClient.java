@@ -4,7 +4,7 @@ import ca.utoronto.msrg.padres.client.BrokerState;
 import ca.utoronto.msrg.padres.client.Client;
 import ca.utoronto.msrg.padres.client.ClientConfig;
 import ca.utoronto.msrg.padres.client.ClientException;
-import ca.utoronto.msrg.padres.common.comm.NodeAddress;
+import ca.utoronto.msrg.padres.common.comm.INodeAddress;
 
 /**
  * Auxiliary class used as part of test framework. The class represents
@@ -38,7 +38,7 @@ public class TesterClient extends Client {
 	}
 
 	@Override
-	protected BrokerState createBrokerState(NodeAddress brokerAddress) {
+	protected BrokerState createBrokerState(INodeAddress brokerAddress) {
 		return new TesterBrokerState(_brokerTester, _clientId, brokerAddress);
 	}
 	

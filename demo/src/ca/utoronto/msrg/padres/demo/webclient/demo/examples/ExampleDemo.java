@@ -4,14 +4,14 @@
  */
 package ca.utoronto.msrg.padres.demo.webclient.demo.examples;
 
-import java.util.Properties;
-
 import ca.utoronto.msrg.padres.client.ClientException;
-import ca.utoronto.msrg.padres.common.comm.NodeAddress;
+import ca.utoronto.msrg.padres.common.comm.INodeAddress;
 import ca.utoronto.msrg.padres.demo.webclient.client.ClientEvent;
-import ca.utoronto.msrg.padres.demo.webclient.client.WebClientException;
 import ca.utoronto.msrg.padres.demo.webclient.client.EventQueue;
+import ca.utoronto.msrg.padres.demo.webclient.client.WebClientException;
 import ca.utoronto.msrg.padres.demo.webclient.client.WebUIClient;
+
+import java.util.Properties;
 
 /*
  * Example of how to write Java code to support custom demos
@@ -28,7 +28,7 @@ public class ExampleDemo {
 	 * Ignore properties. The entire demo is self-contained in this method.
 	 */
 	public Properties demo1(Properties props) throws WebClientException, ClientException {
-		NodeAddress bid;
+		INodeAddress bid;
 		try {
 			bid = client.handleConnect("socket://localhost:1098/Broker1");
 			client.handleConnect("localhost:1097");
@@ -71,7 +71,7 @@ public class ExampleDemo {
 			throw new WebClientException("Missing argument(s) to Demo #2");
 
 		// run the demo
-		NodeAddress bid = client.handleConnect(broker);
+		INodeAddress bid = client.handleConnect(broker);
 		client.handleAdvertise(adv, bid.getNodeURI());
 		client.handleSubscribe(sub, bid.getNodeURI());
 		client.handlePublish(pub1, bid.getNodeURI());
@@ -106,7 +106,7 @@ public class ExampleDemo {
 		}
 
 		String addr = props.getProperty("broker", "rmi://localhost:1099/Broker1");
-		NodeAddress bid = client.handleConnect(addr);
+		INodeAddress bid = client.handleConnect(addr);
 		client.handleAdvertise("[class,eq,Demo3],[counter,>=,0]", bid.getNodeURI());
 		stream = new PubStream(delay, bid.getNodeURI());
 		stream.start();

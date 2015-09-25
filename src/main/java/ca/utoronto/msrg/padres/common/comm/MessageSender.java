@@ -40,7 +40,7 @@ public abstract class MessageSender {
 	/**
 	 * The URI of the remote server to connect; it is null when connected to a client
 	 */
-	protected NodeAddress remoteServerAddress = null;
+	protected INodeAddress remoteServerAddress = null;
 
 	/**
 	 * To mark whether a connection is active. Child classes must make sure to set/unset this
@@ -54,7 +54,7 @@ public abstract class MessageSender {
 	 * @param serverURI
 	 *            The URI of the remote server to connect
 	 */
-	public MessageSender(NodeAddress remoteAddress) {
+	public MessageSender(INodeAddress remoteAddress) {
 		remoteServerAddress = remoteAddress;
 		connected = false;
 	}

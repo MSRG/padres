@@ -1,57 +1,44 @@
 package ca.utoronto.msrg.padres.common.comm.socket;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
+import ca.utoronto.msrg.padres.common.comm.CommSystem.CommSystemType;
+import ca.utoronto.msrg.padres.common.comm.CommunicationException;
+import ca.utoronto.msrg.padres.common.comm.INodeAddress;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import ca.utoronto.msrg.padres.common.comm.CommSystem.CommSystemType;
-import ca.utoronto.msrg.padres.common.comm.CommunicationException;
-import ca.utoronto.msrg.padres.common.comm.NodeAddress;
+import static ca.utoronto.msrg.padres.common.comm.ConnectionHelper.getLocalIPAddr;
 
-public class SocketAddress extends NodeAddress {
+public class SocketAddress implements INodeAddress {
 
-	public static final String SOCKET_REG_EXP = "socket://([^:/]+)(:(\\d+))?/(.+)";
+	private static final String SOCKET_REG_EXP = "socket://([^:/]+)(:(\\d+))?/(.+)";
+    private final CommSystemType type;
+    private String host;
+    private int port;
+    private String remoteID;
 
-	public SocketAddress(String nodeURI) throws CommunicationException {
-		super(nodeURI);
+    public SocketAddress(String nodeURI) throws CommunicationException {
 		type = CommSystemType.SOCKET;
+        parseURI(nodeURI);
 	}
 
-	@Override
-	protected void parseURI(String nodeURI) throws CommunicationException {
-		// set the default values
-		host = "localhost";
-		port = 1099;
-		remoteID = null;
-		// get the actual values from the input string
-		Matcher socketMatcher = Pattern.compile(SOCKET_REG_EXP).matcher(nodeURI);
-		if (socketMatcher.find()) {
-			host = socketMatcher.group(1);
-			if (socketMatcher.group(3) != null) {
-				port = Integer.parseInt(socketMatcher.group(3));
-			}
-			remoteID = socketMatcher.group(4);
-		} else {
-			throw new CommunicationException("Malformed remote broker socket URI: " + nodeURI);
-		}
-	}
-
-	public String getHost() {
-		return host;
-	}
-
-	public void setHost(String host) {
-		this.host = host;
-	}
-
-	public int getPort() {
-		return port;
-	}
-
-	public String getNodeID() {
-		return remoteID;
-	}
+    void parseURI(String nodeURI) throws CommunicationException {
+        // set the default values
+        host = "localhost";
+        port = 1099;
+        remoteID = null;
+        // get the actual values from the input string
+        Matcher socketMatcher = Pattern.compile(SOCKET_REG_EXP).matcher(nodeURI);
+        if (socketMatcher.find()) {
+            host = getLocalIPAddr(socketMatcher.group(1));
+            if (socketMatcher.group(3) != null) {
+                port = Integer.parseInt(socketMatcher.group(3));
+            }
+            remoteID = socketMatcher.group(4);
+        } else {
+            throw new CommunicationException("Malformed remote broker socket URI: " + nodeURI);
+        }
+    }
 
 	@Override
 	public boolean equals(Object o) {
@@ -63,24 +50,42 @@ public class SocketAddress extends NodeAddress {
 		return false;
 	}
 
-	@Override
-	public boolean isEqual(String checkURI) throws CommunicationException {
-		try {
-			SocketAddress checkAddr = new SocketAddress(checkURI);
-			InetAddress checkHost = InetAddress.getByName(checkAddr.host);
-			checkURI = String.format("socket://%s:%d/%s", checkHost.getHostAddress(),
-					checkAddr.port, checkAddr.remoteID);
-			InetAddress thisHost = InetAddress.getByName(checkAddr.host);
-			String thisURI = String.format("socket://%s:%d/%s", thisHost.getHostAddress(), port,
-					remoteID);
-			return thisURI.equalsIgnoreCase(checkURI);
-		} catch (UnknownHostException e) {
-			throw new CommunicationException(e);
-		}
+    @Override
+    public int hashCode() {
+        int result = type.hashCode();
+        result = 31 * result + host.hashCode();
+        result = 31 * result + port;
+        result = 31 * result + remoteID.hashCode();
+        return result;
+    }
+
+    public String toString() {
+
+        return String.format("socket://%s:%d/%s", host, port, remoteID);
 	}
 
-	public String toString() {
-		return String.format("socket://%s:%d/%s", host, port, remoteID);
-	}
+    @Override
+    public CommSystemType getType() {
+        return this.type;
+    }
 
+    @Override
+    public String getNodeURI() {
+        return this.toString();
+    }
+
+    @Override
+    public String getNodeID() {
+        return this.remoteID;
+    }
+
+    @Override
+    public String getHost() {
+        return this.host;
+    }
+
+    @Override
+    public int getPort() {
+        return this.port;
+    }
 }

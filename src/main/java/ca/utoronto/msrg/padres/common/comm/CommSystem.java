@@ -104,7 +104,7 @@ public class CommSystem {
 	 * by their specific ID given at the time of creation. These servers can be of different
 	 * communication types (RMI, socket, etc.)
 	 */
-	protected Map<NodeAddress, CommServer> listenServers;
+	protected Map<INodeAddress, CommServer> listenServers;
 	
 	private boolean shutdown = false;
 
@@ -116,7 +116,7 @@ public class CommSystem {
 	 */
 	public CommSystem() throws CommunicationException {
 		defaultServer = null;
-		listenServers = new HashMap<NodeAddress, CommServer>();
+		listenServers = new HashMap<INodeAddress, CommServer>();
 		findLocalIPv4Addresses();
 	}
 
@@ -159,7 +159,7 @@ public class CommSystem {
 		return defaultServer.getServerURI();
 	}
 
-	public NodeAddress getServerAddress() throws CommunicationException {
+	public INodeAddress getServerAddress() throws CommunicationException {
 		return defaultServer.getAddress();
 	}
 
@@ -197,7 +197,7 @@ public class CommSystem {
 	 * @see CommSystemType
 	 */
 	public void createListener(String serverURI) throws CommunicationException {
-		NodeAddress serverAddress = ConnectionHelper.getAddress(serverURI);
+		INodeAddress serverAddress = ConnectionHelper.getAddress(serverURI);
 		if (listenServers.containsKey(serverAddress)) {
 			throw new CommunicationException("A server with the URI " + serverAddress.toString()
 					+ " already exists");
@@ -236,7 +236,7 @@ public class CommSystem {
 	 */
 	public void addMessageListener(String serverURI, MessageListenerInterface msgListener)
 			throws CommunicationException {
-		NodeAddress serverAddress = ConnectionHelper.getAddress(serverURI);
+		INodeAddress serverAddress = ConnectionHelper.getAddress(serverURI);
 		listenServers.get(serverAddress).addMessageListener(msgListener);
 	}
 
@@ -266,7 +266,7 @@ public class CommSystem {
 	 */
 	public void addConnectionListener(String serverURI, ConnectionListenerInterface connectListener)
 			throws CommunicationException {
-		NodeAddress serverAddress = ConnectionHelper.getAddress(serverURI);
+		INodeAddress serverAddress = ConnectionHelper.getAddress(serverURI);
 		listenServers.get(serverAddress).addConnectionListener(connectListener);
 	}
 
@@ -298,7 +298,7 @@ public class CommSystem {
 	 * @see CommSystemType
 	 */
 	public MessageSender getMessageSender(String remoteServerURI) throws CommunicationException {
-		NodeAddress remoteServerAddress = ConnectionHelper.getAddress(remoteServerURI);
+		INodeAddress remoteServerAddress = ConnectionHelper.getAddress(remoteServerURI);
 		switch (remoteServerAddress.getType()) {
 		case RMI:
 			return createRMIMessageSender((RMIAddress) remoteServerAddress);

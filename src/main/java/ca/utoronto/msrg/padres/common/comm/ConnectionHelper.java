@@ -39,7 +39,7 @@ public class ConnectionHelper {
 	 *             When there is an error parsing the URI
 	 * @see CommSystem.CommSystemType
 	 */
-	public static NodeAddress getAddress(String nodeURI) throws CommunicationException {
+	public static INodeAddress getAddress(String nodeURI) throws CommunicationException {
 		if (nodeURI == null) {
 			throw new CommunicationException("Null URI given");
 		}

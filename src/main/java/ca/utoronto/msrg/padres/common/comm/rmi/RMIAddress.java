@@ -1,25 +1,28 @@
 package ca.utoronto.msrg.padres.common.comm.rmi;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
+import ca.utoronto.msrg.padres.common.comm.CommSystem.CommSystemType;
+import ca.utoronto.msrg.padres.common.comm.CommunicationException;
+import ca.utoronto.msrg.padres.common.comm.INodeAddress;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import ca.utoronto.msrg.padres.common.comm.CommSystem.CommSystemType;
-import ca.utoronto.msrg.padres.common.comm.CommunicationException;
-import ca.utoronto.msrg.padres.common.comm.NodeAddress;
+import static ca.utoronto.msrg.padres.common.comm.ConnectionHelper.getLocalIPAddr;
 
-public class RMIAddress extends NodeAddress {
+public class RMIAddress implements INodeAddress {
 
 	public static final String RMI_REG_EXP = "rmi://([^:/]+)(:(\\d+))?/(.+)";
+    private final CommSystemType type;
+    private String host;
+    private int port;
+    private String remoteID;
 
-	public RMIAddress(String nodeURI) throws CommunicationException {
-		super(nodeURI);
+    public RMIAddress(String nodeURI) throws CommunicationException { //TODO: Constructors should not throw exceptions
 		type = CommSystemType.RMI;
+        parseURI(nodeURI);
 	}
 
-	@Override
-	protected void parseURI(String nodeURI) throws CommunicationException {
+	private void parseURI(String nodeURI) throws CommunicationException {
 		// set the default values
 		host = "localhost";
 		port = 1099;
@@ -27,7 +30,7 @@ public class RMIAddress extends NodeAddress {
 		// get the actual values from the input string
 		Matcher rmiMatcher = Pattern.compile(RMI_REG_EXP).matcher(nodeURI);
 		if (rmiMatcher.find()) {
-			host = rmiMatcher.group(1);
+			host = getLocalIPAddr(rmiMatcher.group(1));
 			if (rmiMatcher.group(3) != null) {
 				port = Integer.parseInt(rmiMatcher.group(3));
 			}
@@ -37,22 +40,7 @@ public class RMIAddress extends NodeAddress {
 		}
 	}
 
-	@Override
-	public boolean isEqual(String checkURI) throws CommunicationException {
-		try {
-			RMIAddress checkAddr = new RMIAddress(checkURI);
-			InetAddress checkHost = InetAddress.getByName(checkAddr.host);
-			checkURI = String.format("rmi://%s:%d/%s", checkHost.getHostAddress(), checkAddr.port,
-					checkAddr.remoteID);
-			InetAddress thisHost = InetAddress.getByName(checkAddr.host);
-			String thisURI = String.format("rmi://%s:%d/%s", thisHost.getHostAddress(), port,
-					remoteID);
-			return thisURI.equalsIgnoreCase(checkURI);
-		} catch (UnknownHostException e) {
-			throw new CommunicationException(e);
-		}
-	}
-
+    /*
 	public String getHost() {
 		return host;
 	}
@@ -63,9 +51,18 @@ public class RMIAddress extends NodeAddress {
 
 	public String getNodeID() {
 		return remoteID;
-	}
+	}*/
 
-	@Override
+    @Override
+    public int hashCode() {
+        int result = type.hashCode();
+        result = 31 * result + host.hashCode();
+        result = 31 * result + port;
+        result = 31 * result + remoteID.hashCode();
+        return result;
+    }
+
+    @Override
 	public boolean equals(Object o) {
 		if (!(o instanceof RMIAddress))
 			return false;
@@ -78,4 +75,28 @@ public class RMIAddress extends NodeAddress {
 		return String.format("rmi://%s:%d/%s", host, port, remoteID);
 	}
 
+    @Override
+    public CommSystemType getType() {
+        return this.type;
+    }
+
+    @Override
+    public String getNodeURI() {
+        return this.toString();
+    }
+
+    @Override
+    public String getNodeID() {
+        return this.remoteID;
+    }
+
+    @Override
+    public String getHost() {
+        return this.host;
+    }
+
+    @Override
+    public int getPort() {
+        return this.port;
+    }
 }
