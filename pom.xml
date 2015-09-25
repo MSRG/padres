@@ -44,6 +44,7 @@
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>3.8.2</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>mysql</groupId>
@@ -68,7 +69,6 @@
     </dependencies>
 
     <build>
-        <testSourceDirectory>src/main/java/ca/utoronto/msrg/padres/test/junit</testSourceDirectory>
         <plugins>
             <plugin>
                 <groupId>com.helger.maven</groupId>
@@ -90,7 +90,15 @@
                     </execution>
                 </executions>
             </plugin>
-
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.10.3</version>
+                <configuration>
+                    <outputDirectory>${project.build.directory}/doc/padres/</outputDirectory>
+                    <bottom><![CDATA[Copyright 2003, <a href="http://www.msrg.utoronto.ca">MSRG<a>]]> Copyright (c) 2003 Middleware Systems Research Group, University of Toronto</bottom>
+                </configuration>
+            </plugin>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.2</version>
@@ -114,10 +122,11 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-report-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jxr-plugin</artifactId>
+                <version>2.18.1</version>
+                <configuration>
+                    <showSuccess>false</showSuccess>
+                    <outputName>${basedir}/doc/testresults/unit-tests-report</outputName>
+                </configuration>
             </plugin>
         </plugins>
     </reporting>
