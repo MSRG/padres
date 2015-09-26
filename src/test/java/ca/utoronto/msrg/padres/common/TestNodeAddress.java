@@ -1,5 +1,6 @@
 package ca.utoronto.msrg.padres.common;
 
+import ca.utoronto.msrg.padres.common.comm.CommSystem;
 import ca.utoronto.msrg.padres.common.comm.CommunicationException;
 import ca.utoronto.msrg.padres.common.comm.ConnectionHelper;
 import ca.utoronto.msrg.padres.common.comm.INodeAddress;
@@ -21,6 +22,7 @@ public class TestNodeAddress extends TestCase {
         INodeAddress address = ConnectionHelper.getAddress(uri);
 
         assertEquals("rmi1", address.getNodeID());
+        assertEquals(CommSystem.CommSystemType.RMI, address.getType());
         assertEquals(RMIAddress.class, address.getClass());
         assertEquals(8080, address.getPort());
     }
@@ -31,6 +33,7 @@ public class TestNodeAddress extends TestCase {
         INodeAddress address = ConnectionHelper.getAddress(uri);
 
         assertEquals("sock1", address.getNodeID());
+        assertEquals(CommSystem.CommSystemType.SOCKET, address.getType());
         assertEquals(SocketAddress.class, address.getClass());
         assertEquals(8080, address.getPort());
     }
@@ -41,6 +44,7 @@ public class TestNodeAddress extends TestCase {
         INodeAddress address = ConnectionHelper.getAddress(uri);
 
         assertEquals("zerotcp", address.getNodeID());
+        assertEquals(CommSystem.CommSystemType.ZERO, address.getType());
         assertEquals(ZeroAddress.class, address.getClass());
         assertEquals(8080, address.getPort());
     }

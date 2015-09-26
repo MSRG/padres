@@ -74,7 +74,7 @@ public class ZeroAddress implements INodeAddress {
 
     @Override
     public CommSystem.CommSystemType getType() {
-        return null;
+        return this.type;
     }
 
     @Override

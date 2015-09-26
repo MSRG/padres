@@ -11,12 +11,11 @@ import junit.framework.TestSuite;
  */
 public class TestBasicZero extends TestCase  {
 
-    public void testStartBrokerWithZero() throws BrokerCoreException {
+    public void test_Broker_with_zero_should_initialize() throws BrokerCoreException {
         BrokerConfig cfg = new BrokerConfig();
-        cfg.setBrokerURI("zero-tcp://127.0.0.1:5555");
+        cfg.setBrokerURI("zero-tcp://127.0.0.1:5555/broker1");
 
         BrokerCore bc = new BrokerCore(cfg);
         bc.initialize();
-
     }
 }
