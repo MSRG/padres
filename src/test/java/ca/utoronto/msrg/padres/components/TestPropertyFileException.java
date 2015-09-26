@@ -1,8 +1,12 @@
 package ca.utoronto.msrg.padres.components;
+import org.junit.Before;
+import org.junit.After;
+
+import org.junit.Test;
 
 import java.io.IOException;
 
-import junit.framework.TestCase;
+import org.junit.Assert;
 import ca.utoronto.msrg.padres.broker.brokercore.BrokerConfig;
 import ca.utoronto.msrg.padres.broker.brokercore.BrokerCore;
 import ca.utoronto.msrg.padres.broker.brokercore.BrokerCoreException;
@@ -12,18 +16,20 @@ import ca.utoronto.msrg.padres.broker.brokercore.BrokerCoreException;
  * 
  * @author Shuang Hou
  */
-public class TestPropertyFileException extends TestCase {
+public class TestPropertyFileException extends Assert {
 
 	private static final String FILE_SEP = System.getProperty("file.separator")
 			+ System.getProperty("file.separator");
 
 	private BrokerCore brokerCore;
 
-	protected void setUp() throws Exception {
+   @Before
+   public void setUp() throws Exception {
 	}
 
-	protected void tearDown() throws Exception {
-		super.tearDown();
+   @After
+   public void tearDown() throws Exception {
+
 		if (brokerCore != null && brokerCore.isRunning()) {
 			brokerCore.shutdown();
 			brokerCore = null;
@@ -37,6 +43,7 @@ public class TestPropertyFileException extends TestCase {
 	 * @throws IOException
 	 * @throws BrokerCoreException
 	 */
+   @Test
 	public void testPropertyFileMissingURIKey() throws IOException, BrokerCoreException {
 		// For now, padres take the 1099 as defalt.
 		String tempPropsFileName = BrokerConfig.PADRES_HOME + "etc" + FILE_SEP + "test" + FILE_SEP
@@ -55,6 +62,7 @@ public class TestPropertyFileException extends TestCase {
 	 * @throws IOException
 	 * @throws BrokerCoreException
 	 */
+   @Test
 	public void testPropertyFileMissingURIValue() throws IOException, BrokerCoreException {
 		// For now, padres take the 1099 as defalt.
 		String tempPropsFileName = BrokerConfig.PADRES_HOME + "etc" + FILE_SEP + "test" + FILE_SEP
@@ -77,6 +85,7 @@ public class TestPropertyFileException extends TestCase {
 	 * @throws IOException
 	 * @throws BrokerCoreException
 	 */
+   @Test
 	public void testPropertyFileMissingHBKey() throws IOException, BrokerCoreException {
 		// For now, padres take the HeartBeat=OFF as defalt.
 		String tempPropsFileName = BrokerConfig.PADRES_HOME + "etc" + FILE_SEP + "test" + FILE_SEP
@@ -95,6 +104,7 @@ public class TestPropertyFileException extends TestCase {
 	 * @throws IOException
 	 * @throws BrokerCoreException
 	 */
+   @Test
 	public void testPropertyFileMissingHBValue() throws IOException, BrokerCoreException {
 		// For now, padres take the HeartBeat=OFF as defalt.
 		String tempPropsFileName = BrokerConfig.PADRES_HOME + "etc" + FILE_SEP + "test" + FILE_SEP
@@ -111,6 +121,7 @@ public class TestPropertyFileException extends TestCase {
 	 * @throws IOException
 	 * @throws BrokerCoreException
 	 */
+   @Test
 	public void testNotExistingPropertyFile() throws IOException, BrokerCoreException {
 		String tempPropsFileName = BrokerConfig.PADRES_HOME + "etc" + FILE_SEP + "test" + FILE_SEP
 				+ "junit" + FILE_SEP + "othersuite" + FILE_SEP + "notExisting.properties";

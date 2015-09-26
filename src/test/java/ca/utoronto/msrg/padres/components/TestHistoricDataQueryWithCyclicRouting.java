@@ -1,8 +1,12 @@
 package ca.utoronto.msrg.padres.components;
+import org.junit.Before;
+import org.junit.After;
+
+import org.junit.Test;
 
 import java.sql.SQLException;
 
-import junit.framework.TestCase;
+import org.junit.Assert;
 import ca.utoronto.msrg.padres.broker.brokercore.BrokerCore;
 import ca.utoronto.msrg.padres.broker.brokercore.BrokerCoreException;
 import ca.utoronto.msrg.padres.broker.brokercore.InputQueueHandler;
@@ -27,7 +31,7 @@ import ca.utoronto.msrg.padres.PatternFilter;
  * @author shou, Bala Maniymaran
  */
 
-public class TestHistoricDataQueryWithCyclicRouting extends TestCase {
+public class TestHistoricDataQueryWithCyclicRouting extends Assert {
 
 	private BrokerCore brokerCore1;
 
@@ -46,7 +50,8 @@ public class TestHistoricDataQueryWithCyclicRouting extends TestCase {
 	PatternFilter clientMsgFilter;
 
 
-	protected void setUp() throws Exception {
+   @Before
+   public void setUp() throws Exception {
 		// start a broker
 		String[] managers = { "DB" };
 		AllTests.brokerConfig01.setManagers(managers);
@@ -76,8 +81,9 @@ public class TestHistoricDataQueryWithCyclicRouting extends TestCase {
 		LogSetup.addAppender("MessagePath", clientMessageWatcher);
 	}
 
-	protected void tearDown() throws Exception {
-		super.tearDown();
+   @After
+   public void tearDown() throws Exception {
+
 	
 		clientA.shutdown();
 		clientB.shutdown();
@@ -100,6 +106,7 @@ public class TestHistoricDataQueryWithCyclicRouting extends TestCase {
 	 * @throws ClientException
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testHistoricDataQueryIntersectCyclicRouting() throws SQLException,
 			BrokerCoreException, ClientException, ParseException {
 		brokerCore1.getController().getLifeCycleManager().getDBHandler().getDBConnector().clearTables();

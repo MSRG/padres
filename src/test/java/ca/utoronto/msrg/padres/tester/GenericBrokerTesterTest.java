@@ -1,4 +1,8 @@
 package ca.utoronto.msrg.padres.tester;
+import org.junit.Before;
+import org.junit.After;
+
+import org.junit.Test;
 
 import ca.utoronto.msrg.padres.common.message.Advertisement;
 import ca.utoronto.msrg.padres.common.message.AdvertisementMessage;
@@ -7,7 +11,7 @@ import ca.utoronto.msrg.padres.common.message.Predicate;
 import ca.utoronto.msrg.padres.common.message.Publication;
 import ca.utoronto.msrg.padres.common.message.Subscription;
 import ca.utoronto.msrg.padres.common.message.SubscriptionMessage;
-import junit.framework.TestCase;
+import org.junit.Assert;
 
 /**
  * A testcase for the Padres test framework! 
@@ -16,7 +20,7 @@ import junit.framework.TestCase;
  * Created: July 26, 2011
  *
  */
-public class GenericBrokerTesterTest extends TestCase {
+public class GenericBrokerTesterTest extends Assert {
 
 	static final int DEFAULT_WAIT_TIME = 1000;
 	
@@ -62,16 +66,17 @@ public class GenericBrokerTesterTest extends TestCase {
 			addPair("class", "stock").
 			addPair("price", 200L);
 
-	@Override
-	public void setUp() {
+   @Before
+   public void setUp() {
 		_brokerTester = new GenericBrokerTester();
 	}
 	
-	@Override
-	public void tearDown() {
+   @After
+   public void tearDown() {
 		_brokerTester = null;
 	}
 	
+   @Test
 	public void testExpectRouterAddSubscription() throws InterruptedException {
 		// Wait for subscription with price 100
 		_brokerTester.

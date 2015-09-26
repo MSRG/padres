@@ -1,6 +1,10 @@
 package ca.utoronto.msrg.padres.components;
+import org.junit.Before;
+import org.junit.After;
 
-import junit.framework.TestCase;
+import org.junit.Test;
+
+import org.junit.Assert;
 import ca.utoronto.msrg.padres.broker.brokercore.BrokerConfig;
 import ca.utoronto.msrg.padres.broker.brokercore.BrokerConfig.CycleType;
 import ca.utoronto.msrg.padres.broker.brokercore.BrokerCore;
@@ -8,19 +12,22 @@ import ca.utoronto.msrg.padres.broker.brokercore.BrokerCoreException;
 import ca.utoronto.msrg.padres.broker.router.AdvertisementFilter.AdvCoveringType;
 import ca.utoronto.msrg.padres.broker.router.SubscriptionFilter.SubCoveringType;
 
-public class TestCmdLine extends TestCase {
+public class TestCmdLine extends Assert {
 
 	private BrokerCore brokerCore;
 
-	protected void setUp() throws Exception {
+   @Before
+   public void setUp() throws Exception {
 	}
 
-	protected void tearDown() throws Exception {
-		super.tearDown();
+   @After
+   public void tearDown() throws Exception {
+
 		if (brokerCore != null && brokerCore.isRunning())
 			brokerCore.shutdown();
 	}
 
+   @Test
 	public void testCmdLineWithPropsFilename() throws BrokerCoreException {
 		String propsFileName = BrokerConfig.PADRES_HOME + "etc"
 				+ System.getProperty("file.separator")
@@ -46,6 +53,7 @@ public class TestCmdLine extends TestCase {
 				props.getConnectionRetryPause() == 10);
 	}
 
+   @Test
 	public void testCmdLineWithNoPropsAndAllArgs() throws BrokerCoreException {
 		String[] args = "-uri rmi://localhost:1100/TestId -n rmi://10.0.0.1:1099/Test2,rmi://10.0.0.2:3333/Test3 -b DB -h ON -rl 30 -rp 10 -s ACTIVE -a ON -cy FIXED -d db/db.properties"
 				.split("\\s+");
@@ -75,6 +83,7 @@ public class TestCmdLine extends TestCase {
 				props.getConnectionRetryPause() == 10);
 	}
 
+   @Test
 	public void testCmdLineWithPropsAndPartialArgs() throws BrokerCoreException {
 		String arg = "-n rmi://10.0.0.1:1099/Broker1,rmi://10.0.0.2:3333/Broker3 -b DB -h ON -c "
 				+ BrokerConfig.PADRES_HOME
@@ -112,6 +121,7 @@ public class TestCmdLine extends TestCase {
 	 * Null values provided in command line should not overwrite default values
 	 * given in properties file
 	 */
+   @Test
 	public void testCmdLineWithNullValues() {
 		String[] args = "-n -b DB -c -i B1 -h".split("\\s+");
 		try {
@@ -122,6 +132,7 @@ public class TestCmdLine extends TestCase {
 		assertTrue("This part of the code should not be reached", false);
 	}
 
+   @Test
 	public void testCmdLineWithEmptyArgs() throws BrokerCoreException {
 		String[] args = new String[0];
 		brokerCore = new BrokerCore(args);
@@ -145,6 +156,7 @@ public class TestCmdLine extends TestCase {
 				props.getConnectionRetryPause() == 10);
 	}
 
+   @Test
 	public void testCmdLineWithNullArgs() {
 		String[] args = null;
 		try {

@@ -6,30 +6,20 @@
  */
 package ca.utoronto.msrg.padres.components.scout;
 
-import junit.framework.TestCase;
+import org.junit.Test;
+
+import org.junit.Assert;
 import ca.utoronto.msrg.padres.broker.router.scout.Relation;
 
 /**
  * @author cheung
  * 
  */
-public class RelationTest extends TestCase {
+public class RelationTest extends Assert {
 
 	Relation rel;
 
-	/**
-	 * Constructor for RelationTest.
-	 * 
-	 * @param arg0
-	 */
-	public RelationTest(String arg0) {
-		super(arg0);
-	}
-
-	public static void main(String[] args) {
-		junit.swingui.TestRunner.run(RelationTest.class);
-	}
-
+   @Test
 	public void testEqualAND() {
 		rel = Relation.EQUAL;
 		assertTrue(rel.AND(Relation.EQUAL) == Relation.EQUAL);
@@ -43,6 +33,7 @@ public class RelationTest extends TestCase {
 		assertTrue(rel.AND(Relation.INTERSECT) == Relation.INTERSECT);
 	}
 
+   @Test
 	public void testSubsetAND() {
 		rel = Relation.SUBSET;
 		assertTrue(rel.AND(Relation.EQUAL) == Relation.SUBSET);
@@ -56,6 +47,7 @@ public class RelationTest extends TestCase {
 		assertTrue(rel.AND(Relation.INTERSECT) == Relation.INTERSECT);
 	}
 
+   @Test
 	public void testSupersetAND() {
 		rel = Relation.SUPERSET;
 		assertTrue(rel.AND(Relation.EQUAL) == Relation.SUPERSET);
@@ -69,6 +61,7 @@ public class RelationTest extends TestCase {
 		assertTrue(rel.AND(Relation.INTERSECT) == Relation.INTERSECT);
 	}
 
+   @Test
 	public void testIntersectAND() {
 		rel = Relation.INTERSECT;
 		assertTrue(rel.AND(Relation.EQUAL) == Relation.INTERSECT);
@@ -82,6 +75,7 @@ public class RelationTest extends TestCase {
 		assertTrue(rel.AND(Relation.INTERSECT) == Relation.INTERSECT);
 	}
 
+   @Test
 	public void testEmptyAND() {
 		rel = Relation.EMPTY;
 		assertTrue(rel.AND(Relation.EQUAL) == Relation.EMPTY);

@@ -1,8 +1,12 @@
 package ca.utoronto.msrg.padres.cyclic;
+import org.junit.Before;
+import org.junit.After;
+
+import org.junit.Test;
 
 import java.util.Map;
 
-import junit.framework.TestCase;
+import org.junit.Assert;
 import ca.utoronto.msrg.padres.broker.brokercore.BrokerConfig;
 import ca.utoronto.msrg.padres.broker.brokercore.BrokerCore;
 import ca.utoronto.msrg.padres.broker.brokercore.BrokerCoreException;
@@ -31,7 +35,7 @@ import ca.utoronto.msrg.padres.tester.TesterMessagePredicates;
  * 
  * @author Shuang Hou
  */
-public class TestDynamicCycles extends TestCase {
+public class TestDynamicCycles extends Assert {
 
 	static {
 		if(System.getProperty("test.version") == null)
@@ -58,8 +62,8 @@ public class TestDynamicCycles extends TestCase {
 
 	private PatternFilter msgFilter;
 
-	@Override
-	protected void setUp() throws Exception {
+   @Before
+   public void setUp() throws Exception {
 		_brokerTester = new GenericBrokerTester();
 		
 		// setup the configurations for a cyclic network
@@ -97,8 +101,9 @@ public class TestDynamicCycles extends TestCase {
 		clientB.connect(brokerCore4.getBrokerURI());
 	}
 
-	protected void tearDown() throws Exception {
-		super.tearDown();
+   @After
+   public void tearDown() throws Exception {
+
 		clientA.shutdown();
 		clientB.shutdown();
 		brokerCore1.shutdown();
@@ -122,6 +127,7 @@ public class TestDynamicCycles extends TestCase {
 	 * which is a publisher. ClientB connects to broker2, which is a subscriber.
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testDynamicCyclicWithBusyLink() throws ParseException, InterruptedException {
 		/* TODO: VINOD (DONE) */
 		// Stop broker2.
@@ -284,6 +290,7 @@ public class TestDynamicCycles extends TestCase {
 	 * Test the dynamic routing.
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testDynamicCyclicWithStopedLink() throws ParseException, InterruptedException {
 		/* TODO: VINOD (DONE) */
 		// Stop broker2.
@@ -441,6 +448,7 @@ public class TestDynamicCycles extends TestCase {
 	 * @throws ParseException 
 	 * @throws InterruptedException 
 	 */
+   @Test
 	public void testDynamicCyclicWithCompositeSubscription() throws ParseException, InterruptedException {
 		/* TODO: REZA (NEW-DONE) */
 		_brokerTester.clearAll().

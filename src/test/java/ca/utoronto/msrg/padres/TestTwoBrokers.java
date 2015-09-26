@@ -1,6 +1,10 @@
 package ca.utoronto.msrg.padres;
+import org.junit.Before;
+import org.junit.After;
 
-import junit.framework.TestCase;
+import org.junit.Test;
+
+import org.junit.Assert;
 import ca.utoronto.msrg.padres.broker.brokercore.BrokerConfig;
 import ca.utoronto.msrg.padres.broker.brokercore.BrokerCore;
 import ca.utoronto.msrg.padres.broker.brokercore.BrokerCoreException;
@@ -27,7 +31,7 @@ import ca.utoronto.msrg.padres.tester.TesterMessagePredicates;
  * @author Shuang Hou, Bala Maniymaran
  */
 
-public class TestTwoBrokers extends TestCase {
+public class TestTwoBrokers extends Assert {
 
 	protected GenericBrokerTester _brokerTester;
 	
@@ -43,8 +47,8 @@ public class TestTwoBrokers extends TestCase {
 
 	protected PatternFilter msgFilter;
 
-	@Override
-	protected void setUp() throws Exception {
+   @Before
+   public void setUp() throws Exception {
 		_brokerTester = new GenericBrokerTester();
 		
 		// setup the standard overlay B1-B2
@@ -80,9 +84,9 @@ public class TestTwoBrokers extends TestCase {
 		return new TesterBrokerCore(_brokerTester, brokerConfig);
 	}
 
-	@Override
-	protected void tearDown() throws Exception {
-		super.tearDown();
+   @After
+   public void tearDown() throws Exception {
+
 		clientA.shutdown();
 		clientB.shutdown();
 		brokerCore1.shutdown();
@@ -100,6 +104,7 @@ public class TestTwoBrokers extends TestCase {
 	/**
 	 * Test connection between two brokers, where they are initialized correctly.
 	 */
+   @Test
 	public void testConnectionBetweenTwoBrokers() {
 		// wait for the message to be routed
 		messageWatcher.getMessage();
@@ -122,6 +127,7 @@ public class TestTwoBrokers extends TestCase {
 	 * @throws InterruptedException 
 	 * 
 	 */
+   @Test
 	public void testConnectionAndPubSubMatchingBetweenTwoExistingBrokers() throws ParseException, InterruptedException {
 		/* TODO: REZA (DONE2) */
 		_brokerTester.clearAll().
@@ -179,6 +185,7 @@ public class TestTwoBrokers extends TestCase {
 	 * @throws InterruptedException 
 	 * 
 	 */
+   @Test
 	public void testReConnectionAndPubSubMatchingBetweenTwoBrokers() throws ParseException, InterruptedException {
 		/* REZA (NEW-DONE) */
 		_brokerTester.clearAll().
@@ -216,6 +223,7 @@ public class TestTwoBrokers extends TestCase {
 	 * @throws InterruptedException 
 	 * 
 	 */
+   @Test
 	public void testAdvSubRoutingWithOneAdv() throws ParseException, InterruptedException {
 		/* TODO: VINOD/YOUNG (DONE2) */
 		// setup message filter
@@ -307,6 +315,7 @@ public class TestTwoBrokers extends TestCase {
 	 * @see TestTwoBrokers#testAdvSubRoutingWithOneAdv()
 	 * 
 	 */
+   @Test
 	public void testSubAdvRoutingWithOneAdv() throws ParseException, InterruptedException {
 		/* TODO: REZA (DONE2) */
 		_brokerTester.clearAll().
@@ -372,6 +381,7 @@ public class TestTwoBrokers extends TestCase {
 	 * @throws ParseException 
 	 * @throws InterruptedException 
 	 */
+   @Test
 	public void testAdvSubRoutingWithTwoAdvsWithSameLastHop() throws ParseException, InterruptedException {
 		/* TODO: REZA (DONE2) */
 		// Check receipt of advertisement 1
@@ -489,6 +499,7 @@ public class TestTwoBrokers extends TestCase {
 	 * 
 	 * @see TestTwoBrokers#testAdvSubRoutingWithTwoAdvsWithSameLastHop()
 	 */
+   @Test
 	public void testSubAdvRoutingWithTwoAdvsWithSameLastHop() throws ParseException, InterruptedException {
 		/* TODO: REZA (DONE2) */
 		_brokerTester.clearAll().
@@ -640,6 +651,7 @@ public class TestTwoBrokers extends TestCase {
 	 * @throws ParseException 
 	 * @throws InterruptedException 
 	 */
+   @Test
 	public void testSubPubMatchingWithOneSub() throws ParseException, InterruptedException {
 		/* TODO: REZA (DONE2) */
 		_brokerTester.clearAll().
@@ -710,6 +722,7 @@ public class TestTwoBrokers extends TestCase {
 	 * 
 	 * @see TestTwoBrokers#testSubPubMatchingWithOneSub()
 	 */
+   @Test
 	public void testPubSubMatching() throws ParseException {
 		// setup message filter
 		msgFilter.setPattern(".*" + brokerCore1.getBrokerURI()
@@ -740,6 +753,7 @@ public class TestTwoBrokers extends TestCase {
 	 * @throws ParseException 
 	 * @throws InterruptedException 
 	 */
+   @Test
 	public void testSubPubMatchingWithTwoSubsWithSameLastHop() throws ParseException, InterruptedException {
 		/* TODO: REZA (DONE2) */
 		// Check receipt of advertisement 1

@@ -6,12 +6,14 @@
  */
 package ca.utoronto.msrg.padres.components.scout;
 
+import org.junit.Test;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.HashSet;
 import java.util.Set;
 
-import junit.framework.TestCase;
+import org.junit.Assert;
 import ca.utoronto.msrg.padres.broker.brokercore.BrokerConfig;
 import ca.utoronto.msrg.padres.broker.router.scout.Scout;
 import ca.utoronto.msrg.padres.broker.router.scout.ScoutNode;
@@ -26,7 +28,7 @@ import ca.utoronto.msrg.padres.common.message.parser.MessageFactory;
  *         children set. If this is not done, then the supposedly child node can become a neighbor
  *         of its parent when the child's last parent is removed
  */
-public class ScoutTestAddDupChild2 extends TestCase {
+public class ScoutTestAddDupChild2 extends Assert {
 
 	private static final String subscriptionFile = BrokerConfig.PADRES_HOME
 			+ "/etc/test/junit/matching/scout/ScoutTestAddDupChild2.txt";
@@ -39,13 +41,8 @@ public class ScoutTestAddDupChild2 extends TestCase {
 	 * @param arg0
 	 */
 	public ScoutTestAddDupChild2(String arg0) {
-		super(arg0);
 		scout = new Scout();
 		loadScout();
-	}
-
-	public static void main(String[] args) {
-		junit.swingui.TestRunner.run(ScoutTestMissingExistingChildBug.class);
 	}
 
 	private void loadScout() {
@@ -66,6 +63,7 @@ public class ScoutTestAddDupChild2 extends TestCase {
 		// scout.showTree();
 	}
 
+   @Test
 	public void testSupersetSubset() {
 		Set<ScoutNode> expectedParentSet = new HashSet<ScoutNode>();
 		expectedParentSet.add(scout.getNode("2562"));

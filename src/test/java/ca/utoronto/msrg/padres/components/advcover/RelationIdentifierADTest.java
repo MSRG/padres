@@ -5,10 +5,13 @@
  * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
  */
 package ca.utoronto.msrg.padres.components.advcover;
+import org.junit.Before;
+
+import org.junit.Test;
 
 import java.util.Map;
 
-import junit.framework.TestCase;
+import org.junit.Assert;
 import ca.utoronto.msrg.padres.broker.router.scoutad.RelationAD;
 import ca.utoronto.msrg.padres.broker.router.scoutad.RelationIdentifierAD;
 import ca.utoronto.msrg.padres.common.message.parser.MessageFactory;
@@ -19,7 +22,7 @@ import ca.utoronto.msrg.padres.common.message.parser.MessageFactory;
  *         To change the template for this generated type comment go to
  *         Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
  */
-public class RelationIdentifierADTest extends TestCase {
+public class RelationIdentifierADTest extends Assert {
 
 	// Allows us to easily compose a predicate map
 	Map[] predIBM = new Map[14];
@@ -30,24 +33,12 @@ public class RelationIdentifierADTest extends TestCase {
 
 	Map[] predStr = new Map[14];
 
-	/**
-	 * Constructor for RelationIdentifierTest.
-	 * 
-	 * @param arg0
-	 */
-	public RelationIdentifierADTest(String arg0) {
-		super(arg0);
-	}
-
-	public static void main(String[] args) {
-		junit.swingui.TestRunner.run(RelationIdentifierADTest.class);
-	}
-
 	/*
 	 * @see TestCase#setUp()
 	 */
-	protected void setUp() throws Exception {
-		super.setUp();
+   @Before
+   public void setUp() throws Exception {
+
 		predAll = MessageFactory.createAdvertisementFromString("[class,eq,'stock']").getPredicateMap();
 		predIBM[0] = MessageFactory.createAdvertisementFromString("[class,eq,'stock'],[symbol,eq,'ibm']").getPredicateMap();
 		predIBM[1] = MessageFactory.createAdvertisementFromString("[class,eq,'stock'],[symbol,eq,'ibm'],[volume,>,100]").getPredicateMap();
@@ -93,6 +84,7 @@ public class RelationIdentifierADTest extends TestCase {
 
 	}
 
+   @Test
 	public void testGetRelationStringSingleAttr() {
 
 		assertTrue(RelationIdentifierAD.getRelationAD(predStr[0], predStr[0]) == RelationAD.EQUAL);
@@ -193,6 +185,7 @@ public class RelationIdentifierADTest extends TestCase {
 	// public void testGetRelationStringMultiAttr() {
 	// }
 
+   @Test
 	public void testGetRelationNumericSingleAttr() {
 		assertTrue(RelationIdentifierAD.getRelationAD(predIBM[1], predIBM[1]) == RelationAD.EQUAL);
 
@@ -237,6 +230,7 @@ public class RelationIdentifierADTest extends TestCase {
 		// RelationAD.INTERSECT);
 	}
 
+   @Test
 	public void testGetRelationNumericMultiAttr() {
 		// assertTrue(RelationIdentifierAD.getRelationAD(predIBM[7], predIBM[8]) ==
 		// RelationAD.INTERSECT);

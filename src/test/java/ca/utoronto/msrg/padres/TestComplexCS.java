@@ -1,6 +1,10 @@
 package ca.utoronto.msrg.padres;
+import org.junit.Before;
+import org.junit.After;
 
-import junit.framework.TestCase;
+import org.junit.Test;
+
+import org.junit.Assert;
 import ca.utoronto.msrg.padres.broker.brokercore.BrokerCore;
 import ca.utoronto.msrg.padres.client.Client;
 import ca.utoronto.msrg.padres.common.message.Advertisement;
@@ -21,7 +25,7 @@ import ca.utoronto.msrg.padres.common.util.LogSetup;
  * @author Shuang Hou
  */
 
-public class TestComplexCS extends TestCase {
+public class TestComplexCS extends Assert {
 
 	private BrokerCore brokerCore;
 
@@ -35,7 +39,8 @@ public class TestComplexCS extends TestCase {
 
 	private PatternFilter msgFilter;
 
-	protected void setUp() throws Exception {
+   @Before
+   public void setUp() throws Exception {
 		brokerCore = new BrokerCore(AllTests.brokerConfig01);
 		brokerCore.initialize();
 		clientA = new Client(AllTests.clientConfigA);
@@ -51,8 +56,9 @@ public class TestComplexCS extends TestCase {
 		LogSetup.addAppender("MessagePath", messageWatcher);
 	}
 
-	protected void tearDown() throws Exception {
-		super.tearDown();
+   @After
+   public void tearDown() throws Exception {
+
 		clientA.shutdown();
 		clientB.shutdown();
 		clientC.shutdown();
@@ -64,6 +70,7 @@ public class TestComplexCS extends TestCase {
 	 * Test composite subscription: s1 AND s2.
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testCompositeSubscriptionWithAnd() throws ParseException {
 		// clientA,B is publisher, clientC is susbcriber
 		MessageDestination mdA = clientA.getClientDest();
@@ -142,6 +149,7 @@ public class TestComplexCS extends TestCase {
 	 * Test composite subscription: s1 AND s2. Composite subscription is issued first.
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testCompositeSubscriptionWithAndWithCSBeforeAdv() throws ParseException {
 		// clientA,B is publisher, clientC is susbcriber
 		MessageDestination mdA = clientA.getClientDest();
@@ -220,6 +228,7 @@ public class TestComplexCS extends TestCase {
 	 * Test composite subscription: s1 OR s2.
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testCompositeSubscriptionWithOr() throws ParseException {
 		// clientA,B is publisher, clientC is susbcriber
 		MessageDestination mdA = clientA.getClientDest();
@@ -285,6 +294,7 @@ public class TestComplexCS extends TestCase {
 	 * Test composite subscription: {{s1 AND s2} AND s3}.
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testCompositeSubscriptionWithAndAnd() throws ParseException {
 		// clientA,B is publisher, clientC is susbcriber
 		MessageDestination mdA = clientA.getClientDest();
@@ -428,6 +438,7 @@ public class TestComplexCS extends TestCase {
 	 * Test composite subscription: {{s1 OR s2} OR s3}.
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testCompositeSubscriptionWithOrOr() throws ParseException {
 		// clientA,B is publisher, clientC is susbcriber
 		MessageDestination mdA = clientA.getClientDest();
@@ -508,6 +519,7 @@ public class TestComplexCS extends TestCase {
 	 * Test composite subscription: {{s1 AND s2} OR s3}.
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testCompositeSubscriptionWithAndOr() throws ParseException {
 		// clientA,B is publisher, clientC is susbcriber
 		MessageDestination mdA = clientA.getClientDest();
@@ -668,6 +680,7 @@ public class TestComplexCS extends TestCase {
 	 * Test composite subscription: {{s1 OR s2} AND s3}.
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testCompositeSubscriptionWithOrAnd() throws ParseException {
 		// clientA,B is publisher, clientC is subscriber
 		MessageDestination mdA = clientA.getClientDest();
@@ -859,6 +872,7 @@ public class TestComplexCS extends TestCase {
 	 * Test composite subscription: s1 AND s2, both s1 and s2 have string variable.
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testCompositeSubscriptionWithStringVariableWithAnd() throws ParseException {
 		// varibale test for CS is only "eq" right now.
 		// clientA,B is publisher, clientC is susbcriber
@@ -899,6 +913,7 @@ public class TestComplexCS extends TestCase {
 	 * Test composite subscription: s1 OR s2, both s1 and s2 have string variable.
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testCompositeSubscriptionWithStringVariableWithOr() throws ParseException {
 		// varibale test for CS is only "eq" right now.
 		// clientA,B is publisher, clientC is susbcriber
@@ -930,6 +945,7 @@ public class TestComplexCS extends TestCase {
 	 * Test composite subscription: s1 AND s2, both s1 and s2 have integer variable
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testCompositeSubscriptionWithNumberVariableWithAnd() throws ParseException {
 		// varibale test for CS is only "=" right now.
 		// clientA,B is publisher, clientC is susbcriber
@@ -971,6 +987,7 @@ public class TestComplexCS extends TestCase {
 	 * Test composite subscription: s1 OR s2, both s1 and s2 have integer variable
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testCompositeSubscriptionWithNumberVariableWithOr() throws ParseException {
 		// varibale test for CS is only "=" right now.
 		// clientA,B is publisher, clientC is susbcriber
@@ -1004,6 +1021,7 @@ public class TestComplexCS extends TestCase {
 	 * Test composite subscription: {s1 AND {s2 AND s3}}.
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testCompositeSubscriptionWithAndAndLast() throws ParseException {
 		// clientA,B is publisher, clientC is susbcriber
 		MessageDestination mdA = clientA.getClientDest();
@@ -1158,6 +1176,7 @@ public class TestComplexCS extends TestCase {
 	 * Test composite subscription: {s1 OR { s2 OR s3}}.
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testCompositeSubscriptionWithOrOrLast() throws ParseException {
 		// clientA,B is publisher, clientC is susbcriber
 		MessageDestination mdA = clientA.getClientDest();
@@ -1242,6 +1261,7 @@ public class TestComplexCS extends TestCase {
 	 * Test composite subscription: {s1 AND {s2 AND s3}}.
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testCompositeSubscriptionWithAndAndLastWithVarible() throws ParseException {
 		// clientA,B is publisher, clientC is susbcriber
 		MessageDestination mdA = clientA.getClientDest();
@@ -1337,6 +1357,7 @@ public class TestComplexCS extends TestCase {
 	 * + "{[class,eq,Trigger1],[applname,eq,PAYROLL],[GID,eq,$S$X],[schedule,isPresent,DAILY]}}}");
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testCompositeSubscriptionFromWorkflowDemo() throws ParseException {
 		// clientA,B is publisher, clientC is susbcriber
 		MessageDestination mdA = clientB.getClientDest();
@@ -1425,6 +1446,7 @@ public class TestComplexCS extends TestCase {
 	 * ]}}}&{[class,eq,Trigger],[applname,eq,PAYROLL],[GID,eq,$S$X],[schedule,isPresent,DAILY]}}
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testCompositeSubscriptionFromWorkflowDemoComplex() throws ParseException {
 		// clientA,B is publisher, clientC is susbcriber
 		MessageDestination mdA = clientB.getClientDest();

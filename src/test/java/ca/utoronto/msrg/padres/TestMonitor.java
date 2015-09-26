@@ -1,6 +1,10 @@
 package ca.utoronto.msrg.padres;
+import org.junit.Before;
+import org.junit.After;
 
-import junit.framework.TestCase;
+import org.junit.Test;
+
+import org.junit.Assert;
 import ca.utoronto.msrg.padres.broker.brokercore.BrokerConfig;
 import ca.utoronto.msrg.padres.broker.brokercore.BrokerCore;
 import ca.utoronto.msrg.padres.broker.brokercore.BrokerCoreException;
@@ -13,7 +17,7 @@ import ca.utoronto.msrg.padres.tools.padresmonitor.MonitorFrame;
 import ca.utoronto.msrg.padres.tools.padresmonitor.dialogs.InjectMessageDialog;
 import ca.utoronto.msrg.padres.tools.padresmonitor.resources.MonitorResources;
 
-public class TestMonitor extends TestCase {
+public class TestMonitor extends Assert {
 
 	private BrokerCore brokerCore1;
 
@@ -27,8 +31,8 @@ public class TestMonitor extends TestCase {
 
 	private PatternFilter msgFilter;
 
-	@Override
-	public void setUp() {
+   @Before
+   public void setUp() {
 		AllTests.resetBrokerConnections();
 		messageWatcher = new MessageWatchAppender();
 		msgFilter = new PatternFilter(InputQueueHandler.class.getName());
@@ -37,8 +41,8 @@ public class TestMonitor extends TestCase {
 		LogSetup.addAppender("MessagePath", messageWatcher);
 	}
 
-	@Override
-	public void tearDown() {
+   @After
+   public void tearDown() {
 		try {
 			monitorFrame.shutdown();
 		} catch (ClientException e) {
@@ -62,6 +66,7 @@ public class TestMonitor extends TestCase {
 	 * @throws BrokerCoreException
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testOneBrokerConnectedOtherTwoBrokersAtSameTime() throws ClientException,
 			BrokerCoreException, ParseException {
 		// start broker 1

@@ -1,6 +1,10 @@
 package ca.utoronto.msrg.padres;
+import org.junit.Before;
+import org.junit.After;
 
-import junit.framework.TestCase;
+import org.junit.Test;
+
+import org.junit.Assert;
 import ca.utoronto.msrg.padres.broker.brokercore.BrokerConfig;
 import ca.utoronto.msrg.padres.broker.brokercore.BrokerCore;
 import ca.utoronto.msrg.padres.broker.brokercore.BrokerCoreException;
@@ -22,7 +26,7 @@ import ca.utoronto.msrg.padres.tools.padresmonitor.OverlayManager;
  * 
  * @author Shuang Hou
  */
-public class TestHeartBeat extends TestCase {
+public class TestHeartBeat extends Assert {
 	
 	static {
 		if(System.getProperty("test.version") == null)
@@ -43,7 +47,8 @@ public class TestHeartBeat extends TestCase {
 
 	protected PatternFilter msgFilter;
 
-	protected void setUp() throws Exception {
+   @Before
+   public void setUp() throws Exception {
 		_brokerTester = new GenericBrokerTester();
 		
 		// start the broker
@@ -69,8 +74,9 @@ public class TestHeartBeat extends TestCase {
 		return new TesterBrokerCore(_brokerTester, brokerConfig);
 	}
 
-	protected void tearDown() throws Exception {
-		super.tearDown();
+   @After
+   public void tearDown() throws Exception {
+
 		// TODO: remove this line
 		// padresMonitor.exitMonitor();
         padresMonitor.shutdown();
@@ -93,6 +99,7 @@ public class TestHeartBeat extends TestCase {
 	 * @throws ParseException 
 	 * @throws InterruptedException 
 	 */
+   @Test
 	public void testHeartBeatACK() throws ParseException, InterruptedException {
 		/* TODO: REZA (DONE2) */
 		_brokerTester.clearAll().
@@ -125,6 +132,7 @@ public class TestHeartBeat extends TestCase {
 	 * @throws ParseException 
 	 * @throws InterruptedException 
 	 */
+   @Test
 	public void testHeartBeatFailureDetectAndFailureCleared() throws ParseException, InterruptedException {
 		// setup the message filter
 		msgFilter = new PatternFilter(OverlayManager.class.getName());

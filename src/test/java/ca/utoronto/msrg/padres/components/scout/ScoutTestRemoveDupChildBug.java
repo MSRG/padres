@@ -5,8 +5,11 @@
  * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
  */
 package ca.utoronto.msrg.padres.components.scout;
+import org.junit.Before;
 
-import junit.framework.TestCase;
+import org.junit.Test;
+
+import org.junit.Assert;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.*;
@@ -22,7 +25,7 @@ import ca.utoronto.msrg.padres.common.message.parser.MessageFactory;
  *         To change the template for this generated type comment go to
  *         Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
  */
-public class ScoutTestRemoveDupChildBug extends TestCase {
+public class ScoutTestRemoveDupChildBug extends Assert {
 
 	private static final String subscriptionFile = BrokerConfig.PADRES_HOME
 			+ "/etc/test/junit/matching/scout/ScoutTestRemoveDupChild.txt";
@@ -37,20 +40,16 @@ public class ScoutTestRemoveDupChildBug extends TestCase {
 	 * @param arg0
 	 */
 	public ScoutTestRemoveDupChildBug(String arg0) {
-		super(arg0);
 		scout = new Scout();
 		idToMsgMap = new HashMap<String, Message>(6);
-	}
-
-	public static void main(String[] args) {
-		junit.swingui.TestRunner.run(ScoutTestRemoveDupChildBug.class);
 	}
 
 	/*
 	 * @see TestCase#setUp()
 	 */
-	protected void setUp() throws Exception {
-		super.setUp();
+   @Before
+   public void setUp() throws Exception {
+
 		loadScout();
 	}
 
@@ -73,6 +72,7 @@ public class ScoutTestRemoveDupChildBug extends TestCase {
 		// scout.showTree();
 	}
 
+   @Test
 	public void testRemoveDupChildBug() {
 		String idToRemove = "1";
 		String invalidID = "2";

@@ -1,5 +1,7 @@
 package ca.utoronto.msrg.padres.cyclic;
 
+import org.junit.Test;
+
 import ca.utoronto.msrg.padres.client.Client;
 import ca.utoronto.msrg.padres.common.message.Advertisement;
 import ca.utoronto.msrg.padres.common.message.AdvertisementMessage;
@@ -21,6 +23,7 @@ import ca.utoronto.msrg.padres.tester.TesterMessagePredicates;
 public class TestCyclicTwoBrokers extends TestTwoBrokers {
 
 	@Override
+   @Test
 	public void testConnectionAndPubSubMatchingBetweenTwoExistingBrokers() throws ParseException, InterruptedException {
 		/* TODO: VINOD (DONE) */
 		Advertisement adv = MessageFactory.createAdvertisementFromString("[class,eq,'stock'],[price,=,100]");
@@ -65,6 +68,7 @@ public class TestCyclicTwoBrokers extends TestTwoBrokers {
 	 * @throws InterruptedException 
 	 * 
 	 */
+   @Test
 	public void testReConnectionAndPubSubMatchingBetweenTwoBrokers() throws ParseException, InterruptedException {
 		/* TODO: REZA (NEW-DONE) */
 		_brokerTester.clearAll().
@@ -110,6 +114,7 @@ public class TestCyclicTwoBrokers extends TestTwoBrokers {
 	 * @throws InterruptedException 
 	 * 
 	 */
+   @Test
 	public void testAdvSubRoutingWithOneAdv() throws ParseException, InterruptedException {
 		/* TODO: YOUNG (DONE)  */
 		MessageDestination mdA = clientA.getClientDest();
@@ -215,6 +220,7 @@ public class TestCyclicTwoBrokers extends TestTwoBrokers {
 	 * @see TestCyclicTwoBrokers#testAdvSubRoutingWithOneAdv()
 	 * 
 	 */
+   @Test
 	public void testSubAdvRoutingWithOneAdv() throws ParseException, InterruptedException {
 		/* TODO: REZA (DONE) */
 		_brokerTester.clearAll().
@@ -284,6 +290,7 @@ public class TestCyclicTwoBrokers extends TestTwoBrokers {
 	 * @throws ParseException 
 	 * @throws InterruptedException 
 	 */
+   @Test
 	public void testAdvSubRoutingWithTwoAdvsWithSameLastHop() throws ParseException, InterruptedException {
 		/* TODO: YOUNG (DONE) */
 		MessageDestination mdA = clientA.getClientDest();
@@ -345,6 +352,7 @@ public class TestCyclicTwoBrokers extends TestTwoBrokers {
 	 * 
 	 * @see TestCyclicTwoBrokers#testAdvSubRoutingWithTwoAdvsWithSameLastHop()
 	 */
+   @Test
 	public void testSubAdvRoutingWithTwoAdvsWithSameLastHop() throws ParseException, InterruptedException {
 		/* TODO: YOUNG (DONE) */
 		_brokerTester.clearAll().
@@ -442,6 +450,7 @@ public class TestCyclicTwoBrokers extends TestTwoBrokers {
 	 * @throws ParseException 
 	 * @throws InterruptedException 
 	 */
+   @Test
 	public void testSubPubMatchingWithOneSub() throws ParseException, InterruptedException {
 		/* TODO: REZA (DONE2) */
 		_brokerTester.clearAll().
@@ -497,6 +506,7 @@ public class TestCyclicTwoBrokers extends TestTwoBrokers {
 	 * brokers. Two subs are sent on the same brokers
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testSubPubMatchingWithTwoSubsWithSameLastHop() throws ParseException {
 		// setup message filter
 		msgFilter.setPattern(".*" + brokerCore1.getBrokerURI()

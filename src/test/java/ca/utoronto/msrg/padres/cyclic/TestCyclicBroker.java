@@ -1,5 +1,7 @@
 package ca.utoronto.msrg.padres.cyclic;
 
+import org.junit.Test;
+
 import java.util.Map;
 
 import ca.utoronto.msrg.padres.common.message.Advertisement;
@@ -26,6 +28,7 @@ public class TestCyclicBroker extends TestBroker {
 	 * correctly.
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testInitialAdvMsg() throws ParseException {
 		boolean foundInitialAdv = false;
 		Map<String, AdvertisementMessage> fullAdvs = brokerCore.getRouter().getAdvertisements();
@@ -51,6 +54,7 @@ public class TestCyclicBroker extends TestBroker {
 	 * Test controller Subscription message (sent by Controller) is initialied correctly.
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testControllerSub() throws ParseException {
 		/* TODO: VINOD (DONE) */
 		String tidPredicate = ",[tid,eq,$S$Tid]";
@@ -65,6 +69,7 @@ public class TestCyclicBroker extends TestBroker {
 	 * Test Subscriptions (sent by SystemMonitor) are initialized correctly.
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testSystemMonitorSubs() throws ParseException {
 		/* TODO: VINOD (DONE) */
 		String tidPredicate = ",[tid,eq,$S$Tid]";
@@ -89,6 +94,7 @@ public class TestCyclicBroker extends TestBroker {
 	 * HeartbeatAdv and FailureDetectAdv
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testHeartbeatAdvMsgs() throws ParseException, InterruptedException {
 		/* TODO: VINOD (DONE) */
 		// Wait until two heart beat messages are received by the input queue from heartbeat manager
@@ -119,6 +125,7 @@ public class TestCyclicBroker extends TestBroker {
 	 * Test HeartbeatSubscription Message (sent by Heartbeat) is initialized correctly.
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testHeartbeatSubMsg() throws ParseException, InterruptedException {
 		/* TODO: VINOD (DONE) (Fails because of possible bug in GenericBrokerTester.matchEvents().) */
 		// Wait until the heart beat messages are routed.

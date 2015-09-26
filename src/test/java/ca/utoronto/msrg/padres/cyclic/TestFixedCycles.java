@@ -1,8 +1,12 @@
 package ca.utoronto.msrg.padres.cyclic;
+import org.junit.Before;
+import org.junit.After;
+
+import org.junit.Test;
 
 import java.util.Set;
 
-import junit.framework.TestCase;
+import org.junit.Assert;
 import ca.utoronto.msrg.padres.broker.brokercore.BrokerConfig;
 import ca.utoronto.msrg.padres.broker.brokercore.BrokerCore;
 import ca.utoronto.msrg.padres.broker.brokercore.BrokerCoreException;
@@ -37,7 +41,7 @@ import ca.utoronto.msrg.padres.tester.TesterBrokerCore;
 import ca.utoronto.msrg.padres.tester.TesterClient;
 import ca.utoronto.msrg.padres.tester.TesterMessagePredicates;
 
-public class TestFixedCycles extends TestCase {
+public class TestFixedCycles extends Assert {
 	
 	static {
 		if(System.getProperty("test.version") == null)
@@ -68,7 +72,8 @@ public class TestFixedCycles extends TestCase {
 
 	private PatternFilter msgFilter;
 
-	protected void setUp() throws Exception {
+   @Before
+   public void setUp() throws Exception {
 		_brokerTester = new GenericBrokerTester();
 		
 		// setup configurations according a cyclic network
@@ -103,8 +108,9 @@ public class TestFixedCycles extends TestCase {
 		clientC = createNewClient(AllTests.clientConfigA);
 	}
 
-	protected void tearDown() throws Exception {
-		super.tearDown();
+   @After
+   public void tearDown() throws Exception {
+
 		clientA.shutdown();
 		clientB.shutdown();
 		clientC.shutdown();
@@ -127,6 +133,7 @@ public class TestFixedCycles extends TestCase {
 	/**
 	 * Test the overlay connections when the cyclic network is setup
 	 */
+   @Test
 	public void testCyclic() {
 		OverlayRoutingTable ort1 = brokerCore1.getOverlayManager().getORT();
 		OverlayRoutingTable ort2 = brokerCore2.getOverlayManager().getORT();
@@ -160,6 +167,7 @@ public class TestFixedCycles extends TestCase {
 	 * @throws ParseException 
 	 * @throws InterruptedException 
 	 */
+   @Test
 	public void testNoAdvLoopInNetwork() throws ClientException, ParseException, InterruptedException {
 		/* TODO: REZA (NEW-DONE) */
 		// start swingClientA for Broker1
@@ -239,6 +247,7 @@ public class TestFixedCycles extends TestCase {
 	 * @throws ParseException 
 	 * @throws InterruptedException 
 	 */
+   @Test
 	public void testNoDuplicateSubInNetwork() throws ClientException, ParseException, InterruptedException {
 		/* TODO: YOUNG (DONE) */
 		// start swingClientA for Broker2
@@ -312,6 +321,7 @@ public class TestFixedCycles extends TestCase {
 	 * @throws ParseException 
 	 * @throws InterruptedException 
 	 */
+   @Test
 	public void testUnsubWithCycles1() throws ClientException, ParseException, InterruptedException {
 		/* TODO: MANIY, REZA (NEW-ErrorInOriginal) */
 		// start swingClientA for Broker1
@@ -473,6 +483,7 @@ public class TestFixedCycles extends TestCase {
 	 * @throws ParseException 
 	 * @throws InterruptedException 
 	 */
+   @Test
 	public void testUnsubWithCycles2() throws ClientException, ParseException, InterruptedException {
 		/* REZA (NEW) */
 		// start swingClientA for Broker2
@@ -605,6 +616,7 @@ public class TestFixedCycles extends TestCase {
 	 * @throws ParseException 
 	 * @throws InterruptedException 
 	 */
+   @Test
 	public void testUnadvWithCycles1() throws ClientException, ParseException, InterruptedException {
 		/* TODO: REZA (NEWW) */
 		// start swingClientA for Broker1
@@ -696,6 +708,7 @@ public class TestFixedCycles extends TestCase {
 	 * @throws ParseException 
 	 * @throws InterruptedException 
 	 */
+   @Test
 	public void testUnadvWithCycles2() throws ClientException, ParseException, InterruptedException {
 		/* TODO: REZA (NEW-DONE) */
 		// start swingClientA for Broker2
@@ -784,6 +797,7 @@ public class TestFixedCycles extends TestCase {
 	 * @throws ParseException 
 	 * @throws InterruptedException 
 	 */
+   @Test
 	public void testCompositeSubscriptionWithCycles() throws ClientException, ParseException, InterruptedException {
 		/* TODO: REZA (NEW-DONE) */
 		// start swingClientA for Broker1
@@ -881,6 +895,7 @@ public class TestFixedCycles extends TestCase {
 	 * @throws ParseException 
 	 * @throws InterruptedException 
 	 */
+   @Test
 	public void testUnCompositeSubscriptionWithCycles() throws ClientException, ParseException, InterruptedException {
 		// start swingClientA for Broker1
 		clientA.connect(brokerCore1.getBrokerURI());

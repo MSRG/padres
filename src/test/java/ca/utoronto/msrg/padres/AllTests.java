@@ -2,8 +2,8 @@ package ca.utoronto.msrg.padres;
 
 import java.util.Set;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
+import org.junit.Test;
+// FIXME include in TestSuite @RunWith(Suite.class)@Suite.SuiteClasses(...)
 import ca.utoronto.msrg.padres.broker.brokercore.BrokerConfig;
 import ca.utoronto.msrg.padres.broker.brokercore.BrokerConfig.CycleType;
 import ca.utoronto.msrg.padres.broker.brokercore.BrokerCore;
@@ -39,6 +39,8 @@ import ca.utoronto.msrg.padres.cyclic.TestCyclicMultipleBrokers;
 import ca.utoronto.msrg.padres.cyclic.TestCyclicTwoBrokers;
 import ca.utoronto.msrg.padres.cyclic.TestDynamicCycles;
 import ca.utoronto.msrg.padres.cyclic.TestFixedCycles;
+import org.junit.runner.RunWith;
+import org.junit.runners.Suite;
 
 /**
  * @author Maniy
@@ -82,6 +84,7 @@ public class AllTests {
 
     public static ClientConfig clientConfigD;
 
+    /* TODO: Testsuit does not exist in junit4
     public static Test suite() throws BrokerCoreException, ClientException {
         // run tests
         TestSuite suite = new TestSuite("Test Version " + commProtocol + " " + testVersion);
@@ -156,7 +159,7 @@ public class AllTests {
             suite.addTestSuite(TestCyclicMultipleBrokers.class);
         }
         return suite;
-    }
+    }*/
 
     static void setupConfigurations(int testVersion) throws BrokerCoreException, ClientException {
         setupBrokerConfigurations(testVersion);

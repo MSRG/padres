@@ -1,11 +1,15 @@
 package ca.utoronto.msrg.padres;
+import org.junit.Before;
+import org.junit.After;
+
+import org.junit.Test;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 
-import junit.framework.TestCase;
+import org.junit.Assert;
 import ca.utoronto.msrg.padres.broker.brokercore.BrokerConfig;
 import ca.utoronto.msrg.padres.broker.brokercore.BrokerCore;
 import ca.utoronto.msrg.padres.broker.brokercore.BrokerCoreException;
@@ -40,7 +44,7 @@ import ca.utoronto.msrg.padres.tester.TesterMessagePredicates;
  * @author Shuang Hou, Bala Maniymaran, and Vinod Muthusamy
  */
 
-public class TestClients extends TestCase {
+public class TestClients extends Assert {
 
 	protected GenericBrokerTester _brokerTester;
 	
@@ -56,8 +60,8 @@ public class TestClients extends TestCase {
 
 	private PatternFilter msgFilter;
 	
-	@Override
-	protected void setUp() throws Exception {
+   @Before
+   public void setUp() throws Exception {
 		_brokerTester = new GenericBrokerTester();
 		
 		// start the broker
@@ -78,9 +82,9 @@ public class TestClients extends TestCase {
 		LogSetup.addAppender("MessagePath", messageWatcher);
 	}
 
-	@Override
-	protected void tearDown() throws Exception {
-		super.tearDown();
+   @After
+   public void tearDown() throws Exception {
+
 		clientA.shutdown();
 		clientB.shutdown();
 		clientC.shutdown();
@@ -99,6 +103,7 @@ public class TestClients extends TestCase {
 	/**
 	 * Test wingRmiClient connects to the broker correctly.
 	 */
+   @Test
 	public void testConnectionWithClients() {
 		OverlayRoutingTable ort = brokerCore.getOverlayManager().getORT();
 		MessageDestination expectedMdA = clientA.getClientDest();
@@ -113,6 +118,7 @@ public class TestClients extends TestCase {
 	 * Test pub/sub matched on one client.
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testPubSubMatchOnOneClient() throws ParseException {
 		MessageDestination mdA = clientA.getClientDest();
 		MessageDestination mdB = clientB.getClientDest();
@@ -139,6 +145,7 @@ public class TestClients extends TestCase {
 	 * Test pub/sub not matched on one client.
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testPubSubNotMatchOnOneClient() throws ParseException {
 		MessageDestination mdA = clientA.getClientDest();
 		MessageDestination mdB = clientB.getClientDest();
@@ -165,6 +172,7 @@ public class TestClients extends TestCase {
 	 * Test pub/sub matched on two clients.
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testPubSubMatchOnTwoClients() throws ParseException {
 		// clientB is publisher, clientA is subscriber
 		MessageDestination mdA = clientA.getClientDest();
@@ -194,6 +202,7 @@ public class TestClients extends TestCase {
 	 * Test pub/sub not matched on two clients.
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testPubSubNotMatchOnTwoClients() throws ParseException {
 		// clientB is publisher, clientA is susbcriber
 		MessageDestination mdA = clientA.getClientDest();
@@ -221,6 +230,7 @@ public class TestClients extends TestCase {
 	 * Test pub/sub match with messages injected from swingClient, not from broker.
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testPubSubMatchInjectedFromSwingClients() throws ParseException {
 		// clientA is publisher, clientB is subscriber
 		clientB.handleCommand("a [class,eq,'stock'],[price,=,100]");
@@ -240,6 +250,7 @@ public class TestClients extends TestCase {
 	 * Test publication has same attribute set with the advertisement.
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testPubHavingSameAttributeSetWithAdv() throws ParseException {
 		MessageDestination mdA = clientA.getClientDest();
 		MessageDestination mdB = clientB.getClientDest();
@@ -268,6 +279,7 @@ public class TestClients extends TestCase {
 	 * Test publication has less attribute set than the advertisement
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testPubHavingLessAttributeSetThanAdv() throws ParseException {
 		MessageDestination mdA = clientA.getClientDest();
 		MessageDestination mdB = clientB.getClientDest();
@@ -296,6 +308,7 @@ public class TestClients extends TestCase {
 	 * Test subscription has the same attribute set with the publication.
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testSubHavingSameAttributeSetWithPub() throws ParseException {
 		MessageDestination mdA = clientA.getClientDest();
 		MessageDestination mdB = clientB.getClientDest();
@@ -334,6 +347,7 @@ public class TestClients extends TestCase {
 	 * Test subscription has more attribute set than the publication.
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testSubHavingMoreAttributeSetThanPub() throws ParseException {
 		MessageDestination mdA = clientA.getClientDest();
 		MessageDestination mdB = clientB.getClientDest();
@@ -361,6 +375,7 @@ public class TestClients extends TestCase {
 	 * Test subscription has less attribute set than the publication.
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testSubHavingLessAttributeSetThanPub() throws ParseException {
 		MessageDestination mdA = clientA.getClientDest();
 		MessageDestination mdB = clientB.getClientDest();
@@ -403,6 +418,7 @@ public class TestClients extends TestCase {
 	 * @throws ParseException 
 	 */
 
+   @Test
 	public void testAllSubPredicatesHavingOverlapWithAdv() throws ParseException {
 		MessageDestination mdA = clientA.getClientDest();
 		MessageDestination mdB = clientB.getClientDest();
@@ -443,6 +459,7 @@ public class TestClients extends TestCase {
 	 * one non-overlap predicate exists.
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testNotAllSubPredicatesHavingOverlapWithAdv() throws ParseException {
 		MessageDestination mdA = clientA.getClientDest();
 		MessageDestination mdB = clientB.getClientDest();
@@ -471,6 +488,7 @@ public class TestClients extends TestCase {
 	 * all.
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testAllSubPredicatesNotHavingOverlapWithAdv() throws ParseException {
 		MessageDestination mdA = clientA.getClientDest();
 		MessageDestination mdB = clientB.getClientDest();
@@ -500,6 +518,7 @@ public class TestClients extends TestCase {
 	 * 
 	 * 
 	 */
+   @Test
 	public void testAdvWithLessThanOperatorSubWithLessThanOperator() throws ParseException {
 		MessageDestination mdA = clientA.getClientDest();
 		MessageDestination mdB = clientB.getClientDest();
@@ -585,6 +604,7 @@ public class TestClients extends TestCase {
 	 * Test adv with "<" and sub with "<=.
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testAdvWithLessThanOperatorSubWithLessThanOrEqualToOperator() throws ParseException {
 		Advertisement adv = MessageFactory.createAdvertisementFromString("[class,eq,'stock'],[price,<,100]");
 		MessageDestination mdA = clientA.getClientDest();
@@ -671,6 +691,7 @@ public class TestClients extends TestCase {
 	 * Test adv with "<" and sub with ">".
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testAdvWithLessThanOperatorSubWithGreaterThanOperator() throws ParseException {
 		Advertisement adv = MessageFactory.createAdvertisementFromString("[class,eq,'stock'],[price,<,100]");
 		MessageDestination mdA = clientA.getClientDest();
@@ -727,6 +748,7 @@ public class TestClients extends TestCase {
 	 * Test adv with "<" and sub with ">=".
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testAdvWithLessThanOperatorSubWithGreaterThanOrEqualToOperator() throws ParseException {
 		Advertisement adv = MessageFactory.createAdvertisementFromString("[class,eq,'stock'],[price,<,100]");
 		MessageDestination mdA = clientA.getClientDest();
@@ -788,6 +810,7 @@ public class TestClients extends TestCase {
 	 * Test adv with "<" and sub with "=".
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testAdvWithLessThanOperatorSubWithEqualToOperator() throws ParseException {
 		Advertisement adv = MessageFactory.createAdvertisementFromString("[class,eq,'stock'],[price,<,100]");
 		MessageDestination mdA = clientA.getClientDest();
@@ -848,6 +871,7 @@ public class TestClients extends TestCase {
 	 * Test adv with "<" and sub with "<>".
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testAdvWithLessThanOperatorSubWithNotEqualToOperator() throws ParseException {
 		Advertisement adv = MessageFactory.createAdvertisementFromString("[class,eq,'stock'],[price,<,100]");
 		MessageDestination mdA = clientA.getClientDest();
@@ -936,6 +960,7 @@ public class TestClients extends TestCase {
 	 * Test adv with "<" and sub with "isPresent".
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testAdvWithLessThanOperatorSubWithIsPresentOperator() throws ParseException {
 		Advertisement adv = MessageFactory.createAdvertisementFromString("[class,eq,'stock'],[price,<,100]");
 		MessageDestination mdA = clientA.getClientDest();
@@ -964,6 +989,7 @@ public class TestClients extends TestCase {
 	 * @throws ParseException 
 	 * @throws InterruptedException 
 	 */
+   @Test
 	public void testAdvWithLessThanEqualToOperatorSubWithLessThanOperator() throws ParseException, InterruptedException {
 		/* TODO: REZA (NEW-DONE) */
 		MessageDestination mdA = clientA.getClientDest();
@@ -1075,6 +1101,7 @@ public class TestClients extends TestCase {
 	 * Test adv with "<=" and sub with "<=".
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testAdvWithLessThanEqualToOperatorSubWithLessThanEqualToOperator() throws ParseException {
 		Advertisement adv = MessageFactory.createAdvertisementFromString("[class,eq,'stock'],[price,<=,100]");
 		MessageDestination mdA = clientA.getClientDest();
@@ -1158,6 +1185,7 @@ public class TestClients extends TestCase {
 	 * Test adv with "<=" and sub with ">".
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testAdvWithLessThanEqualToOperatorSubWithGreaterThanOperator() throws ParseException {
 		Advertisement adv = MessageFactory.createAdvertisementFromString("[class,eq,'stock'],[price,<=,100]");
 		MessageDestination mdA = clientA.getClientDest();
@@ -1231,6 +1259,7 @@ public class TestClients extends TestCase {
 	 * Test adv with "<=" and sub with ">=".
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testAdvWithLessThanEqualToOperatorSubWithGreaterThanEqualToOperator() throws ParseException {
 		MessageDestination mdA = clientA.getClientDest();
 		MessageDestination mdB = clientB.getClientDest();
@@ -1315,6 +1344,7 @@ public class TestClients extends TestCase {
 	 * Test adv with "<=" and sub with "=".
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testAdvWithLessThanEqualToOperatorSubWithEqualToOperator() throws ParseException {
 		MessageDestination mdA = clientA.getClientDest();
 		MessageDestination mdB = clientB.getClientDest();
@@ -1388,6 +1418,7 @@ public class TestClients extends TestCase {
 	 * Test adv with "<=" and sub with "<>".
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testAdvWithLessThanEqualToOperatorSubWithNotEqualToOperator() throws ParseException {
 		MessageDestination mdA = clientA.getClientDest();
 		MessageDestination mdB = clientB.getClientDest();
@@ -1480,6 +1511,7 @@ public class TestClients extends TestCase {
 	 * Test adv with "<=" and sub with "isPresent".
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testAdvWithLessThanEqualToOperatorSubWithIsPresentOperator() throws ParseException {
 		Advertisement adv = MessageFactory.createAdvertisementFromString("[class,eq,'stock'],[price,<=,100]");
 		MessageDestination mdA = clientA.getClientDest();
@@ -1508,6 +1540,7 @@ public class TestClients extends TestCase {
 	 * Test adv with ">" and sub with "<".
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testAdvWithGreaterThanOperatorSubWithLessThanOperator() throws ParseException {
 		MessageDestination mdA = clientA.getClientDest();
 		MessageDestination mdB = clientB.getClientDest();
@@ -1577,6 +1610,7 @@ public class TestClients extends TestCase {
 	 * Test adv with ">" and sub with "<="
 	 * @throws ParseException.
 	 */
+   @Test
 	public void testAdvWithGreaterThanOperatorSubWithLessThanEqualToOperator() throws ParseException {
 		MessageDestination mdA = clientA.getClientDest();
 		MessageDestination mdB = clientB.getClientDest();
@@ -1646,6 +1680,7 @@ public class TestClients extends TestCase {
 	 * Test adv with ">" and sub with ">".
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testAdvWithGreaterThanOperatorSubWithGreaterThanOperator() throws ParseException {
 		MessageDestination mdA = clientA.getClientDest();
 		MessageDestination mdB = clientB.getClientDest();
@@ -1738,6 +1773,7 @@ public class TestClients extends TestCase {
 	 * Test adv with ">" and sub with ">=".
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testAdvWithGreaterThanOperatorSubWithGreaterThanEqualToOperator() throws ParseException {
 		MessageDestination mdA = clientA.getClientDest();
 		MessageDestination mdB = clientB.getClientDest();
@@ -1830,6 +1866,7 @@ public class TestClients extends TestCase {
 	 * Test adv with ">" and sub with "=".
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testAdvWithGreaterThanOperatorSubWithEqualToOperator() throws ParseException {
 		Advertisement adv = MessageFactory.createAdvertisementFromString("[class,eq,'stock'],[price,>,100]");
 		MessageDestination mdA = clientA.getClientDest();
@@ -1898,6 +1935,7 @@ public class TestClients extends TestCase {
 	 * Test adv with ">" and sub with "<>".
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testAdvWithGreaterThanOperatorSubWithNotEqualToOperator() throws ParseException {
 		MessageDestination mdA = clientA.getClientDest();
 		MessageDestination mdB = clientB.getClientDest();
@@ -1990,6 +2028,7 @@ public class TestClients extends TestCase {
 	 * Test adv with ">" and sub with "isPresent".
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testAdvWithGreaterThanOperatorSubWithIsPresentOperator() throws ParseException {
 		Advertisement adv = MessageFactory.createAdvertisementFromString("[class,eq,'stock'],[price,>,100]");
 		MessageDestination mdA = clientA.getClientDest();
@@ -2018,6 +2057,7 @@ public class TestClients extends TestCase {
 	 * Test adv with ">=" and sub with "<".
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testAdvWithGreaterThanEqualToOperatorSubWithLessThanOperator() throws ParseException {
 		MessageDestination mdA = clientA.getClientDest();
 		MessageDestination mdB = clientB.getClientDest();
@@ -2087,6 +2127,7 @@ public class TestClients extends TestCase {
 	 * Test adv with ">=" and sub with "<=".
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testAdvWithGreaterThanEqualToOperatorSubWithLessThanEqualToOperator() throws ParseException {
 		MessageDestination mdA = clientA.getClientDest();
 		MessageDestination mdB = clientB.getClientDest();
@@ -2160,6 +2201,7 @@ public class TestClients extends TestCase {
 	 * Test adv with ">=" and sub with ">".
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testAdvWithGreaterThanEqualToOperatorSubWithGreaterThanOperator() throws ParseException {
 		MessageDestination mdA = clientA.getClientDest();
 		MessageDestination mdB = clientB.getClientDest();
@@ -2252,6 +2294,7 @@ public class TestClients extends TestCase {
 	 * Test adv with ">=" and sub with ">=".
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testAdvWithGreaterThanEqualToOperatorSubWithGreaterThanEqualToOperator() throws ParseException {
 		Advertisement adv = MessageFactory.createAdvertisementFromString("[class,eq,'stock'],[price,>=,100]");
 		MessageDestination mdA = clientA.getClientDest();
@@ -2335,6 +2378,7 @@ public class TestClients extends TestCase {
 	 * Test adv with ">=" and sub with "=".
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testAdvWithGreaterThanEqualToOperatorSubWithEqualToOperator() throws ParseException {
 		Advertisement adv = MessageFactory.createAdvertisementFromString("[class,eq,'stock'],[price,>=,100]");
 		MessageDestination mdA = clientA.getClientDest();
@@ -2404,6 +2448,7 @@ public class TestClients extends TestCase {
 	 * Test adv with ">=" and sub with "<>".
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testAdvWithGreaterThanEqualToOperatorSubWithNotEqualToOperator() throws ParseException {
 		Advertisement adv = MessageFactory.createAdvertisementFromString("[class,eq,'stock'],[price,>=,100]");
 		MessageDestination mdA = clientA.getClientDest();
@@ -2495,6 +2540,7 @@ public class TestClients extends TestCase {
 	 * Test adv with ">=" and sub with "isPresent".
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testAdvWithGreaterThanEqualToOperatorSubWithIsPresentOperator() throws ParseException {
 		Advertisement adv = MessageFactory.createAdvertisementFromString("[class,eq,'stock'],[price,>=,100]");
 		MessageDestination mdA = clientA.getClientDest();
@@ -2523,6 +2569,7 @@ public class TestClients extends TestCase {
 	 * Test adv with "=" and sub with "<".
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testAdvWithEqualToOperatorSubWithLessThanOperator() throws ParseException {
 		Advertisement adv = MessageFactory.createAdvertisementFromString("[class,eq,'stock'],[price,=,100]");
 		MessageDestination mdA = clientA.getClientDest();
@@ -2568,6 +2615,7 @@ public class TestClients extends TestCase {
 	 * Test adv with "=" and sub with "<=".
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testAdvWithEqualToOperatorSubWithLessThanEqualToOperator() throws ParseException {
 		Advertisement adv = MessageFactory.createAdvertisementFromString("[class,eq,'stock'],[price,=,100]");
 		MessageDestination mdA = clientA.getClientDest();
@@ -2624,6 +2672,7 @@ public class TestClients extends TestCase {
 	 * Test adv with "=" and sub with ">".
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testAdvWithEqualToOperatorSubWithGreaterThanOperator() throws ParseException {
 		Advertisement adv = MessageFactory.createAdvertisementFromString("[class,eq,'stock'],[price,=,100]");
 		MessageDestination mdA = clientA.getClientDest();
@@ -2667,6 +2716,7 @@ public class TestClients extends TestCase {
 	 * Test adv with "=" and sub with ">=".
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testAdvWithEqualToOperatorSubWithGreaterThanEqualToOperator() throws ParseException {
 		Advertisement adv = MessageFactory.createAdvertisementFromString("[class,eq,'stock'],[price,=,100]");
 		MessageDestination mdA = clientA.getClientDest();
@@ -2725,6 +2775,7 @@ public class TestClients extends TestCase {
 	 * for all publications, but is reproduceable.
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testAdvConformanceChecking() throws ParseException {
 		int noOfPubsToTest = 20;
 		String stockSymbol = "YHOO";
@@ -2787,6 +2838,7 @@ public class TestClients extends TestCase {
 	 * Test adv with "=" and sub with "=".
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testAdvWithEqualToOperatorSubWithEqualToOperator() throws ParseException {
 		Advertisement adv = MessageFactory.createAdvertisementFromString("[class,eq,'stock'],[price,=,100]");
 		MessageDestination mdA = clientA.getClientDest();
@@ -2832,6 +2884,7 @@ public class TestClients extends TestCase {
 	 * Test adv with "=" and sub with "<>".
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testAdvWithEqualToOperatorSubWithNotEqualToOperator() throws ParseException {
 		Advertisement adv = MessageFactory.createAdvertisementFromString("[class,eq,'stock'],[price,=,100]");
 		MessageDestination mdA = clientA.getClientDest();
@@ -2889,6 +2942,7 @@ public class TestClients extends TestCase {
 	 * Test adv with "=" and sub with "isPresent".
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testAdvWithEqualToOperatorSubWithIsPresentOperator() throws ParseException {
 		Advertisement adv = MessageFactory.createAdvertisementFromString("[class,eq,'stock'],[price,=,100]");
 		MessageDestination mdA = clientA.getClientDest();
@@ -2917,6 +2971,7 @@ public class TestClients extends TestCase {
 	 * Test adv with "<>" and sub with "<".
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testAdvWithNotEqualToOperatorSubWithLessThanOperator() throws ParseException {
 		Advertisement adv = MessageFactory.createAdvertisementFromString("[class,eq,'stock'],[price,<>,100]");
 		MessageDestination mdA = clientA.getClientDest();
@@ -2992,6 +3047,7 @@ public class TestClients extends TestCase {
 	 * Test adv with "<>" and sub with "<=".
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testAdvWithNotEqualToOperatorSubWithLessThanEqualToOperator() throws ParseException {
 		Advertisement adv = MessageFactory.createAdvertisementFromString("[class,eq,'stock'],[price,<>,100]");
 		MessageDestination mdA = clientA.getClientDest();
@@ -3072,6 +3128,7 @@ public class TestClients extends TestCase {
 	 * @throws ParseException 
 	 * @throws InterruptedException 
 	 */
+   @Test
 	public void testAdvWithNotEqualToOperatorSubWithGreaterThanOperator() throws ParseException, InterruptedException {
 		/* TODO: REZA (NEW-DONE) */
 		Advertisement adv = MessageFactory.createAdvertisementFromString("[class,eq,'stock'],[price,<>,100]");
@@ -3134,6 +3191,7 @@ public class TestClients extends TestCase {
 	 * Test adv with "<>" and sub with ">=".
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testAdvWithNotEqualToOperatorSubWithGreaterThanEqualToOperator() throws ParseException {
 		Advertisement adv = MessageFactory.createAdvertisementFromString("[class,eq,'stock'],[price,<>,100]");
 		MessageDestination mdA = clientA.getClientDest();
@@ -3209,6 +3267,7 @@ public class TestClients extends TestCase {
 	 * Test adv with "<>" and sub with "=".
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testAdvWithNotEqualToOperatorSubWithEqualToOperator() throws ParseException {
 		Advertisement adv = MessageFactory.createAdvertisementFromString("[class,eq,'stock'],[price,<>,100]");
 		MessageDestination mdA = clientA.getClientDest();
@@ -3277,6 +3336,7 @@ public class TestClients extends TestCase {
 	 * Test adv with "<>" and sub with "<>".
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testAdvWithNotEqualToOperatorSubWithNotEqualToOperator() throws ParseException {
 		Advertisement adv = MessageFactory.createAdvertisementFromString("[class,eq,'stock'],[price,<>,100]");
 		MessageDestination mdA = clientA.getClientDest();
@@ -3359,6 +3419,7 @@ public class TestClients extends TestCase {
 	 * Test adv with "<>" and sub with "isPresent".
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testAdvWithNotEqualToOperatorSubWithIsPresentOperator() throws ParseException {
 		Advertisement adv = MessageFactory.createAdvertisementFromString("[class,eq,'stock'],[price,<>,100]");
 		MessageDestination mdA = clientA.getClientDest();
@@ -3387,6 +3448,7 @@ public class TestClients extends TestCase {
 	 * Test adv with "isPresent" and sub with "isPresent".
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testAdvWithIsPresentOperatorSubWithIsPresentOperator() throws ParseException {
 		Advertisement adv = MessageFactory.createAdvertisementFromString("[class,eq,'stock'],[price,isPresent,100]");
 		MessageDestination mdA = clientA.getClientDest();
@@ -3415,6 +3477,7 @@ public class TestClients extends TestCase {
 	 * Test adv with "str-lt" and sub with "str-contains".
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testAdvWithStrLtOperatorSubWithStrContainsOperator() throws ParseException {
 		Advertisement adv = MessageFactory.createAdvertisementFromString("[class,eq,'stock'],[attribute,str-lt,'ibm']");
 		MessageDestination mdA = clientA.getClientDest();
@@ -3455,6 +3518,7 @@ public class TestClients extends TestCase {
 	 * Test adv with "str-lt" and sub with "str-prefix".
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testAdvWithStrLtOperatorSubWithStrPrefixOperator() throws ParseException {
 		Advertisement adv = MessageFactory.createAdvertisementFromString("[class,eq,'stock'],[attribute,str-lt,'ibm']");
 		MessageDestination mdA = clientA.getClientDest();
@@ -3493,6 +3557,7 @@ public class TestClients extends TestCase {
 	 * Test adv with "str-lt" and sub with "str-postfix".
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testAdvWithStrLtOperatorSubWithStrPostfixOperator() throws ParseException {
 		Advertisement adv = MessageFactory.createAdvertisementFromString("[class,eq,'stock'],[attribute,str-lt,'ibm']");
 		MessageDestination mdA = clientA.getClientDest();
@@ -3533,6 +3598,7 @@ public class TestClients extends TestCase {
 	 * Test adv with "str-lt" and sub with "isPresent".
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testAdvWithStrLtOperatorSubWithStrIsPresentOperator() throws ParseException {
 		Advertisement adv = MessageFactory.createAdvertisementFromString("[class,eq,'stock'],[attribute,str-lt,'ibm']");
 		MessageDestination mdA = clientA.getClientDest();
@@ -3561,6 +3627,7 @@ public class TestClients extends TestCase {
 	 * Test adv with "str-lt" and sub with "str-lt".
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testAdvWithStrLtOperatorSubWithStrLtOperator() throws ParseException {
 		Advertisement adv = MessageFactory.createAdvertisementFromString("[class,eq,'stock'],[attribute,str-lt,'ibm']");
 		MessageDestination mdA = clientA.getClientDest();
@@ -3648,6 +3715,7 @@ public class TestClients extends TestCase {
 	 * Test adv with "str-lt" and sub with "str-le".
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testAdvWithStrLtOperatorSubWithStrLeOperator() throws ParseException {
 		Advertisement adv = MessageFactory.createAdvertisementFromString("[class,eq,'stock'],[attribute,str-lt,'ibm']");
 		MessageDestination mdA = clientA.getClientDest();
@@ -3732,6 +3800,7 @@ public class TestClients extends TestCase {
 	 * Test adv with "str-lt" and sub with "str-ge".
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testAdvWithStrLtOperatorSubWithStrGeOperator() throws ParseException {
 		Advertisement adv = MessageFactory.createAdvertisementFromString("[class,eq,'stock'],[attribute,str-lt,'ibm']");
 		MessageDestination mdA = clientA.getClientDest();
@@ -3791,6 +3860,7 @@ public class TestClients extends TestCase {
 	 * Test adv with "str-lt" and sub with "str-gt".
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testAdvWithStrLtOperatorSubWithStrGtOperator() throws ParseException {
 		Advertisement adv = MessageFactory.createAdvertisementFromString("[class,eq,'stock'],[attribute,str-lt,'ibm']");
 		MessageDestination mdA = clientA.getClientDest();
@@ -3850,6 +3920,7 @@ public class TestClients extends TestCase {
 	 * Test adv with "str-lt" and sub with "eq".
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testAdvWithStrLtOperatorSubWithStrEqOperator() throws ParseException {
 		Advertisement adv = MessageFactory.createAdvertisementFromString("[class,eq,'stock'],[attribute,str-lt,'ibm']");
 		MessageDestination mdA = clientA.getClientDest();
@@ -3909,6 +3980,7 @@ public class TestClients extends TestCase {
 	 * Test adv with "str-lt" and sub with "neq".
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testAdvWithStrLtOperatorSubWithStrNeqOperator() throws ParseException {
 		Advertisement adv = MessageFactory.createAdvertisementFromString("[class,eq,'stock'],[attribute,str-lt,'ibm']");
 		MessageDestination mdA = clientA.getClientDest();
@@ -3993,6 +4065,7 @@ public class TestClients extends TestCase {
 	 * Test adv with "str-le" and sub with "str-contains".
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testAdvWithStrLeOperatorSubWithStrContainsOperator() throws ParseException {
 		Advertisement adv = MessageFactory.createAdvertisementFromString("[class,eq,'stock'],[attribute,str-le,'ibm']");
 		MessageDestination mdA = clientA.getClientDest();
@@ -4031,6 +4104,7 @@ public class TestClients extends TestCase {
 	 * Test adv with "str-le" and sub with "str-prefix".
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testAdvWithStrLeOperatorSubWithStrPrefixOperator() throws ParseException {
 		Advertisement adv = MessageFactory.createAdvertisementFromString("[class,eq,'stock'],[attribute,str-le,'ibm']");
 		MessageDestination mdA = clientA.getClientDest();
@@ -4069,6 +4143,7 @@ public class TestClients extends TestCase {
 	 * Test adv with "str-le" and sub with "str-postfix".
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testAdvWithStrLeOperatorSubWithStrPostfixOperator() throws ParseException {
 		Advertisement adv = MessageFactory.createAdvertisementFromString("[class,eq,'stock'],[attribute,str-le,'ibm']");
 		MessageDestination mdA = clientA.getClientDest();
@@ -4109,6 +4184,7 @@ public class TestClients extends TestCase {
 	 * Test adv with "str-le" and sub with "isPresent".
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testAdvWithStrLeOperatorSubWithStrIsPresentOperator() throws ParseException {
 		Advertisement adv = MessageFactory.createAdvertisementFromString("[class,eq,'stock'],[attribute,str-le,'ibm']");
 		MessageDestination mdA = clientA.getClientDest();
@@ -4137,6 +4213,7 @@ public class TestClients extends TestCase {
 	 * Test adv with "str-le" and sub with "str-lt".
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testAdvWithStrLeOperatorSubWithStrLtOperator() throws ParseException {
 		Advertisement adv = MessageFactory.createAdvertisementFromString("[class,eq,'stock'],[attribute,str-le,'ibm']");
 		MessageDestination mdA = clientA.getClientDest();
@@ -4216,6 +4293,7 @@ public class TestClients extends TestCase {
 	 * Test adv with "str-le" and sub with "str-le".
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testAdvWithStrLeOperatorSubWithStrLeOperator() throws ParseException {
 		Advertisement adv = MessageFactory.createAdvertisementFromString("[class,eq,'stock'],[attribute,str-le,'ibm']");
 		MessageDestination mdA = clientA.getClientDest();
@@ -4300,6 +4378,7 @@ public class TestClients extends TestCase {
 	 * Test adv with "str-le" and sub with "str-ge".
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testAdvWithStrLeOperatorSubWithStrGeOperator() throws ParseException {
 		Advertisement adv = MessageFactory.createAdvertisementFromString("[class,eq,'stock'],[attribute,str-le,'ibm']");
 		MessageDestination mdA = clientA.getClientDest();
@@ -4377,6 +4456,7 @@ public class TestClients extends TestCase {
 	 * Test adv with "str-le" and sub with "str-gt".
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testAdvWithStrLeOperatorSubWithStrGtOperator() throws ParseException {
 		Advertisement adv = MessageFactory.createAdvertisementFromString("[class,eq,'stock'],[attribute,str-le,'ibm']");
 		MessageDestination mdA = clientA.getClientDest();
@@ -4436,6 +4516,7 @@ public class TestClients extends TestCase {
 	 * Test adv with "str-le" and sub with "eq".
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testAdvWithStrLeOperatorSubWithStrEqOperator() throws ParseException {
 		Advertisement adv = MessageFactory.createAdvertisementFromString("[class,eq,'stock'],[attribute,str-le,'ibm']");
 		MessageDestination mdA = clientA.getClientDest();
@@ -4506,6 +4587,7 @@ public class TestClients extends TestCase {
 	 * Test adv with "str-le" and sub with "neq".
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testAdvWithStrLeOperatorSubWithStrNeqOperator() throws ParseException {
 		Advertisement adv = MessageFactory.createAdvertisementFromString("[class,eq,'stock'],[attribute,str-le,'ibm']");
 		MessageDestination mdA = clientA.getClientDest();
@@ -4590,6 +4672,7 @@ public class TestClients extends TestCase {
 	 * Test adv with "str-ge" and sub with "str-contains".
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testAdvWithStrGeOperatorSubWithStrContainsOperator() throws ParseException {
 		Advertisement adv = MessageFactory.createAdvertisementFromString("[class,eq,'stock'],[attribute,str-ge,'ibm']");
 		MessageDestination mdA = clientA.getClientDest();
@@ -4628,6 +4711,7 @@ public class TestClients extends TestCase {
 	 * Test adv with "str-ge" and sub with "str-prefix".
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testAdvWithStrGeOperatorSubWithStrPrefixOperator() throws ParseException {
 		Advertisement adv = MessageFactory.createAdvertisementFromString("[class,eq,'stock'],[attribute,str-ge,'ibm']");
 		MessageDestination mdA = clientA.getClientDest();
@@ -4696,6 +4780,7 @@ public class TestClients extends TestCase {
 	 * Test adv with "str-ge" and sub with "str-postfix".
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testAdvWithStrGeOperatorSubWithStrPostfixOperator() throws ParseException {
 		Advertisement adv = MessageFactory.createAdvertisementFromString("[class,eq,'stock'],[attribute,str-ge,'ibm']");
 		MessageDestination mdA = clientA.getClientDest();
@@ -4736,6 +4821,7 @@ public class TestClients extends TestCase {
 	 * Test adv with "str-ge" and sub with "isPresent".
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testAdvWithStrGeOperatorSubWithStrIsPresentOperator() throws ParseException {
 		Advertisement adv = MessageFactory.createAdvertisementFromString("[class,eq,'stock'],[attribute,str-ge,'ibm']");
 		MessageDestination mdA = clientA.getClientDest();
@@ -4764,6 +4850,7 @@ public class TestClients extends TestCase {
 	 * Test adv with "str-ge" and sub with "str-lt".
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testAdvWithStrGeOperatorSubWithStrLtOperator() throws ParseException {
 		Advertisement adv = MessageFactory.createAdvertisementFromString("[class,eq,'stock'],[attribute,str-ge,'ibm']");
 		MessageDestination mdA = clientA.getClientDest();
@@ -4826,6 +4913,7 @@ public class TestClients extends TestCase {
 	 * @throws ParseException 
 	 * @throws InterruptedException 
 	 */
+   @Test
 	public void testAdvWithStrGeOperatorSubWithStrLeOperator() throws ParseException, InterruptedException {
 		/* TODO: REZA (NEW-DONE) */
 		Advertisement adv = MessageFactory.createAdvertisementFromString("[class,eq,'stock'],[attribute,str-ge,'ibm']");
@@ -4892,6 +4980,7 @@ public class TestClients extends TestCase {
 	 * Test adv with "str-ge" and sub with "str-ge".
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testAdvWithStrGeOperatorSubWithStrGeOperator() throws ParseException {
 		Advertisement adv = MessageFactory.createAdvertisementFromString("[class,eq,'stock'],[attribute,str-ge,'ibm']");
 		MessageDestination mdA = clientA.getClientDest();
@@ -4976,6 +5065,7 @@ public class TestClients extends TestCase {
 	 * Test adv with "str-ge" and sub with "str-gt".
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testAdvWithStrGeOperatorSubWithStrGtOperator() throws ParseException {
 		Advertisement adv = MessageFactory.createAdvertisementFromString("[class,eq,'stock'],[attribute,str-ge,'ibm']");
 		MessageDestination mdA = clientA.getClientDest();
@@ -5053,6 +5143,7 @@ public class TestClients extends TestCase {
 	 * Test adv with "str-ge" and sub with "eq".
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testAdvWithStrGeOperatorSubWithStrEqOperator() throws ParseException {
 		Advertisement adv = MessageFactory.createAdvertisementFromString("[class,eq,'stock'],[attribute,str-ge,'ibm']");
 		MessageDestination mdA = clientA.getClientDest();
@@ -5125,6 +5216,7 @@ public class TestClients extends TestCase {
 	 * Test adv with "str-ge" and sub with "neq".
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testAdvWithStrGeOperatorSubWithStrNeqOperator() throws ParseException {
 		Advertisement adv = MessageFactory.createAdvertisementFromString("[class,eq,'stock'],[attribute,str-ge,'ibm']");
 		MessageDestination mdA = clientA.getClientDest();
@@ -5209,6 +5301,7 @@ public class TestClients extends TestCase {
 	 * Test adv with "str-gt" and sub with "str-contains".
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testAdvWithStrGtOperatorSubWithStrContainsOperator() throws ParseException {
 		Advertisement adv = MessageFactory.createAdvertisementFromString("[class,eq,'stock'],[attribute,str-gt,'ibm']");
 		MessageDestination mdA = clientA.getClientDest();
@@ -5249,6 +5342,7 @@ public class TestClients extends TestCase {
 	 * Test adv with "str-gt" and sub with "str-prefix".
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testAdvWithStrGtOperatorSubWithStrPrefixOperator() throws ParseException {
 		Advertisement adv = MessageFactory.createAdvertisementFromString("[class,eq,'stock'],[attribute,str-gt,'ibm']");
 		MessageDestination mdA = clientA.getClientDest();
@@ -5289,6 +5383,7 @@ public class TestClients extends TestCase {
 	 * Test adv with "str-gt" and sub with "str-postfix".
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testAdvWithStrGtOperatorSubWithStrPostfixOperator() throws ParseException {
 		Advertisement adv = MessageFactory.createAdvertisementFromString("[class,eq,'stock'],[attribute,str-gt,'ibm']");
 		MessageDestination mdA = clientA.getClientDest();
@@ -5329,6 +5424,7 @@ public class TestClients extends TestCase {
 	 * Test adv with "str-gt" and sub with "isPresent".
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testAdvWithStrGtOperatorSubWithStrIsPresentOperator() throws ParseException {
 		Advertisement adv = MessageFactory.createAdvertisementFromString("[class,eq,'stock'],[attribute,str-gt,'ibm']");
 		MessageDestination mdA = clientA.getClientDest();
@@ -5357,6 +5453,7 @@ public class TestClients extends TestCase {
 	 * Test adv with "str-gt" and sub with "str-lt".
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testAdvWithStrGtOperatorSubWithStrLtOperator() throws ParseException {
 		Advertisement adv = MessageFactory.createAdvertisementFromString("[class,eq,'stock'],[attribute,str-gt,'ibm']");
 		MessageDestination mdA = clientA.getClientDest();
@@ -5418,6 +5515,7 @@ public class TestClients extends TestCase {
 	 * Test adv with "str-gt" and sub with "str-le".
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testAdvWithStrGtOperatorSubWithStrLeOperator() throws ParseException {
 		Advertisement adv = MessageFactory.createAdvertisementFromString("[class,eq,'stock'],[attribute,str-gt,'ibm']");
 		MessageDestination mdA = clientA.getClientDest();
@@ -5479,6 +5577,7 @@ public class TestClients extends TestCase {
 	 * Test adv with "str-gt" and sub with "str-ge".
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testAdvWithStrGtOperatorSubWithStrGeOperator() throws ParseException {
 		Advertisement adv = MessageFactory.createAdvertisementFromString("[class,eq,'stock'],[attribute,str-gt,'ibm']");
 		MessageDestination mdA = clientA.getClientDest();
@@ -5563,6 +5662,7 @@ public class TestClients extends TestCase {
 	 * Test adv with "str-gt" and sub with "str-gt".
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testAdvWithStrGtOperatorSubWithStrGtOperator() throws ParseException {
 		Advertisement adv = MessageFactory.createAdvertisementFromString("[class,eq,'stock'],[attribute,str-gt,'ibm']");
 		MessageDestination mdA = clientA.getClientDest();
@@ -5647,6 +5747,7 @@ public class TestClients extends TestCase {
 	 * Test adv with "str-gt" and sub with "eq".
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testAdvWithStrGtOperatorSubWithStrEqOperator() throws ParseException {
 		Advertisement adv = MessageFactory.createAdvertisementFromString("[class,eq,'stock'],[attribute,str-gt,'ibm']");
 		MessageDestination mdA = clientA.getClientDest();
@@ -5717,6 +5818,7 @@ public class TestClients extends TestCase {
 	 * Test adv with "str-gt" and sub with "neq".
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testAdvWithStrGtOperatorSubWithStrNeqOperator() throws ParseException {
 		Advertisement adv = MessageFactory.createAdvertisementFromString("[class,eq,'stock'],[attribute,str-gt,'ibm']");
 		MessageDestination mdA = clientA.getClientDest();
@@ -5801,6 +5903,7 @@ public class TestClients extends TestCase {
 	 * Test adv with "eq" and sub with "str-contains".
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testAdvWithStrEqOperatorSubWithStrContainsOperator() throws ParseException {
 		Advertisement adv = MessageFactory.createAdvertisementFromString("[class,eq,'stock'],[attribute,eq,'ibm']");
 		MessageDestination mdA = clientA.getClientDest();
@@ -5839,6 +5942,7 @@ public class TestClients extends TestCase {
 	 * Test adv with "eq" and sub with "str-prefix".
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testAdvWithStrEqOperatorSubWithStrPrefixOperator() throws ParseException {
 		Advertisement adv = MessageFactory.createAdvertisementFromString("[class,eq,'stock'],[attribute,eq,'ibm']");
 		MessageDestination mdA = clientA.getClientDest();
@@ -5877,6 +5981,7 @@ public class TestClients extends TestCase {
 	 * Test adv with "eq" and sub with "str-postfix".
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testAdvWithStrEqOperatorSubWithStrPostfixOperator() throws ParseException {
 		Advertisement adv = MessageFactory.createAdvertisementFromString("[class,eq,'stock'],[attribute,eq,'ibm']");
 		MessageDestination mdA = clientA.getClientDest();
@@ -5917,6 +6022,7 @@ public class TestClients extends TestCase {
 	 * Test adv with "eq" and sub with "isPresent".
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testAdvWithStrEqOperatorSubWithStrIsPresentOperator() throws ParseException {
 		Advertisement adv = MessageFactory.createAdvertisementFromString("[class,eq,'stock'],[attribute,eq,'ibm']");
 		MessageDestination mdA = clientA.getClientDest();
@@ -5945,6 +6051,7 @@ public class TestClients extends TestCase {
 	 * Test adv with "eq" and sub with "str-lt".
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testAdvWithStrEqOperatorSubWithStrLtOperator() throws ParseException {
 		Advertisement adv = MessageFactory.createAdvertisementFromString("[class,eq,'stock'],[attribute,eq,'ibm']");
 		MessageDestination mdA = clientA.getClientDest();
@@ -5995,6 +6102,7 @@ public class TestClients extends TestCase {
 	 * Test adv with "eq" and sub with "str-le".
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testAdvWithStrEqOperatorSubWithStrLeOperator() throws ParseException {
 		Advertisement adv = MessageFactory.createAdvertisementFromString("[class,eq,'stock'],[attribute,eq,'ibm']");
 		MessageDestination mdA = clientA.getClientDest();
@@ -6052,6 +6160,7 @@ public class TestClients extends TestCase {
 	 * Test adv with "eq" and sub with "str-ge".
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testAdvWithStrEqOperatorSubWithStrGeOperator() throws ParseException {
 		Advertisement adv = MessageFactory.createAdvertisementFromString("[class,eq,'stock'],[attribute,eq,'ibm']");
 		MessageDestination mdA = clientA.getClientDest();
@@ -6109,6 +6218,7 @@ public class TestClients extends TestCase {
 	 * Test adv with "eq" and sub with "str-gt".
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testAdvWithStrEqOperatorSubWithStrGtOperator() throws ParseException {
 		Advertisement adv = MessageFactory.createAdvertisementFromString("[class,eq,'stock'],[attribute,eq,'ibm']");
 		MessageDestination mdA = clientA.getClientDest();
@@ -6152,6 +6262,7 @@ public class TestClients extends TestCase {
 	 * Test adv with "eq" and sub with "eq".
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testAdvWithStrEqOperatorSubWithStrEqOperator() throws ParseException {
 		Advertisement adv = MessageFactory.createAdvertisementFromString("[class,eq,'stock'],[attribute,eq,'ibm']");
 		MessageDestination mdA = clientA.getClientDest();
@@ -6198,6 +6309,7 @@ public class TestClients extends TestCase {
 	 * Test adv with "eq" and sub with "neq".
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testAdvWithStrEqOperatorSubWithStrNeqOperator() throws ParseException {
 		Advertisement adv = MessageFactory.createAdvertisementFromString("[class,eq,'stock'],[attribute,eq,'ibm']");
 		MessageDestination mdA = clientA.getClientDest();
@@ -6241,6 +6353,7 @@ public class TestClients extends TestCase {
 	 * Test adv with "neq" and sub with "str-contains".
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testAdvWithStrNeqOperatorSubWithStrContainsOperator() throws ParseException {
 		Advertisement adv = MessageFactory.createAdvertisementFromString("[class,eq,'stock'],[attribute,neq,'ibm']");
 		MessageDestination mdA = clientA.getClientDest();
@@ -6281,6 +6394,7 @@ public class TestClients extends TestCase {
 	 * Test adv with "neq" and sub with "str-prefix".
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testAdvWithStrNeqOperatorSubWithStrPrefixOperator() throws ParseException {
 		Advertisement adv = MessageFactory.createAdvertisementFromString("[class,eq,'stock'],[attribute,neq,'ibm']");
 		MessageDestination mdA = clientA.getClientDest();
@@ -6319,6 +6433,7 @@ public class TestClients extends TestCase {
 	 * Test adv with "neq" and sub with "str-postfix".
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testAdvWithStrNeqOperatorSubWithStrPostfixOperator() throws ParseException {
 		Advertisement adv = MessageFactory.createAdvertisementFromString("[class,eq,'stock'],[attribute,neq,'ibm']");
 		MessageDestination mdA = clientA.getClientDest();
@@ -6357,6 +6472,7 @@ public class TestClients extends TestCase {
 	 * Test adv with "neq" and sub with "isPresent".
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testAdvWithStrNeqOperatorSubWithStrIsPresentOperator() throws ParseException {
 		Advertisement adv = MessageFactory.createAdvertisementFromString("[class,eq,'stock'],[attribute,neq,'ibm']");
 		MessageDestination mdA = clientA.getClientDest();
@@ -6385,6 +6501,7 @@ public class TestClients extends TestCase {
 	 * Test adv with "neq" and sub with "str-lt".
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testAdvWithStrNeqOperatorSubWithStrLtOperator() throws ParseException {
 		Advertisement adv = MessageFactory.createAdvertisementFromString("[class,eq,'stock'],[attribute,neq,'ibm']");
 		MessageDestination mdA = clientA.getClientDest();
@@ -6461,6 +6578,7 @@ public class TestClients extends TestCase {
 	 * Test adv with "neq" and sub with "str-le".
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testAdvWithStrNeqOperatorSubWithStrLeOperator() throws ParseException {
 		Advertisement adv = MessageFactory.createAdvertisementFromString("[class,eq,'stock'],[attribute,neq,'ibm']");
 		MessageDestination mdA = clientA.getClientDest();
@@ -6540,6 +6658,7 @@ public class TestClients extends TestCase {
 	 * Test adv with "neq" and sub with "str-ge".
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testAdvWithStrNeqOperatorSubWithStrGeOperator() throws ParseException {
 		Advertisement adv = MessageFactory.createAdvertisementFromString("[class,eq,'stock'],[attribute,neq,'ibm']");
 		MessageDestination mdA = clientA.getClientDest();
@@ -6617,6 +6736,7 @@ public class TestClients extends TestCase {
 	 * Test adv with "neq" and sub with "str-gt".
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testAdvWithStrNeqOperatorSubWithStrGtOperator() throws ParseException {
 		Advertisement adv = MessageFactory.createAdvertisementFromString("[class,eq,'stock'],[attribute,neq,'ibm']");
 		MessageDestination mdA = clientA.getClientDest();
@@ -6694,6 +6814,7 @@ public class TestClients extends TestCase {
 	 * Test adv with "neq" and sub with "eq".
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testAdvWithStrNeqOperatorSubWithStrEqOperator() throws ParseException {
 		Advertisement adv = MessageFactory.createAdvertisementFromString("[class,eq,'stock'],[attribute,neq,'ibm']");
 		MessageDestination mdA = clientA.getClientDest();
@@ -6765,6 +6886,7 @@ public class TestClients extends TestCase {
 	 * Test adv with "neq" and sub with "neq".
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testAdvWithStrNeqOperatorSubWithStrNeqOperator() throws ParseException {
 		Advertisement adv = MessageFactory.createAdvertisementFromString("[class,eq,'stock'],[attribute,neq,'ibm']");
 		MessageDestination mdA = clientA.getClientDest();
@@ -6848,6 +6970,7 @@ public class TestClients extends TestCase {
 	 * Test adv with "str-contains" and sub with "str-contains".
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testAdvWithStrContainsOperatorSubWithStrContainsOperator() throws ParseException {
 		Advertisement adv = MessageFactory.createAdvertisementFromString("[class,eq,'stock'],[attribute,str-contains,'ibm']");
 		MessageDestination mdA = clientA.getClientDest();
@@ -6886,6 +7009,7 @@ public class TestClients extends TestCase {
 	 * Test adv with "str-contains" and sub with "str-prefix".
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testAdvWithStrContainsOperatorSubWithStrPrefixOperator() throws ParseException {
 		Advertisement adv = MessageFactory.createAdvertisementFromString("[class,eq,'stock'],[attribute,str-contains,'ibm']");
 		MessageDestination mdA = clientA.getClientDest();
@@ -6924,6 +7048,7 @@ public class TestClients extends TestCase {
 	 * Test adv with "str-contains" and sub with "str-postfix".
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testAdvWithStrContainsOperatorSubWithStrPostfixOperator() throws ParseException {
 		Advertisement adv = MessageFactory.createAdvertisementFromString("[class,eq,'stock'],[attribute,str-contains,'ibm']");
 		MessageDestination mdA = clientA.getClientDest();
@@ -6964,6 +7089,7 @@ public class TestClients extends TestCase {
 	 * Test adv with "str-contains" and sub with "isPresent".
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testAdvWithStrContainsOperatorSubWithStrIsPresentOperator() throws ParseException {
 		Advertisement adv = MessageFactory.createAdvertisementFromString("[class,eq,'stock'],[attribute,str-contains,'ibm']");
 		MessageDestination mdA = clientA.getClientDest();
@@ -6992,6 +7118,7 @@ public class TestClients extends TestCase {
 	 * Test adv with "str-contains" and sub with "str-lt".
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testAdvWithStrContainsOperatorSubWithStrLtOperator() throws ParseException {
 		Advertisement adv = MessageFactory.createAdvertisementFromString("[class,eq,'stock'],[attribute,str-contains,'ibm']");
 		MessageDestination mdA = clientA.getClientDest();
@@ -7032,6 +7159,7 @@ public class TestClients extends TestCase {
 	 * Test adv with "str-contains" and sub with "str-le".
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testAdvWithStrContainsOperatorSubWithStrLeOperator() throws ParseException {
 		Advertisement adv = MessageFactory.createAdvertisementFromString("[class,eq,'stock'],[attribute,str-contains,'ibm']");
 		MessageDestination mdA = clientA.getClientDest();
@@ -7072,6 +7200,7 @@ public class TestClients extends TestCase {
 	 * Test adv with "str-contains" and sub with "str-ge".
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testAdvWithStrContainsOperatorSubWithStrGeOperator() throws ParseException {
 		Advertisement adv = MessageFactory.createAdvertisementFromString("[class,eq,'stock'],[attribute,str-contains,'ibm']");
 		MessageDestination mdA = clientA.getClientDest();
@@ -7112,6 +7241,7 @@ public class TestClients extends TestCase {
 	 * Test adv with "str-contains" and sub with "str-gt".
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testAdvWithStrContainsOperatorSubWithStrGtOperator() throws ParseException {
 		Advertisement adv = MessageFactory.createAdvertisementFromString("[class,eq,'stock'],[attribute,str-contains,'ibm']");
 		MessageDestination mdA = clientA.getClientDest();
@@ -7152,6 +7282,7 @@ public class TestClients extends TestCase {
 	 * Test adv with "str-contains" and sub with "eq".
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testAdvWithStrContainsOperatorSubWithStrEqOperator() throws ParseException {
 		Advertisement adv = MessageFactory.createAdvertisementFromString("[class,eq,'stock'],[attribute,str-contains,'ibm']");
 		MessageDestination mdA = clientA.getClientDest();
@@ -7192,6 +7323,7 @@ public class TestClients extends TestCase {
 	 * Test adv with "str-contains" and sub with "neq".
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testAdvWithStrContainsOperatorSubWithStrNeqOperator() throws ParseException {
 		Advertisement adv = MessageFactory.createAdvertisementFromString("[class,eq,'stock'],[attribute,str-contains,'ibm']");
 		MessageDestination mdA = clientA.getClientDest();
@@ -7232,6 +7364,7 @@ public class TestClients extends TestCase {
 	 * Test adv with "str-prefix" and sub with "str-contains".
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testAdvWithStrPrefixOperatorSubWithStrContainsOperator() throws ParseException {
 		Advertisement adv = MessageFactory.createAdvertisementFromString("[class,eq,'stock'],[attribute,str-prefix,'ibm']");
 		MessageDestination mdA = clientA.getClientDest();
@@ -7295,6 +7428,7 @@ public class TestClients extends TestCase {
 	 * Test adv with "str-prefix" and sub with "str-prefix".
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testAdvWithStrPrefixOperatorSubWithStrPrefixOperator() throws ParseException {
 		Advertisement adv = MessageFactory.createAdvertisementFromString("[class,eq,'stock'],[attribute,str-prefix,'ibm']");
 		MessageDestination mdA = clientA.getClientDest();
@@ -7349,6 +7483,7 @@ public class TestClients extends TestCase {
 	 * Test adv with "str-prefix" and sub with "str-postfix".
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testAdvWithStrPrefixOperatorSubWithStrPostfixOperator() throws ParseException {
 		Advertisement adv = MessageFactory.createAdvertisementFromString("[class,eq,'stock'],[attribute,str-prefix,'ibm']");
 		MessageDestination mdA = clientA.getClientDest();
@@ -7406,6 +7541,7 @@ public class TestClients extends TestCase {
 	 * Test adv with "str-prefix" and sub with "isPresent".
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testAdvWithStrPrefixOperatorSubWithStrIsPresentOperator() throws ParseException {
 		Advertisement adv = MessageFactory.createAdvertisementFromString("[class,eq,'stock'],[attribute,str-prefix,'ibm']");
 		MessageDestination mdA = clientA.getClientDest();
@@ -7434,6 +7570,7 @@ public class TestClients extends TestCase {
 	 * Test adv with "str-prefix" and sub with "str-lt".
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testAdvWithStrPrefixOperatorSubWithStrLtOperator() throws ParseException {
 		Advertisement adv = MessageFactory.createAdvertisementFromString("[class,eq,'stock'],[attribute,str-prefix,'ibm']");
 		MessageDestination mdA = clientA.getClientDest();
@@ -7474,6 +7611,7 @@ public class TestClients extends TestCase {
 	 * Test adv with "str-prefix" and sub with "str-le".
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testAdvWithStrPrefixOperatorSubWithStrLeOperator() throws ParseException {
 		Advertisement adv = MessageFactory.createAdvertisementFromString("[class,eq,'stock'],[attribute,str-prefix,'ibm']");
 		MessageDestination mdA = clientA.getClientDest();
@@ -7514,6 +7652,7 @@ public class TestClients extends TestCase {
 	 * Test adv with "str-prefix" and sub with "str-ge".
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testAdvWithStrPrefixOperatorSubWithStrGeOperator() throws ParseException {
 		Advertisement adv = MessageFactory.createAdvertisementFromString("[class,eq,'stock'],[attribute,str-prefix,'ibm']");
 		MessageDestination mdA = clientA.getClientDest();
@@ -7554,6 +7693,7 @@ public class TestClients extends TestCase {
 	 * Test adv with "str-prefix" and sub with "str-gt".
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testAdvWithStrPrefixOperatorSubWithStrGtOperator() throws ParseException {
 		Advertisement adv = MessageFactory.createAdvertisementFromString("[class,eq,'stock'],[attribute,str-prefix,'ibm']");
 		MessageDestination mdA = clientA.getClientDest();
@@ -7594,6 +7734,7 @@ public class TestClients extends TestCase {
 	 * Test adv with "str-prefix" and sub with "eq".
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testAdvWithStrPrefixOperatorSubWithStrEqOperator() throws ParseException {
 		Advertisement adv = MessageFactory.createAdvertisementFromString("[class,eq,'stock'],[attribute,str-prefix,'ibm']");
 		MessageDestination mdA = clientA.getClientDest();
@@ -7634,6 +7775,7 @@ public class TestClients extends TestCase {
 	 * Test adv with "str-prefix" and sub with "neq".
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testAdvWithStrPrefixOperatorSubWithStrNeqOperator() throws ParseException {
 		Advertisement adv = MessageFactory.createAdvertisementFromString("[class,eq,'stock'],[attribute,str-prefix,'ibm']");
 		MessageDestination mdA = clientA.getClientDest();
@@ -7674,6 +7816,7 @@ public class TestClients extends TestCase {
 	 * Test adv with "str-postfix" and sub with "str-contains".
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testAdvWithStrPostfixOperatorSubWithStrContainsOperator() throws ParseException {
 		Advertisement adv = MessageFactory.createAdvertisementFromString("[class,eq,'stock'],[attribute,str-postfix,'ibm']");
 		MessageDestination mdA = clientA.getClientDest();
@@ -7728,6 +7871,7 @@ public class TestClients extends TestCase {
 	 * Test adv with "str-postfix" and sub with "str-prefix".
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testAdvWithStrPostfixOperatorSubWithStrPrefixOperator() throws ParseException {
 		Advertisement adv = MessageFactory.createAdvertisementFromString("[class,eq,'stock'],[attribute,str-postfix,'ibm']");
 		MessageDestination mdA = clientA.getClientDest();
@@ -7786,6 +7930,7 @@ public class TestClients extends TestCase {
 	 * Test adv with "str-postfix" and sub with "str-postfix".
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testAdvWithStrPostfixOperatorSubWithStrPostfixOperator() throws ParseException {
 		Advertisement adv = MessageFactory.createAdvertisementFromString("[class,eq,'stock'],[attribute,str-postfix,'ibm']");
 		MessageDestination mdA = clientA.getClientDest();
@@ -7840,6 +7985,7 @@ public class TestClients extends TestCase {
 	 * Test adv with "str-postfix" and sub with "isPresent".
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testAdvWithStrPostfixOperatorSubWithStrIsPresentOperator() throws ParseException {
 		Advertisement adv = MessageFactory.createAdvertisementFromString("[class,eq,'stock'],[attribute,str-postfix,'ibm']");
 		MessageDestination mdA = clientA.getClientDest();
@@ -7868,6 +8014,7 @@ public class TestClients extends TestCase {
 	 * Test adv with "str-postfix" and sub with "str-lt".
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testAdvWithStrPostfixOperatorSubWithStrLtOperator() throws ParseException {
 		Advertisement adv = MessageFactory.createAdvertisementFromString("[class,eq,'stock'],[attribute,str-postfix,'ibm']");
 		MessageDestination mdA = clientA.getClientDest();
@@ -7908,6 +8055,7 @@ public class TestClients extends TestCase {
 	 * Test adv with "str-postfix" and sub with "str-le".
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testAdvWithStrPostfixOperatorSubWithStrLeOperator() throws ParseException {
 		Advertisement adv = MessageFactory.createAdvertisementFromString("[class,eq,'stock'],[attribute,str-postfix,'ibm']");
 		MessageDestination mdA = clientA.getClientDest();
@@ -7948,6 +8096,7 @@ public class TestClients extends TestCase {
 	 * Test adv with "str-postfix" and sub with "str-ge".
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testAdvWithStrPostfixOperatorSubWithStrGeOperator() throws ParseException {
 		Advertisement adv = MessageFactory.createAdvertisementFromString("[class,eq,'stock'],[attribute,str-postfix,'ibm']");
 		MessageDestination mdA = clientA.getClientDest();
@@ -7988,6 +8137,7 @@ public class TestClients extends TestCase {
 	 * Test adv with "str-postfix" and sub with "str-gt".
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testAdvWithStrPostfixOperatorSubWithStrGtOperator() throws ParseException {
 		Advertisement adv = MessageFactory.createAdvertisementFromString("[class,eq,'stock'],[attribute,str-postfix,'ibm']");
 		MessageDestination mdA = clientA.getClientDest();
@@ -8028,6 +8178,7 @@ public class TestClients extends TestCase {
 	 * Test adv with "str-postfix" and sub with "eq".
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testAdvWithStrPostfixOperatorSubWithStrEqOperator() throws ParseException {
 		Advertisement adv = MessageFactory.createAdvertisementFromString("[class,eq,'stock'],[attribute,str-postfix,'ibm']");
 		MessageDestination mdA = clientA.getClientDest();
@@ -8068,6 +8219,7 @@ public class TestClients extends TestCase {
 	 * Test adv with "str-postfix" and sub with "neq".
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testAdvWithStrPostfixOperatorSubWithStrNeqOperator() throws ParseException {
 		Advertisement adv = MessageFactory.createAdvertisementFromString("[class,eq,'stock'],[attribute,str-postfix,'ibm']");
 		MessageDestination mdA = clientA.getClientDest();
@@ -8108,6 +8260,7 @@ public class TestClients extends TestCase {
 	 * Test adv with "isPresent" and sub with "isPresent".
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testAdvWithStrIsPresentOperatorSubWithStrIsPresentOperator() throws ParseException {
 		Advertisement adv = MessageFactory.createAdvertisementFromString("[class,eq,'stock'],[attribute,isPresent,'ibm']");
 		MessageDestination mdA = clientA.getClientDest();
@@ -8136,6 +8289,7 @@ public class TestClients extends TestCase {
 	 * Test unsubscribe a subscription.
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testUnsubscribe() throws ParseException {
 		// clientA is publisher, clientB is subscriber
 		Advertisement adv = MessageFactory.createAdvertisementFromString("[class,eq,'stock'],[price,>,100]");
@@ -8184,6 +8338,7 @@ public class TestClients extends TestCase {
 	 * Test unadvertisement
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testUnadvertise() throws ParseException {
 		// clientA is publisher, clientB is subscriber
 		Advertisement adv = MessageFactory.createAdvertisementFromString("[class,eq,'stock'],[price,>,100]");
@@ -8231,6 +8386,7 @@ public class TestClients extends TestCase {
 	 * Test composite subscription: s1 AND s2.
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testCompositeSubscriptionWithAnd() throws ParseException {
 		// clientA,B is publisher, clientC is susbcriber
 		MessageDestination mdA = clientA.getClientDest();
@@ -8314,6 +8470,7 @@ public class TestClients extends TestCase {
 	 * Test composite subscription: s1 AND s2. Composite subscription is issued first.
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testCompositeSubscriptionWithAndWithCSBeforeAdv() throws ParseException {
 		// clientA,B is publisher, clientC is susbcriber
 		MessageDestination mdA = clientA.getClientDest();
@@ -8398,6 +8555,7 @@ public class TestClients extends TestCase {
 	 * Test composite subscription: s1 OR s2.
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testCompositeSubscriptionWithOr() throws ParseException {
 		// clientA,B is publisher, clientC is susbcriber
 		MessageDestination mdA = clientA.getClientDest();
@@ -8471,6 +8629,7 @@ public class TestClients extends TestCase {
 	 * Test composite subscription: {{s1 AND s2} AND s3}.
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testCompositeSubscriptionWithAndAnd() throws ParseException {
 		// clientA,B is publisher, clientC is susbcriber
 		MessageDestination mdA = clientA.getClientDest();
@@ -8623,6 +8782,7 @@ public class TestClients extends TestCase {
 	 * Test composite subscription: {{s1 OR s2} OR s3}.
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testCompositeSubscriptionWithOrOr() throws ParseException {
 		// clientA,B is publisher, clientC is susbcriber
 		MessageDestination mdA = clientA.getClientDest();
@@ -8713,6 +8873,7 @@ public class TestClients extends TestCase {
 	 * Test composite subscription: {{s1 AND s2} OR s3}.
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testCompositeSubscriptionWithAndOr() throws ParseException {
 		// clientA,B is publisher, clientC is susbcriber
 		MessageDestination mdA = clientA.getClientDest();
@@ -8888,6 +9049,7 @@ public class TestClients extends TestCase {
 	 * Test composite subscription: {{s1 OR s2} AND s3}.
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testCompositeSubscriptionWithOrAnd() throws ParseException {
 		// clientA,B is publisher, clientC is susbcriber
 		MessageDestination mdA = clientA.getClientDest();
@@ -9095,6 +9257,7 @@ public class TestClients extends TestCase {
 	 * Test composite subscription: s1 AND s2, both s1 and s2 have string variable.
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testCompositeSubscriptionWithStringVariableWithAnd() throws ParseException {
 		// varibale test for CS is only "eq" right now.
 		// clientA,B is publisher, clientC is susbcriber
@@ -9141,6 +9304,7 @@ public class TestClients extends TestCase {
 	 * Test composite subscription: s1 OR s2, both s1 and s2 have string variable.
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testCompositeSubscriptionWithStringVariableWithOr() throws ParseException {
 		// varibale test for CS is only "eq" right now.
 		// clientA,B is publisher, clientC is susbcriber
@@ -9178,6 +9342,7 @@ public class TestClients extends TestCase {
 	 * Test composite subscription: s1 AND s2, both s1 and s2 have integer variable
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testCompositeSubscriptionWithNumberVariableWithAnd() throws ParseException {
 		// varibale test for CS is only "=" right now.
 		// clientA,B is publisher, clientC is susbcriber
@@ -9224,6 +9389,7 @@ public class TestClients extends TestCase {
 	 * Test composite subscription: s1 OR s2, both s1 and s2 have integer variable
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testCompositeSubscriptionWithNumberVariableWithOr() throws ParseException {
 		// varibale test for CS is only "=" right now.
 		// clientA,B is publisher, clientC is susbcriber
@@ -9262,6 +9428,7 @@ public class TestClients extends TestCase {
 	/**
 	 * Test payload attached with publication.
 	 */
+   @Test
 	public void testPubPayload() {
 
 	}

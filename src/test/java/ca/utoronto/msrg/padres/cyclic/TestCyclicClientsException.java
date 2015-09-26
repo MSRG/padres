@@ -1,5 +1,7 @@
 package ca.utoronto.msrg.padres.cyclic;
 
+import org.junit.Test;
+
 import ca.utoronto.msrg.padres.common.message.Advertisement;
 import ca.utoronto.msrg.padres.common.message.AdvertisementMessage;
 import ca.utoronto.msrg.padres.common.message.MessageDestination;
@@ -23,6 +25,7 @@ public class TestCyclicClientsException extends TestClientsException {
 	 * Test for exception that subscription without single quotes in string predicate.
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testSubWithoutSingleQuotesInStringPredicates() throws ParseException {
 		// for now padres do not throw exception, and matching can be excuted correctly
 		// this message format is allowed in Padres.

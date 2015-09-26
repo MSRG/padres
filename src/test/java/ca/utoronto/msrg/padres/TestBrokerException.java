@@ -1,7 +1,11 @@
 package ca.utoronto.msrg.padres;
+import org.junit.Before;
+import org.junit.After;
+
+import org.junit.Test;
 
 import ca.utoronto.msrg.padres.common.comm.ConnectionHelper;
-import junit.framework.TestCase;
+import org.junit.Assert;
 
 import org.apache.log4j.Level;
 
@@ -26,7 +30,7 @@ import ca.utoronto.msrg.padres.common.util.LogSetup;
 import ca.utoronto.msrg.padres.tester.GenericBrokerTester;
 import ca.utoronto.msrg.padres.tester.TesterBrokerCore;
 
-public class TestBrokerException extends TestCase {
+public class TestBrokerException extends Assert {
 	
 	static {
 		if(System.getProperty("test.version") == null)
@@ -40,9 +44,9 @@ public class TestBrokerException extends TestCase {
 	protected BrokerCore otherBroker = null;
 	
 	
-	@Override
-	protected void tearDown() throws Exception {
-		super.tearDown();
+   @After
+   public void tearDown() throws Exception {
+
 
 		LogSetup.removeAppender("Exception", exceptionAppender);
 		brokerCore.shutdown();
@@ -59,8 +63,8 @@ public class TestBrokerException extends TestCase {
 
 	private PatternFilter patternFilter;
 
-	@Override
-	protected void setUp() throws Exception {
+   @Before
+   public void setUp() throws Exception {
 		_brokerTester = new GenericBrokerTester();
 		
 		// start the broker
@@ -80,6 +84,7 @@ public class TestBrokerException extends TestCase {
 	 * Test for exception that the remoteBroker of OVERLAY-CONNECT command is malformed.
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testMalformedBrokerConnectPubForOverlay() throws ParseException {
 		// A malformed remoteBrokerURI is given
 		Publication olConnectPub = MessageFactory.createPublicationFromString("[class,'BROKER_CONTROL'],[brokerID,'"
@@ -102,6 +107,7 @@ public class TestBrokerException extends TestCase {
 	 * Test for exception that the remoteBroker of OVERLAY-CONNECT command is null.
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testNullRemoteBrokerConnectPubForOverlay() throws ParseException {
 		// A null remoteBrokerURI is given
 		Publication olConnectPub = MessageFactory.createPublicationFromString("[class,'BROKER_CONTROL'],[brokerID,'"
@@ -123,6 +129,7 @@ public class TestBrokerException extends TestCase {
 	 * important to note that this will cause a loop, and the routing will be wrong totally.
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testConnectItselfPubForOverlay() throws ParseException {
 		// A fake remoteBrokerURI is given
 		Publication olConnectPub = MessageFactory.createPublicationFromString("[class,'BROKER_CONTROL'],[brokerID,'"
@@ -145,6 +152,7 @@ public class TestBrokerException extends TestCase {
 	 * Test for exception that the unrecognized command for overlay.
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testUnrecognizedCommandPubForOverlay() throws ParseException {
 		// An unrecognized command is given
 		Publication olUnrecognizedCommandPub = MessageFactory.createPublicationFromString(
@@ -168,6 +176,7 @@ public class TestBrokerException extends TestCase {
 	 * Test for exception that the unrecognized command for lifeCycle.
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testUnrecognizedCommandPubForLifeCycle() throws ParseException {
 		// An unrecognized command is given
 		Publication lcUnrecognizedCommandPub = MessageFactory.createPublicationFromString(
@@ -197,6 +206,7 @@ public class TestBrokerException extends TestCase {
 	 * 
 	 */
 
+   @Test
 	public void testUnrecognizedCommandPubForServerInjection() throws ParseException {
 		// An unrecognized command is given
 		Publication siUnrecognizedCommandPub = MessageFactory.createPublicationFromString(
@@ -226,6 +236,7 @@ public class TestBrokerException extends TestCase {
 	 * 
 	 */
 
+   @Test
 	public void testUnrecognizedCommandPubForSystemMonitor() throws ParseException {
 		MessageDestination md = new MessageDestination("Broker-D0-0");
 		Advertisement smAdv = MessageFactory.createAdvertisementFromString(
@@ -263,6 +274,7 @@ public class TestBrokerException extends TestCase {
 	 * 
 	 * 
 	 */
+   @Test
 	public void testUnrecognizedClassPub() throws ParseException {
 		// An unrecognized command is given
 		MessageDestination mdA = new MessageDestination(brokerCore.getBrokerID() + "-D0-0");
@@ -289,6 +301,7 @@ public class TestBrokerException extends TestCase {
 	}
 	
 	/* TODO: REZA (DONE) */
+   @Test
 	public void testBrokerConnectUnroutableIP() throws ParseException, InterruptedException {
 		String ipStr = "142.150.237.234";
 		String brokerURI =
@@ -309,6 +322,7 @@ public class TestBrokerException extends TestCase {
 	}
 
 	/* TODO: REZA (DONE) */
+   @Test
 	public void testBrokerConnectInvalidIP() throws ParseException, InterruptedException {
 		// Invalid IP address includes a value of 400 for the last byte.
 		String ipStr = "142.150.237.400";
@@ -330,6 +344,7 @@ public class TestBrokerException extends TestCase {
 	}
 	
 	/* TODO: REZA */
+   @Test
 	public void testUnexistingBrokerConnect() throws ParseException, InterruptedException {
 		String ipStr = "localhost";
 		// No broker listening at this port.
@@ -352,6 +367,7 @@ public class TestBrokerException extends TestCase {
 	}
 	
 	/* TODO: REZA (DOES NOT WORK) */
+   @Test
 	public void testBrokerConnectToAnotherSpecifyingWrongID() throws BrokerCoreException, InterruptedException, ParseException {
 		if(1==1) return;
 		GenericBrokerTester.lookAtPubs = true;

@@ -1,6 +1,10 @@
 package ca.utoronto.msrg.padres.subcover;
+import org.junit.Before;
+import org.junit.After;
 
-import junit.framework.TestCase;
+import org.junit.Test;
+
+import org.junit.Assert;
 import ca.utoronto.msrg.padres.broker.brokercore.BrokerConfig;
 import ca.utoronto.msrg.padres.broker.brokercore.BrokerCore;
 import ca.utoronto.msrg.padres.broker.brokercore.BrokerCoreException;
@@ -34,7 +38,7 @@ import ca.utoronto.msrg.padres.tester.TesterMessagePredicates;
  * @author Shuang Hou, Bala Maniymaran
  */
 
-public class TestSubCovering extends TestCase {
+public class TestSubCovering extends Assert {
 
 	static {
 		if(System.getProperty("test.version") == null)
@@ -63,7 +67,8 @@ public class TestSubCovering extends TestCase {
 
     protected PatternFilter msgFilter;
 	
-    protected void setUp() throws Exception {
+   @Before
+   public void setUp() throws Exception {
     	_brokerTester = new GenericBrokerTester();
     	
         // setup configurations for a star network
@@ -101,8 +106,9 @@ public class TestSubCovering extends TestCase {
         clientC.connect(brokerCore4.getBrokerURI());
     }
 
-    protected void tearDown() throws Exception {
-        super.tearDown();
+   @After
+   public void tearDown() throws Exception {
+
         clientA.shutdown();
         clientB.shutdown();
         clientC.shutdown();
@@ -134,6 +140,7 @@ public class TestSubCovering extends TestCase {
      * @throws ParseException
      * @throws InterruptedException 
      */
+   @Test
     public void testSub1CoversOrEqualsToSub2() throws ParseException, InterruptedException {
 		/* TODO: VINOD/YOUNG (DONE) */
 		// Send adv and wait for it to be routed.
@@ -288,6 +295,7 @@ public class TestSubCovering extends TestCase {
      * @throws ParseException
      * @throws InterruptedException 
      */
+   @Test
     public void testSub1NoInteractWithSub2() throws ParseException, InterruptedException {
 		/* TODO: REZA (DONE) */
 		_brokerTester.clearAll().
@@ -329,6 +337,7 @@ public class TestSubCovering extends TestCase {
      * @throws ParseException
      * @throws InterruptedException 
      */
+   @Test
     public void testSub1InteractWithSub2() throws ParseException, InterruptedException {
 		/* TODO: REZA (DONE) */
 		_brokerTester.clearAll().
@@ -370,6 +379,7 @@ public class TestSubCovering extends TestCase {
      * @throws ParseException
      * @throws InterruptedException 
      */
+   @Test
     public void testSub1CoversSub2AndUnsubscribeSub2() throws ParseException, InterruptedException {
 		/* TODO: REZA (DONE) */
 		_brokerTester.clearAll().
@@ -452,6 +462,7 @@ public class TestSubCovering extends TestCase {
      * @throws ParseException
      * @throws InterruptedException 
      */
+   @Test
     public void testSub1CoversSub2AndUnsubscribeSub1() throws ParseException, InterruptedException {
 		/* REZA (NEW-DONE) */
         // reset message filter

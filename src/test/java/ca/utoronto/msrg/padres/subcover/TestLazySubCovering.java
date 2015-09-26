@@ -1,5 +1,7 @@
 package ca.utoronto.msrg.padres.subcover;
 
+import org.junit.Test;
+
 import ca.utoronto.msrg.padres.client.Client;
 import ca.utoronto.msrg.padres.common.message.MessageDestination;
 import ca.utoronto.msrg.padres.common.message.MessageType;
@@ -42,6 +44,7 @@ public class TestLazySubCovering extends TestSubCovering {
      * @throws ParseException
      * @throws InterruptedException 
      */
+   @Test
     public void testSub1BeCoveredBySub2WithLazy() throws ParseException, InterruptedException {
 		/* TODO: VINOD/YOUNG (DONE) */
 		// Send an adv.
@@ -102,6 +105,7 @@ public class TestLazySubCovering extends TestSubCovering {
      * @throws ParseException
      * @throws InterruptedException 
      */
+   @Test
     public void testSub1BeCoveredBySub2AndUnsubscribeSub1WithLazy() throws ParseException, InterruptedException {
 		/* TODO: VINOD/YOUNG (DONE) (Consistently passes with version 3.) */
 		// Send adv and wait for it to propagate.
@@ -182,6 +186,7 @@ public class TestLazySubCovering extends TestSubCovering {
      * 
      * @throws ParseException
      */
+   @Test
     public void testSub1BeCoveredBySub2AndUnsubscribeSub2WithLazy() throws ParseException {
         // reset message filter
         msgFilter.setPattern(brokerCore3.getBrokerURI() + ".+got message.+Advertisement.+");

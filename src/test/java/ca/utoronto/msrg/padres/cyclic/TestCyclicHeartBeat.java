@@ -1,5 +1,7 @@
 package ca.utoronto.msrg.padres.cyclic;
 
+import org.junit.Test;
+
 import ca.utoronto.msrg.padres.common.message.MessageType;
 import ca.utoronto.msrg.padres.common.message.parser.ParseException;
 import ca.utoronto.msrg.padres.TestHeartBeat;
@@ -19,6 +21,7 @@ public class TestCyclicHeartBeat extends TestHeartBeat {
 	 * @throws ParseException 
 	 * @throws InterruptedException 
 	 */
+   @Test
 	public void testHeartBeatACK() throws ParseException, InterruptedException {
 		/* TODO: VINOD (DONE) */
 		// TODO: Can we also test for the tid and handle attributes?
@@ -43,6 +46,7 @@ public class TestCyclicHeartBeat extends TestHeartBeat {
 	 * @throws ParseException 
 	 * @throws InterruptedException 
 	 */
+   @Test
 	public void testHeartBeatFailureDetectAndFailureCleared() throws ParseException, InterruptedException {
 		/* TODO: VINOD (DONE) */
 		// Stop broker 2 and wait for the failure to be detected.

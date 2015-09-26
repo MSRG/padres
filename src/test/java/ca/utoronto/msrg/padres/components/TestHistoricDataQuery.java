@@ -1,9 +1,13 @@
 package ca.utoronto.msrg.padres.components;
+import org.junit.Before;
+import org.junit.After;
+
+import org.junit.Test;
 
 import java.io.File;
 import java.sql.SQLException;
 
-import junit.framework.TestCase;
+import org.junit.Assert;
 import ca.utoronto.msrg.padres.broker.brokercore.BrokerConfig;
 import ca.utoronto.msrg.padres.broker.brokercore.BrokerCore;
 import ca.utoronto.msrg.padres.broker.brokercore.BrokerCoreException;
@@ -34,7 +38,7 @@ import ca.utoronto.msrg.padres.tester.TesterMessagePredicates;
  * 
  * @author shou
  */
-public class TestHistoricDataQuery extends TestCase {
+public class TestHistoricDataQuery extends Assert {
 
 	static {
 		if(System.getProperty("test.version") == null)
@@ -69,8 +73,8 @@ public class TestHistoricDataQuery extends TestCase {
 
 	protected PatternFilter clientMsgFilter;
 
-	@Override
-	protected void setUp() throws Exception {
+   @Before
+   public void setUp() throws Exception {
 		_brokerTester = new GenericBrokerTester();
 		
 		propsFileName1 = BrokerConfig.PADRES_HOME + "etc" + File.separator + "db" + File.separator
@@ -131,8 +135,9 @@ public class TestHistoricDataQuery extends TestCase {
 		return new TesterBrokerCore(_brokerTester, args);
 	}
 	
-	protected void tearDown() throws Exception {
-		super.tearDown();
+   @After
+   public void tearDown() throws Exception {
+
 		_brokerTester = null;
 		clientA.shutdown();
 		clientB.shutdown();
@@ -155,6 +160,7 @@ public class TestHistoricDataQuery extends TestCase {
 	 * @throws ParseException 
 	 * @throws InterruptedException 
 	 */
+   @Test
 	public void testHistoricDataQueryWithMultipleBrokers() throws SQLException, BrokerCoreException, ClientException, ParseException, InterruptedException {
 		/* TODO: YOUNG (DONE) */
 		clientC.connect(brokerCore2.getBrokerURI());
@@ -394,6 +400,7 @@ public class TestHistoricDataQuery extends TestCase {
 	 * @throws ParseException 
 	 * @throws InterruptedException 
 	 */
+   @Test
 	public void testHistoricDataQueryWithOneBroker() throws SQLException, ClientException, ParseException, InterruptedException {
 		/* TODO: YOUNG (DONE) */
 		clientC.connect(brokerCore1.getBrokerURI());
@@ -523,6 +530,7 @@ public class TestHistoricDataQuery extends TestCase {
 	 * @throws ParseException 
 	 * @throws InterruptedException 
 	 */
+   @Test
 	public void testHistoricDataQueryWithOneBrokerWithRegularSub() throws SQLException,	ClientException, ParseException, InterruptedException {
 		/* TODO: YOUNG (DONE) */
 		clientC.connect(brokerCore1.getBrokerURI());
@@ -668,6 +676,7 @@ public class TestHistoricDataQuery extends TestCase {
 	 * @throws ParseException 
 	 * @throws InterruptedException 
 	 */
+   @Test
 	public void testHistoricDataQueryWithOneBrokerWithSubHavingMoreAttributes() throws SQLException, ClientException, ParseException, InterruptedException {
 		/* TODO: YOUNG (DONE) */
 		clientC.connect(brokerCore1.getBrokerURI());

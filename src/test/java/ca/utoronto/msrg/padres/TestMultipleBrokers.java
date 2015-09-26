@@ -1,7 +1,11 @@
 package ca.utoronto.msrg.padres;
+import org.junit.Before;
+import org.junit.After;
 
-import junit.framework.AssertionFailedError;
-import junit.framework.TestCase;
+import org.junit.Test;
+
+
+import org.junit.Assert;
 import ca.utoronto.msrg.padres.broker.brokercore.BrokerConfig;
 import ca.utoronto.msrg.padres.broker.brokercore.BrokerCore;
 import ca.utoronto.msrg.padres.broker.brokercore.BrokerCoreException;
@@ -38,7 +42,7 @@ import ca.utoronto.msrg.padres.tester.TesterMessagePredicates;
  * 
  * @author Shuang Hou, Bala Maniymaran
  */
-public class TestMultipleBrokers extends TestCase {
+public class TestMultipleBrokers extends Assert {
 	
 	static {
 		if(System.getProperty("test.version") == null)
@@ -73,7 +77,8 @@ public class TestMultipleBrokers extends TestCase {
 
 	protected PatternFilter msgFilter;
 
-	protected void setUp() throws Exception {
+   @Before
+   public void setUp() throws Exception {
 		_brokerTester = new GenericBrokerTester();
 		
 		// configure for network type 1
@@ -129,9 +134,9 @@ public class TestMultipleBrokers extends TestCase {
 		return new TesterBrokerCore(_brokerTester, brokerConfig);
 	}
 	
-	@Override
-	protected void tearDown() throws Exception {
-		super.tearDown();
+   @After
+   public void tearDown() throws Exception {
+
 		clientA.shutdown();
 		clientB.shutdown();
 		clientC.shutdown();
@@ -162,6 +167,7 @@ public class TestMultipleBrokers extends TestCase {
 	 * is the core, other four brokers connect to Broker1 seperately.
 	 * @throws InterruptedException 
 	 */
+   @Test
 	public void testEstablishedNetwork() throws InterruptedException {
 		/* TODO: REZA (NEW-DONE) */
 		final long startTime = System.currentTimeMillis();
@@ -198,7 +204,7 @@ public class TestMultipleBrokers extends TestCase {
 						ort1.isNeighbor(brokerCore5.getBrokerDestination()));
 				assertTrue("The Broker1 is not connected to the Broker5 correctly",
 						ort5.isNeighbor(brokerCore1.getBrokerDestination()));
-			} catch (AssertionFailedError x) {
+			} catch (AssertionError x) {
 				if(loopingEnded)
 					throw x;
 				else
@@ -215,6 +221,7 @@ public class TestMultipleBrokers extends TestCase {
 	 * @throws ParseException 
 	 * @throws InterruptedException 
 	 */
+   @Test
 	public void testAdvFloodInNetwork() throws ParseException, InterruptedException {
 		/* TODO: VINOD (Fails at last assertion for countBroker5.) */
 		// send an advertisement
@@ -302,6 +309,7 @@ public class TestMultipleBrokers extends TestCase {
 	 * @throws ParseException 
 	 * @throws InterruptedException 
 	 */
+   @Test
 	public void testAdvSubRoutingWithOneAdvWithMoreBrokers() throws ParseException, InterruptedException {
 		/* TODO: VINOD X (DONE) (Consistently passes with versions 1, 2, 3, 4) */
 		// Send an adv.
@@ -375,6 +383,7 @@ public class TestMultipleBrokers extends TestCase {
 	 * 
 	 * @see TestMultipleBrokers#testAdvSubRoutingWithOneAdvWithMoreBrokers()
 	 */
+   @Test
 	public void testSubAdvRoutingWithOneAdvWithMoreBrokers() throws ParseException, InterruptedException {
 		/* TODO: VINOD (DONE) (Works with versions 3 and 4.) */
 		_brokerTester.clearAll().
@@ -432,6 +441,7 @@ public class TestMultipleBrokers extends TestCase {
 	 * @throws ParseException 
 	 * @throws InterruptedException 
 	 */
+   @Test
 	public void testAdvSubRoutingWithTwoAdvsWithSameLastHopWithMoreBrokers() throws ParseException, InterruptedException {
 		/* TODO: VINOD (DONE) (Consistently passes with version 3) */
 		// Send adv.
@@ -522,6 +532,7 @@ public class TestMultipleBrokers extends TestCase {
 	 * 
 	 * @see TestMultipleBrokers#testAdvSubRoutingWithTwoAdvsWithSameLastHopWithMoreBrokers()
 	 */
+   @Test
 	public void testSubAdvRoutingWithTwoAdvsWithSameLastHopWithMoreBrokers() throws ParseException, InterruptedException {
 		/* TODO: REZA (DONE) */
 		_brokerTester.clearAll().
@@ -597,6 +608,7 @@ public class TestMultipleBrokers extends TestCase {
 	 * @throws ParseException 
 	 * @throws InterruptedException 
 	 */
+   @Test
 	public void testAdvSubRoutingWithTwoAdvsWithDiffLastHopWithMoreBrokers() throws ParseException, InterruptedException {
 		/* TODO: VINOD (DONE) */
 		// Send advs.
@@ -658,6 +670,7 @@ public class TestMultipleBrokers extends TestCase {
 	 * 
 	 * @see TestMultipleBrokers#testAdvSubRoutingWithTwoAdvsWithDiffLastHopWithMoreBrokers
 	 */
+   @Test
 	public void testSubAdvRoutingWithTwoAdvsWithDiffLastHopWithMoreBrokers() throws ParseException, InterruptedException {
 		/* TODO: VINOD (DONE) */
 		// Sub overlaps both ads.
@@ -710,6 +723,7 @@ public class TestMultipleBrokers extends TestCase {
 	 * @throws ParseException 
 	 * @throws InterruptedException 
 	 */
+   @Test
 	public void testAdvSubAdvRoutingWithTwoAdvsWithDiffLastHopWithMoreBrokers() throws ParseException, InterruptedException {
 		/* TODO: REZA (DONE) */
 		_brokerTester.clearAll().
@@ -763,6 +777,7 @@ public class TestMultipleBrokers extends TestCase {
 	 * @throws ParseException 
 	 * @throws InterruptedException 
 	 */
+   @Test
 	public void testSubPubMatchingWithOneSubWithMoreBrokers() throws ParseException, InterruptedException {
 		/* TODO: REZA (NEW-DONE) */
 		_brokerTester.clearAll().
@@ -814,6 +829,7 @@ public class TestMultipleBrokers extends TestCase {
 	 * @throws ParseException 
 	 * @throws InterruptedException 
 	 */
+   @Test
 	public void testSubPubMatchingWithTwoSubsWithSameLastHopWithMoreBrokers() throws ParseException, InterruptedException {
 		/* TODO: REZA++ (DONE) */
 		_brokerTester.clearAll().
@@ -884,6 +900,7 @@ public class TestMultipleBrokers extends TestCase {
 	 * @throws ParseException 
 	 * @throws InterruptedException 
 	 */
+   @Test
 	public void testSubPubMatchingWithTwoSubsWithDiffLastHopWithMoreBrokers() throws ParseException, InterruptedException {
 		/* TODO: REZA (DONE) */
 		_brokerTester.
@@ -927,6 +944,7 @@ public class TestMultipleBrokers extends TestCase {
 	 * clientC is subscriber. Unsubscription is sent out on clientC.
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testUnsubscribeOnOriginalBrokerWithMultipleBrokers() throws ParseException {
 		// re-setup filter
 		msgFilter.setPattern(".*" + brokerCore4.getBrokerURI()
@@ -1004,6 +1022,7 @@ public class TestMultipleBrokers extends TestCase {
 	 * @throws ParseException 
 	 * @throws InterruptedException 
 	 */
+   @Test
 	public void testUnsubscribeNotOnOriginalBrokerWithMultipleBrokersWithMultiplePublishers() throws ParseException, InterruptedException {
 		/* TODO: REZA (DONE) */
 		_brokerTester.clearAll().
@@ -1121,6 +1140,7 @@ public class TestMultipleBrokers extends TestCase {
 	 * @throws ParseException 
 	 * @throws InterruptedException 
 	 */
+   @Test
 	public void testUnadvertisementWithMultipleBrokers() throws ParseException, InterruptedException {
 		/* TODO: REZA (DONE) */
 		_brokerTester.clearAll().
@@ -1230,6 +1250,7 @@ public class TestMultipleBrokers extends TestCase {
 	 * @throws ParseException 
 	 * @throws InterruptedException 
 	 */
+   @Test
 	public void testCompositeSubscriptionWithMultipleBrokers() throws ParseException, InterruptedException {
 		/* TODO: REZA (DONE) */
 		// right now, in PADRES, composite subscription could not be sent first!!!
@@ -1302,6 +1323,7 @@ public class TestMultipleBrokers extends TestCase {
 	 * @throws ParseException 
 	 * @throws InterruptedException 
 	 */
+   @Test
 	public void testUnCompositeSubscriptionWithMultipleBrokers() throws ParseException, InterruptedException {
 		// right now, in padres, composite subscription could not be sent first!!!
 		// clientA,B,C connect to broker2,3,4 respectively clientA is subscriber, others are

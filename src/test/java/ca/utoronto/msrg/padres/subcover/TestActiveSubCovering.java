@@ -1,4 +1,8 @@
 package ca.utoronto.msrg.padres.subcover;
+import org.junit.Before;
+import org.junit.After;
+
+import org.junit.Test;
 
 import ca.utoronto.msrg.padres.broker.brokercore.BrokerConfig;
 import ca.utoronto.msrg.padres.broker.brokercore.BrokerCore;
@@ -38,7 +42,8 @@ public class TestActiveSubCovering extends TestSubCovering {
 	protected GenericBrokerTester _brokerTester;
 	
 	@Override
-	protected void setUp() throws Exception {
+   @Before
+   public void setUp() throws Exception {
 		_brokerTester = new GenericBrokerTester();
 		
 		super.setUp();
@@ -55,7 +60,8 @@ public class TestActiveSubCovering extends TestSubCovering {
 	}
 
 	@Override
-	protected void tearDown() throws Exception {
+   @After
+   public void tearDown() throws Exception {
 		super.tearDown();
 		_brokerTester = null;
 	}
@@ -70,6 +76,7 @@ public class TestActiveSubCovering extends TestSubCovering {
      * @throws InterruptedException 
      */
 	/* TODO: YOUNG (DONE) */
+   @Test
 	public void testSub1BeCoveredBySub2WithActive() throws ParseException, InterruptedException {
 		_brokerTester.clearAll().
 		expectRouterAddAdvertisement(
@@ -136,6 +143,7 @@ public class TestActiveSubCovering extends TestSubCovering {
      * @throws InterruptedException 
      */
 	/* TODO: VINOD (DONE) */
+   @Test
     public void testSub1BeCoveredBySub2AndUnsubscribeSub1WithActive() throws ParseException, InterruptedException {
 		// Send adv.
         _brokerTester.clearAll().
@@ -216,6 +224,7 @@ public class TestActiveSubCovering extends TestSubCovering {
      * @throws InterruptedException 
      */
     /* TODO: YOUNG (DONE) */
+   @Test
     public void testSub1BeCoveredBySub2AndUnsubscribeSub2WithActive() throws ParseException, InterruptedException {
 		_brokerTester.clearAll().
 		expectReceipt(

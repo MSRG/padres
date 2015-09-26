@@ -1,4 +1,8 @@
 package ca.utoronto.msrg.padres.cyclic;
+import org.junit.Before;
+import org.junit.After;
+
+import org.junit.Test;
 
 import ca.utoronto.msrg.padres.broker.brokercore.InputQueueHandler;
 import ca.utoronto.msrg.padres.common.message.Advertisement;
@@ -40,7 +44,8 @@ public class TestCyclicMultipleBrokers extends TestMultipleBrokers {
 	public static int EXTENDED_WAIT_TIME = 20000;
 	
 	@Override
-	protected void setUp() throws Exception {
+   @Before
+   public void setUp() throws Exception {
 		_brokerTester = new GenericBrokerTester();
 		
 		// configure for network type 1
@@ -90,7 +95,8 @@ public class TestCyclicMultipleBrokers extends TestMultipleBrokers {
 	}
 
 	@Override
-	protected void tearDown() throws Exception {
+   @After
+   public void tearDown() throws Exception {
 		super.tearDown();
 	}
 	
@@ -101,6 +107,7 @@ public class TestCyclicMultipleBrokers extends TestMultipleBrokers {
 	 * @throws InterruptedException 
 	 */
 	@Override
+   @Test
 	public void testAdvFloodInNetwork() throws ParseException, InterruptedException {
 		// send an advertisement
 		MessageDestination mdA = clientA.getClientDest();
@@ -262,6 +269,7 @@ public class TestCyclicMultipleBrokers extends TestMultipleBrokers {
 	 * @throws InterruptedException 
 	 */
 	@Override
+   @Test
 	public void testAdvSubRoutingWithOneAdvWithMoreBrokers() throws ParseException, InterruptedException {
 		// send adv
 		MessageDestination mdA = clientA.getClientDest();
@@ -335,6 +343,7 @@ public class TestCyclicMultipleBrokers extends TestMultipleBrokers {
 	 * @see TestCyclicMultipleBrokers#testAdvSubRoutingWithOneAdvWithMoreBrokers()
 	 */
 	@Override
+   @Test
 	public void testSubAdvRoutingWithOneAdvWithMoreBrokers() throws ParseException, InterruptedException {
 		// send adv
 		MessageDestination mdA = clientA.getClientDest();
@@ -401,6 +410,7 @@ public class TestCyclicMultipleBrokers extends TestMultipleBrokers {
 	 * @throws InterruptedException 
 	 */
 	@Override
+   @Test
 	public void testAdvSubRoutingWithTwoAdvsWithSameLastHopWithMoreBrokers() throws ParseException, InterruptedException {
 		// send adv
 		MessageDestination mdA = clientA.getClientDest();
@@ -562,6 +572,7 @@ public class TestCyclicMultipleBrokers extends TestMultipleBrokers {
 	 * @see TestCyclicMultipleBrokers#testAdvSubRoutingWithTwoAdvsWithSameLastHopWithMoreBrokers()
 	 */
 	@Override
+   @Test
 	public void testSubAdvRoutingWithTwoAdvsWithSameLastHopWithMoreBrokers() throws ParseException, InterruptedException {
 		// send adv
 		MessageDestination mdA = clientA.getClientDest();
@@ -748,6 +759,7 @@ public class TestCyclicMultipleBrokers extends TestMultipleBrokers {
 	 * @throws InterruptedException 
 	 */
 	@Override
+   @Test
 	public void testAdvSubRoutingWithTwoAdvsWithDiffLastHopWithMoreBrokers() throws ParseException, InterruptedException {
 		// send adv
 		MessageDestination mdA = clientA.getClientDest();
@@ -848,6 +860,7 @@ public class TestCyclicMultipleBrokers extends TestMultipleBrokers {
 	 * @see TestCyclicMultipleBrokers#testAdvSubRoutingWithTwoAdvsWithDiffLastHopWithMoreBrokers
 	 */
 	@Override
+   @Test
 	public void testSubAdvRoutingWithTwoAdvsWithDiffLastHopWithMoreBrokers() throws ParseException, InterruptedException {
 		// send adv
 		MessageDestination mdA = clientA.getClientDest();
@@ -949,6 +962,7 @@ public class TestCyclicMultipleBrokers extends TestMultipleBrokers {
 	 * @throws InterruptedException 
 	 */
 	@Override
+   @Test
 	public void testAdvSubAdvRoutingWithTwoAdvsWithDiffLastHopWithMoreBrokers() throws ParseException, InterruptedException {
 		// send adv
 		MessageDestination mdA = clientA.getClientDest();
@@ -1048,6 +1062,7 @@ public class TestCyclicMultipleBrokers extends TestMultipleBrokers {
 	 * @throws InterruptedException 
 	 */
 	@Override
+   @Test
 	public void testSubPubMatchingWithOneSubWithMoreBrokers() throws ParseException, InterruptedException {
 		/* TODO: REZA (NEW-DONE) */
 		_brokerTester.clearAll().
@@ -1102,6 +1117,7 @@ public class TestCyclicMultipleBrokers extends TestMultipleBrokers {
 	 * @throws InterruptedException 
 	 */
 	@Override
+   @Test
 	public void testSubPubMatchingWithTwoSubsWithSameLastHopWithMoreBrokers() throws ParseException, InterruptedException {
 		_brokerTester.clearAll().
 		expectRouterAddAdvertisement(
@@ -1174,6 +1190,7 @@ public class TestCyclicMultipleBrokers extends TestMultipleBrokers {
 	 * @throws InterruptedException 
 	 */
 	@Override
+   @Test
 	public void testSubPubMatchingWithTwoSubsWithDiffLastHopWithMoreBrokers() throws ParseException, InterruptedException {
 		/* REZA (NEW) */
 		_brokerTester.clearAll().
@@ -1248,6 +1265,7 @@ public class TestCyclicMultipleBrokers extends TestMultipleBrokers {
 	 * @throws InterruptedException 
 	 */
 	@Override
+   @Test
 	public void testUnadvertisementWithMultipleBrokers() throws ParseException, InterruptedException {
 		_brokerTester.clearAll().
 		expectRouterAddAdvertisement(
@@ -1357,6 +1375,7 @@ public class TestCyclicMultipleBrokers extends TestMultipleBrokers {
 	 * @throws InterruptedException 
 	 */
 	@Override
+   @Test
 	public void testCompositeSubscriptionWithMultipleBrokers() throws ParseException, InterruptedException {
 		// right now, in padres, composite subscription could not be sent first!!!
 		// clientA is subscriber, others are publisher. adv1 from clientB is sent first, then cs is
@@ -1480,6 +1499,7 @@ public class TestCyclicMultipleBrokers extends TestMultipleBrokers {
 	 * @throws InterruptedException 
 	 */
 	@Override
+   @Test
 	public void testUnCompositeSubscriptionWithMultipleBrokers() throws ParseException, InterruptedException {
 		// right now, in padres, composite subscription could not be sent first!!!
 		// clientA,B,C connect to broker2,3,4 respectively clientA is subscriber, others are
@@ -1593,6 +1613,7 @@ public class TestCyclicMultipleBrokers extends TestMultipleBrokers {
 	}
 	
 	@Override
+   @Test
 	public void testUnsubscribeNotOnOriginalBrokerWithMultipleBrokersWithMultiplePublishers() throws ParseException, InterruptedException {
 		super.testUnsubscribeNotOnOriginalBrokerWithMultipleBrokersWithMultiplePublishers();
 	}

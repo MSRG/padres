@@ -1,7 +1,11 @@
 package ca.utoronto.msrg.padres;
+import org.junit.Before;
+import org.junit.After;
+
+import org.junit.Test;
 
 import ca.utoronto.msrg.padres.common.comm.ConnectionHelper;
-import junit.framework.TestCase;
+import org.junit.Assert;
 
 import org.apache.log4j.Level;
 
@@ -38,7 +42,7 @@ import ca.utoronto.msrg.padres.tester.TesterClient;
  * 
  * @author Shuang Hou, Bala Maniymaran
  */
-public class TestClientsException extends TestCase {
+public class TestClientsException extends Assert {
 	
 	static {
 		if(System.getProperty("test.version") == null)
@@ -65,8 +69,8 @@ public class TestClientsException extends TestCase {
 
 	protected PatternFilter exceptionPatternFilter;
 
-	@Override
-	protected void setUp() throws Exception {
+   @Before
+   public void setUp() throws Exception {
 		_brokerTester = new GenericBrokerTester();
 		
 		// start the broker
@@ -86,9 +90,9 @@ public class TestClientsException extends TestCase {
 		LogSetup.addAppender("MessagePath", messageWatcher);
 	}
 
-	@Override
-	protected void tearDown() throws Exception {
-		super.tearDown();
+   @After
+   public void tearDown() throws Exception {
+
 		LogSetup.removeAppender("Exception", exceptionAppender);
 		LogSetup.removeAppender("MessagePath", messageWatcher);
 		clientA.shutdown();
@@ -113,6 +117,7 @@ public class TestClientsException extends TestCase {
 	 * @throws ClientException 
 	 * @throws InterruptedException 
 	 */
+   @Test
 	public void testFakeConnectionArgsWithSwingClient() throws ClientException, InterruptedException {
 		/* TODO: REZA (NEW-DONE) */
 		// start the ClientB and give a fake URI to connect to
@@ -130,6 +135,7 @@ public class TestClientsException extends TestCase {
 	 * attribute set with publication, however, the value of publication is unrecognized.
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testPubWithUnrecognizedValue() throws ParseException {
 		Advertisement adv = MessageFactory.createAdvertisementFromString("[class,eq,'stock'],[price,>,100]");
 		MessageDestination mdA = clientA.getClientDest();
@@ -160,6 +166,7 @@ public class TestClientsException extends TestCase {
 	 * Test for exception that publication with string value in number predicate.
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testPubWithStringValueInNumberPredicate() throws ParseException {
 		MessageDestination mdA = clientA.getClientDest();
 		Advertisement adv = MessageFactory.createAdvertisementFromString("[class,eq,'stock'],[price,<,100]");
@@ -190,6 +197,7 @@ public class TestClientsException extends TestCase {
 	 * Test for exception that publication with number value in string predicate.
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testPubWithNumberValueInStringPredicate() throws ParseException {
 		MessageDestination mdA = clientA.getClientDest();
 		Advertisement adv = MessageFactory.createAdvertisementFromString("[class,eq,'stock'],[attribute,eq,'IBM']");
@@ -221,6 +229,7 @@ public class TestClientsException extends TestCase {
 	 * set than publication. That is, some attribute name of publication is unrecognized.
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testPubWithUnrecognizedAttribute() throws ParseException {
 		Advertisement adv = MessageFactory.createAdvertisementFromString("[class,eq,'stock'],[price,isPresent,100]");
 		MessageDestination mdA = clientA.getClientDest();
@@ -250,6 +259,7 @@ public class TestClientsException extends TestCase {
 	/**
 	 * Test for exception that advertisement has duplicate attributes.
 	 */
+   @Test
 	public void testAdvWithDuplicateAttribute() {
 		// For now padres just keep only one of them in mind, fail right now
 		try {
@@ -264,6 +274,7 @@ public class TestClientsException extends TestCase {
 	/**
 	 * Test for exception that publication has duplicate attributes.
 	 */
+   @Test
 	public void testPubWithDuplicateAttribute() {
 		// For now padres just keep only one of them in mind,fail right now
 		try {
@@ -278,6 +289,7 @@ public class TestClientsException extends TestCase {
 	/**
 	 * Test for exception that subscription has duplicate attributes.
 	 */
+   @Test
 	public void testSubWithDuplicateAttribute() {
 		try {
 			MessageFactory.createSubscriptionFromString("[class,eq,'stock'],[price,<,100],[price,>,120]");
@@ -291,6 +303,7 @@ public class TestClientsException extends TestCase {
 	/**
 	 * Test for exception that subscription without comma between predicates with space instead
 	 */
+   @Test
 	public void testSubWithoutCommaWithSpaceBetweenPredicates() {
 		// for now padres just add comma between predicates, and do not throw exception
 		// matching can be executed correctly
@@ -306,6 +319,7 @@ public class TestClientsException extends TestCase {
 	/**
 	 * Test for exception that subscription without comma between predicates.
 	 */
+   @Test
 	public void testSubWithoutCommaAndSpaceBetweenPredicates() {
 		// for now padres just add comma between predicates, and do not throw exception
 		// matching can be excuted correctly
@@ -322,6 +336,7 @@ public class TestClientsException extends TestCase {
 	 * Test for exception that subscription without single quotes in string predicate.
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testSubWithoutSingleQuotesInStringPredicates() throws ParseException {
 		// for now padres do not throw exception, and matching can be excuted correctly
 		// this message format is allowed in Padres.
@@ -356,6 +371,7 @@ public class TestClientsException extends TestCase {
 	 * Test for exception that subscription with double quotes in string predicate.
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testSubWithoutSingleQuotesWithDoubleQuotesInStringPredicates() throws ParseException {
 		// for now padres do not throw exception, and matching can be excuted correctly
 		// this message format is allowed in Padres.
@@ -390,6 +406,7 @@ public class TestClientsException extends TestCase {
 	/**
 	 * Test for exception that subscription without brackets between predicates.
 	 */
+   @Test
 	public void testSubWithoutBracketBetweenPredicates() {
 		// for now padres throws a malformed exception by message parser
 		try {
@@ -404,6 +421,7 @@ public class TestClientsException extends TestCase {
 	/**
 	 * Test for exception that subscription without commas in predicate.
 	 */
+   @Test
 	public void testSubWithoutCommaInPredicate() {
 		// for now padres throws a malformed exception by message parser
 		try {
@@ -419,6 +437,7 @@ public class TestClientsException extends TestCase {
 	/**
 	 * Test for exception that subscription with number operator in string predicate.
 	 */
+   @Test
 	public void testSubWithNumberOperatorInStringPredicate() {
 		// for now padres throws a malformed exception by message parser
 		try {
@@ -433,6 +452,7 @@ public class TestClientsException extends TestCase {
 	/**
 	 * Test for exception that subscription with string operator in number predicate.
 	 */
+   @Test
 	public void testSubWithStringOperatorInNumberPredicate() {
 		// for now padres throws a malformed exception by message parser
 		try {
@@ -448,6 +468,7 @@ public class TestClientsException extends TestCase {
 	/**
 	 * Test for exception that subscription without string operator in string predicate.
 	 */
+   @Test
 	public void testSubWithoutOperatorInStringPredicate() {
 		// for now padres throws a malformed exception by message parser
 		try {
@@ -462,6 +483,7 @@ public class TestClientsException extends TestCase {
 	/**
 	 * Test for exception that subscription without number operator in number predicate.
 	 */
+   @Test
 	public void testSubWithoutOperatorInNumberPredicate() {
 		// for now padres throws a malformed exception by message parser
 		try {
@@ -476,6 +498,7 @@ public class TestClientsException extends TestCase {
 	/**
 	 * Test for exception that subscription without string value in string predicate.
 	 */
+   @Test
 	public void testSubWithoutValueInStringPredicate() {
 		// for now padres throws a malformed exception by message parser
 		try {
@@ -490,6 +513,7 @@ public class TestClientsException extends TestCase {
 	/**
 	 * Test for exception that subscription without number value in number predicate.
 	 */
+   @Test
 	public void testSubWithoutValueInNumberPredicate() {
 		// for now padres throws a malformed exception by message parser
 		try {
@@ -504,6 +528,7 @@ public class TestClientsException extends TestCase {
 	/**
 	 * Test for exception that subscription without string attribute in string predicate.
 	 */
+   @Test
 	public void testSubWithoutAttributeInStringPredicate() {
 		// for now padres throws a malformed exception by message parser
 		try {
@@ -518,6 +543,7 @@ public class TestClientsException extends TestCase {
 	/**
 	 * Test for exception that subscription without number attribute in number predicate.
 	 */
+   @Test
 	public void testSubWithoutAttributeInNumberPredicate() {
 		// for now padres throws a malformed exception by message parser
 		try {
@@ -533,6 +559,7 @@ public class TestClientsException extends TestCase {
 	 * Test for exception that unsubscribe an unrecognized subscription.
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testUnsubscribeUnrecognizedSub() throws ParseException {
 		MessageDestination mdA = clientA.getClientDest();
 		Subscription sub = MessageFactory.createSubscriptionFromString("[class,eq,'stock'],[price,>,80]");
@@ -559,6 +586,7 @@ public class TestClientsException extends TestCase {
 	 * Test for exception that unadvertise an unrecognized advertisement.
 	 * @throws ParseException 
 	 */
+   @Test
 	public void testUnadvertiseUnrecognizedAdv() throws ParseException {
 		// for now padres did not implement unadvertisement, so did not throw
 		// any exception. fail right now

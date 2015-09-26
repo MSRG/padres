@@ -1,18 +1,25 @@
 package ca.utoronto.msrg.padres;
+import org.junit.Before;
+import org.junit.After;
 
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
+import org.junit.Test;
+
+import org.junit.Assert;
+// FIXME include in TestSuite @RunWith(Suite.class)@Suite.SuiteClasses(...)
 import ca.utoronto.msrg.padres.common.message.*;
 import ca.utoronto.msrg.padres.common.message.parser.MessageFactory;
 import ca.utoronto.msrg.padres.common.message.parser.ParseException;
 import ca.utoronto.msrg.padres.common.message.parser.TokenMgrError;
 
-public class TestMessageParser extends TestCase {
+public class TestMessageParser extends Assert {
 
-	protected void setUp() throws Exception {super.setUp();	}
-	protected void tearDown() throws Exception {super.tearDown();}
-    public TestMessageParser(String name) {super(name);}
+   @Before
+   public void setUp() throws Exception {	}
+   @After
+   public void tearDown() throws Exception {}
+    public TestMessageParser(String name) {}
 
+   @Test
         public void testInsert() throws ParseException, TokenMgrError {
         	{
         		String stringRep = new String("[class,'temp'],[area,'tor'],[value,-10];");
@@ -112,6 +119,7 @@ public class TestMessageParser extends TestCase {
         	}
         }
         
+   @Test
         public void testInsertMultipleAttributes() throws ParseException{
         	{
         		String stringRep = new String("[class,audit],[firm,ACME],[trust,5];");
@@ -133,6 +141,7 @@ public class TestMessageParser extends TestCase {
         	}
         }
         
+   @Test
         public void testInsertMixedTypes() throws ParseException{
         	{
         		String stringRep = new String("[class,audit],[firm,3.3],[trust,5];");
@@ -154,6 +163,7 @@ public class TestMessageParser extends TestCase {
         	}
         }
 
+   @Test
         public void testCreateTable() throws ParseException{
         	{
         		String stringRep = "[class,eq,'stock'],[price,=,100.3];";
@@ -201,6 +211,7 @@ public class TestMessageParser extends TestCase {
             }
         }
         
+   @Test
         public void testCreateTableAsteriskTypes() throws ParseException{
         	{
         		String stringRep = new String("[class,eq,reading];");
@@ -258,6 +269,7 @@ public class TestMessageParser extends TestCase {
         	}
         }
        
+   @Test
         public void testCreateTableMultipleAttributes() throws ParseException{
         	{
         		String stringRep = new String("[class,eq,audit],[firm,isPresent,abc],[trust,>=,0];");
@@ -279,6 +291,7 @@ public class TestMessageParser extends TestCase {
         	}
         }
         
+   @Test
         public void testCreateTableIntWithDifferentOperators() throws ParseException{
         	{
         		String stringRep = new String("[class,eq,reading],[shipID,>,123];");
@@ -316,6 +329,7 @@ public class TestMessageParser extends TestCase {
         	}
         }
         
+   @Test
         public void testCreateTableDoubleWithDifferentOperators() throws ParseException{
         	{
         		String stringRep = new String("[class,eq,reading],[shipID,>,123.456];");
@@ -352,6 +366,7 @@ public class TestMessageParser extends TestCase {
         	}
         }
         
+   @Test
         public void testCreateTableStringWithDifferentOperators() throws ParseException{
         	{
         		String stringRep = new String("[class,eq,reading],[shipID,str-gt,abc];");
@@ -389,6 +404,7 @@ public class TestMessageParser extends TestCase {
         	}
         }
         
+   @Test
         public void testCreateTableMixedTypes() throws ParseException{
         	{
         		String stringRep = new String("[class,eq,audit],[firm,isPresent,abc],[trust,>=,0.0];");
@@ -410,6 +426,7 @@ public class TestMessageParser extends TestCase {
         	}
         }
      
+   @Test
         public void testSelect() throws ParseException{
         	{
         		String stringRep = "[class,eq,'stock'],[price,=,100.3];";
@@ -457,6 +474,7 @@ public class TestMessageParser extends TestCase {
         	}
         }
         
+   @Test
         public void testSelectAsteriskTypes() throws ParseException{
         	{
         		String stringRep = new String("[class,eq,reading];");
@@ -514,6 +532,7 @@ public class TestMessageParser extends TestCase {
         	}
         }
     
+   @Test
         public void testSelectMultipleAttributes() throws ParseException{
         	{
         		String stringRep = new String("[class,eq,audit],[firm,isPresent,abc],[trust,>=,0];");
@@ -535,6 +554,7 @@ public class TestMessageParser extends TestCase {
         	}
         }
         
+   @Test
         public void testSelectIntWithDifferentOperators() throws ParseException{
         	{
         		String stringRep = new String("[class,eq,reading],[shipID,>,123];");
@@ -572,6 +592,7 @@ public class TestMessageParser extends TestCase {
         	}
         }
         
+   @Test
         public void testSelectDoubleWithDifferentOperators() throws ParseException{
         	{
         		String stringRep = new String("[class,eq,reading],[shipID,>,123.456];");
@@ -609,6 +630,7 @@ public class TestMessageParser extends TestCase {
         	}
         }
         
+   @Test
         public void testSelectStringWithDifferentOperators() throws ParseException{
         	{
         		String stringRep = new String("[class,eq,reading],[shipID,str-gt,abc];");
@@ -646,6 +668,7 @@ public class TestMessageParser extends TestCase {
         	}
         }
         
+   @Test
         public void testSelectMixedTypes() throws ParseException{
         	{
         		String stringRep = new String("[class,eq,audit],[firm,isPresent,abc],[trust,>=,0.0];");
@@ -667,6 +690,7 @@ public class TestMessageParser extends TestCase {
         	}
         }
         
+   @Test
         public void testCompositeSelect() throws ParseException{
         	{
         		String stringRep = new String("{{[class,eq,audit]}&{[class,eq,reading]}}");
@@ -712,6 +736,7 @@ public class TestMessageParser extends TestCase {
         	}
         }
         
+   @Test
         public void testCompositeSelectAsteriskTypes() throws ParseException{
         	{
         		String stringRep = new String("{{[class,eq,audit]}&{[class,eq,reading]}}");
@@ -776,6 +801,7 @@ public class TestMessageParser extends TestCase {
         	}
         }
 
+   @Test
         public void testCompositeSelectMultipleAttributes() throws ParseException{
         	{
         		String stringRep = new String("{{[class,eq,audit]}&{[class,eq,audit],[firm,isPresent,abc],[trust,>=,0]}}");
@@ -798,6 +824,7 @@ public class TestMessageParser extends TestCase {
         	}
         }
         
+   @Test
         public void testCompositeSelectIntWithDifferentOperators() throws ParseException{
         	{
         		String stringRep = new String("{{[class,eq,audit]}&{[class,eq,reading],[shipID,>,123]}}");
@@ -839,6 +866,7 @@ public class TestMessageParser extends TestCase {
         	}
         }
         
+   @Test
         public void testCompositeSelectDoubleWithDifferentOperators() throws ParseException{
         	{
         		String stringRep = new String("{{[class,eq,audit]}&{[class,eq,reading],[shipID,>,123.456]}}");
@@ -880,6 +908,7 @@ public class TestMessageParser extends TestCase {
         	}
         }
         
+   @Test
         public void testCompositeSelectStringWithDifferentOperators() throws ParseException{
         	{
         		String stringRep = new String("{{[class,eq,audit]}&{[class,eq,reading],[shipID,str-gt,abc]}}");
@@ -921,6 +950,7 @@ public class TestMessageParser extends TestCase {
         	}
         }
         
+   @Test
         public void testCompositeSelectMixedTypes() throws ParseException{
         	{
         		String stringRep = new String("{{[class,eq,audit]}&{[class,eq,audit],[firm,isPresent,abc],[trust,>=,0.0]}}");
@@ -943,6 +973,7 @@ public class TestMessageParser extends TestCase {
         	}
         }
 
+   @Test
         public void testCompositeSelectVariablesEqualling() throws ParseException{
         	{
         		String stringRep = new String("{{[class,eq,audit],[reading,=,$I$X0]}&{[class,eq,reading],[reading,=,$I$X0]}}");
@@ -991,6 +1022,7 @@ public class TestMessageParser extends TestCase {
         }
         
         
+   @Test
         public void testCompositeSelectBracesChecking() throws ParseException{
         	{
         		String stringRep = new String("{{{{[class,eq,fa]}&{{[class,eq,do]}||{[class,eq,re]}}}&{[class,eq,so]}}||{[class,eq,do]}}");
@@ -1018,6 +1050,7 @@ public class TestMessageParser extends TestCase {
         	}
         }	
         
+   @Test
         public void test1CompositeSelect() throws ParseException{
         	{
         		String stringRep = new String("{{[class,eq,reading],[level,>,3]}&{[class,eq,audit],[trust,>,7]}}");
@@ -1040,8 +1073,8 @@ public class TestMessageParser extends TestCase {
         	}
         }    
 
-
-        public static TestSuite suite(){
+/*TODO:
+        public static Object suite() // FIXME TestSuite(){
             TestSuite suite = new TestSuite();
             suite.addTest(new TestMessageParser("testInsert"));
             suite.addTest(new TestMessageParser("testInsertMultipleAttributes"));
@@ -1079,5 +1112,5 @@ public class TestMessageParser extends TestCase {
             
             return suite;
       }
-        
+  */
     }
