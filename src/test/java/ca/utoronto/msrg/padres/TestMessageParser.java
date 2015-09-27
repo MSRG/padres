@@ -184,7 +184,6 @@ public class TestMessageParser extends Assert {
     public void should_parse_equal_() throws ParseException {
 
         String stringRep = new String("[class,eq,reading];");
-        System.out.println("Input: " + stringRep);
         Advertisement adv = MessageFactory.createAdvertisementFromString(stringRep);
         assertTrue(adv.toString().contains("[class,eq,reading]"));
     }
@@ -313,7 +312,6 @@ public class TestMessageParser extends Assert {
     @Test
     public void should_parse_bigger_float() throws ParseException {
         String stringRep = new String("[class,eq,reading],[shipID,=,123.456],[level,<,3.456];");
-        System.out.println("Input: " + stringRep);
         Advertisement adv = MessageFactory.createAdvertisementFromString(stringRep);
         assertTrue(adv.toString().contains("[class,eq,reading]"));
         assertTrue(adv.toString().contains("[shipID,=,123.456]"));
@@ -444,7 +442,6 @@ public class TestMessageParser extends Assert {
     public void testSelectIntWithDifferentOperators() throws ParseException {
 
         String stringRep = new String("[class,eq,reading],[shipID,>,123];");
-        System.out.println("Input: " + stringRep);
         Subscription sub = MessageFactory.createSubscriptionFromString(stringRep);
         assertTrue(sub.toString().contains("[class,eq,reading]"));
         assertTrue(sub.toString().contains("[shipID,>,123]"));
@@ -480,7 +477,6 @@ public class TestMessageParser extends Assert {
     @Test
     public void testSelectDoubleWithDifferentOperators() throws ParseException {
         String stringRep = new String("[class,eq,reading],[shipID,>,123.456];");
-        System.out.println("Input: " + stringRep);
         Subscription sub = MessageFactory.createSubscriptionFromString(stringRep);
         assertTrue(sub.toString().contains("[class,eq,reading]"));
         assertTrue(sub.toString().contains("[shipID,>,123.456]"));
@@ -516,7 +512,6 @@ public class TestMessageParser extends Assert {
     @Test
     public void should_parse_string_with_str_gt() throws ParseException {
         String stringRep = new String("[class,eq,reading],[shipID,str-gt,abc];");
-        System.out.println("Input: " + stringRep);
         Subscription sub = MessageFactory.createSubscriptionFromString(stringRep);
         assertTrue(sub.toString().contains("[class,eq,reading]"));
         assertTrue(sub.toString().contains("[shipID,str-gt,\"abc\"]"));
@@ -548,11 +543,10 @@ public class TestMessageParser extends Assert {
         assertTrue(sub.toString().contains("[shipID,str-gt,\"abc\"]"));
         assertTrue(sub.toString().contains("[level,isPresent,\"abc\"]"));
     }
-    
+
     @Test
     public void testSelectMixedTypes_1() throws ParseException {
         String stringRep = new String("[class,eq,audit],[firm,isPresent,abc],[trust,>=,0.0];");
-        System.out.println("Input: " + stringRep);
         Subscription sub = MessageFactory.createSubscriptionFromString(stringRep);
         assertTrue(sub.toString().contains("[class,eq,audit]"));
         assertTrue(sub.toString().contains("[firm,isPresent,\"abc\"]"));
@@ -571,384 +565,367 @@ public class TestMessageParser extends Assert {
 
     @Test
     public void testCompositeSelect() throws ParseException {
-        {
-            String stringRep = new String("{{[class,eq,audit]}&{[class,eq,reading]}}");
-            System.out.println("Input: " + stringRep);
-            CompositeSubscription comsub = MessageFactory.createCompositeSubscriptionFromString(stringRep);
-            assertTrue(comsub.toString().contains("[class,eq,audit]"));
-            assertTrue(comsub.toString().contains("[class,eq,reading]"));
-        }
+        String stringRep = new String("{{[class,eq,audit]}&{[class,eq,reading]}}");
+        CompositeSubscription comsub = MessageFactory.createCompositeSubscriptionFromString(stringRep);
+        assertTrue(comsub.toString().contains("[class,eq,audit]"));
+        assertTrue(comsub.toString().contains("[class,eq,reading]"));
+    }
 
-        {
-            String stringRep = new String("{{[class,eq,audit]}&{[class,eq,reading]}}");
-            System.out.println("Input: " + stringRep);
-            CompositeSubscription comsub = MessageFactory.createCompositeSubscriptionFromString(stringRep);
-            assertTrue(comsub.toString().contains("[class,eq,audit]"));
-            assertTrue(comsub.toString().contains("[class,eq,reading]"));
-        }
+    @Test
+    public void test_parse_composite() throws ParseException {
+        String stringRep = new String("{{[class,eq,audit]}&{[class,eq,reading]}}");
+        CompositeSubscription comsub = MessageFactory.createCompositeSubscriptionFromString(stringRep);
+        assertTrue(comsub.toString().contains("[class,eq,audit]"));
+        assertTrue(comsub.toString().contains("[class,eq,reading]"));
+    }
 
-        {
-            String stringRep = new String("{{[class,eq,audit]}&{[class,eq,reading],[level,=,5]}}");
-            System.out.println("Input: " + stringRep);
-            CompositeSubscription comsub = MessageFactory.createCompositeSubscriptionFromString(stringRep);
-            assertTrue(comsub.toString().contains("[class,eq,audit]"));
-            assertTrue(comsub.toString().contains("[class,eq,reading]"));
-            assertTrue(comsub.toString().contains("[level,=,5]"));
-        }
+    @Test
+    public void should_parse_composite_with_comparator() throws ParseException {
+        String stringRep = new String("{{[class,eq,audit]}&{[class,eq,reading],[level,=,5]}}");
+        CompositeSubscription comsub = MessageFactory.createCompositeSubscriptionFromString(stringRep);
+        assertTrue(comsub.toString().contains("[class,eq,audit]"));
+        assertTrue(comsub.toString().contains("[class,eq,reading]"));
+        assertTrue(comsub.toString().contains("[level,=,5]"));
+    }
 
-        {
-            String stringRep = new String("{{[class,eq,audit]}&{[class,eq,reading],[level,eq,\"5\"]}}");
-            System.out.println("Input: " + stringRep);
-            CompositeSubscription comsub = MessageFactory.createCompositeSubscriptionFromString(stringRep);
-            assertTrue(comsub.toString().contains("[class,eq,audit]"));
-            assertTrue(comsub.toString().contains("[class,eq,reading]"));
-            assertTrue(comsub.toString().contains("[level,eq,\"5\"]"));
-        }
+    @Test
+    public void should_parse_composit_with_equal_operator() throws ParseException {
+        String stringRep = new String("{{[class,eq,audit]}&{[class,eq,reading],[level,eq,\"5\"]}}");
+        CompositeSubscription comsub = MessageFactory.createCompositeSubscriptionFromString(stringRep);
+        assertTrue(comsub.toString().contains("[class,eq,audit]"));
+        assertTrue(comsub.toString().contains("[class,eq,reading]"));
+        assertTrue(comsub.toString().contains("[level,eq,\"5\"]"));
+    }
 
-        {
-            String stringRep = new String("{{[class,eq,audit]}&{[class,eq,reading],[level,=,5.5]}}");
-            System.out.println("Input: " + stringRep);
-            CompositeSubscription comsub = MessageFactory.createCompositeSubscriptionFromString(stringRep);
-            assertTrue(comsub.toString().contains("[class,eq,audit]"));
-            assertTrue(comsub.toString().contains("[class,eq,reading]"));
-            assertTrue(comsub.toString().contains("[level,=,5.5]"));
-        }
+    @Test
+    public void should_parse_composite_with_equal_double() throws ParseException {
+        String stringRep = new String("{{[class,eq,audit]}&{[class,eq,reading],[level,=,5.5]}}");
+        CompositeSubscription comsub = MessageFactory.createCompositeSubscriptionFromString(stringRep);
+        assertTrue(comsub.toString().contains("[class,eq,audit]"));
+        assertTrue(comsub.toString().contains("[class,eq,reading]"));
+        assertTrue(comsub.toString().contains("[level,=,5.5]"));
     }
 
     @Test
     public void testCompositeSelectAsteriskTypes() throws ParseException {
-        {
-            String stringRep = new String("{{[class,eq,audit]}&{[class,eq,reading]}}");
-            System.out.println("Input: " + stringRep);
-            CompositeSubscription comsub = MessageFactory.createCompositeSubscriptionFromString(stringRep);
-            assertTrue(comsub.toString().contains("[class,eq,audit]"));
-            assertTrue(comsub.toString().contains("[class,eq,reading]"));
-        }
 
-        {
-            String stringRep = new String("{{[class,eq,audit]}&{[class,eq,reading],[level,isPresent,123]}}");
-            System.out.println("Input: " + stringRep);
-            CompositeSubscription comsub = MessageFactory.createCompositeSubscriptionFromString(stringRep);
-            assertTrue(comsub.toString().contains("[class,eq,audit]"));
-            assertTrue(comsub.toString().contains("[class,eq,reading]"));
-            assertTrue(comsub.toString().contains("[level,isPresent,123]"));
-        }
-
-        {
-            String stringRep = new String("{{[class,eq,audit]}&{[class,eq,reading],[level,isPresent,abc]}}");
-            System.out.println("Input: " + stringRep);
-            CompositeSubscription comsub = MessageFactory.createCompositeSubscriptionFromString(stringRep);
-            assertTrue(comsub.toString().contains("[class,eq,audit]"));
-            assertTrue(comsub.toString().contains("[class,eq,reading]"));
-            assertTrue(comsub.toString().contains("[level,isPresent,\"abc\"]"));
-        }
-
-        {
-            String stringRep = new String("{{[class,eq,audit]}&{[class,eq,reading],[level,isPresent,123.123]}}");
-            System.out.println("Input: " + stringRep);
-            CompositeSubscription comsub = MessageFactory.createCompositeSubscriptionFromString(stringRep);
-            assertTrue(comsub.toString().contains("[class,eq,audit]"));
-            assertTrue(comsub.toString().contains("[class,eq,reading]"));
-            assertTrue(comsub.toString().contains("[level,isPresent,123.123]"));
-        }
-
-        {
-            String stringRep = new String("{{[class,eq,audit]}&{[class,eq,reading],[shipID,=,123]}}");
-            System.out.println("Input: " + stringRep);
-            CompositeSubscription comsub = MessageFactory.createCompositeSubscriptionFromString(stringRep);
-            assertTrue(comsub.toString().contains("[class,eq,audit]"));
-            assertTrue(comsub.toString().contains("[class,eq,reading]"));
-            assertTrue(comsub.toString().contains("[shipID,=,123]"));
-        }
-
-        {
-            String stringRep = new String("{{[class,eq,audit]}&{[class,eq,reading],[shipID,isPresent,123]}}");
-            System.out.println("Input: " + stringRep);
-            CompositeSubscription comsub = MessageFactory.createCompositeSubscriptionFromString(stringRep);
-            assertTrue(comsub.toString().contains("[class,eq,audit]"));
-            assertTrue(comsub.toString().contains("[class,eq,reading]"));
-            assertTrue(comsub.toString().contains("[shipID,isPresent,123]"));
-        }
-
-        {
-            String stringRep = new String("{{[class,eq,audit]}&{[class,eq,reading],[shipID,isPresent,abc]}}");
-            System.out.println("Input: " + stringRep);
-            CompositeSubscription comsub = MessageFactory.createCompositeSubscriptionFromString(stringRep);
-            assertTrue(comsub.toString().contains("[class,eq,audit]"));
-            assertTrue(comsub.toString().contains("[class,eq,reading]"));
-            assertTrue(comsub.toString().contains("[shipID,isPresent,\"abc\"]"));
-        }
+        String stringRep = new String("{{[class,eq,audit]}&{[class,eq,reading]}}");
+        CompositeSubscription comsub = MessageFactory.createCompositeSubscriptionFromString(stringRep);
+        assertTrue(comsub.toString().contains("[class,eq,audit]"));
+        assertTrue(comsub.toString().contains("[class,eq,reading]"));
     }
 
     @Test
-    public void testCompositeSelectMultipleAttributes() throws ParseException {
-        {
-            String stringRep = new String("{{[class,eq,audit]}&{[class,eq,audit],[firm,isPresent,abc],[trust,>=,0]}}");
-            System.out.println("Input: " + stringRep);
-            CompositeSubscription comsub = MessageFactory.createCompositeSubscriptionFromString(stringRep);
-            assertTrue(comsub.toString().contains("[class,eq,audit]"));
-            assertTrue(comsub.toString().contains("[firm,isPresent,\"abc\"]"));
-            assertTrue(comsub.toString().contains("[trust,>=,0]"));
-        }
-
-        {
-            String stringRep = new String("{{[class,eq,audit]}&{[class,eq,manifest],[shipID,isPresent,123],[firm,isPresent,123.123],[content,isPresent,abc]}}");
-            System.out.println("Input: " + stringRep);
-            CompositeSubscription comsub = MessageFactory.createCompositeSubscriptionFromString(stringRep);
-            assertTrue(comsub.toString().contains("[class,eq,audit]"));
-            assertTrue(comsub.toString().contains("[class,eq,manifest]"));
-            assertTrue(comsub.toString().contains("[shipID,isPresent,123]"));
-            assertTrue(comsub.toString().contains("[firm,isPresent,123.123]"));
-            assertTrue(comsub.toString().contains("[content,isPresent,\"abc\"]"));
-        }
+    public void should_parse_composit_with_asterisk_types_with_isPresent() throws ParseException {
+        String stringRep = new String("{{[class,eq,audit]}&{[class,eq,reading],[level,isPresent,123]}}");
+        CompositeSubscription comsub = MessageFactory.createCompositeSubscriptionFromString(stringRep);
+        assertTrue(comsub.toString().contains("[class,eq,audit]"));
+        assertTrue(comsub.toString().contains("[class,eq,reading]"));
+        assertTrue(comsub.toString().contains("[level,isPresent,123]"));
     }
 
     @Test
-    public void testCompositeSelectIntWithDifferentOperators() throws ParseException {
-        {
-            String stringRep = new String("{{[class,eq,audit]}&{[class,eq,reading],[shipID,>,123]}}");
-            System.out.println("Input: " + stringRep);
-            CompositeSubscription comsub = MessageFactory.createCompositeSubscriptionFromString(stringRep);
-            assertTrue(comsub.toString().contains("[class,eq,audit]"));
-            assertTrue(comsub.toString().contains("[class,eq,reading]"));
-            assertTrue(comsub.toString().contains("[shipID,>,123]"));
-        }
-
-        {
-            String stringRep = new String("{{[class,eq,audit]}&{[class,eq,reading],[shipID,=,123],[level,<,3]}}");
-            System.out.println("Input: " + stringRep);
-            CompositeSubscription comsub = MessageFactory.createCompositeSubscriptionFromString(stringRep);
-            assertTrue(comsub.toString().contains("[class,eq,audit]"));
-            assertTrue(comsub.toString().contains("[class,eq,reading]"));
-            assertTrue(comsub.toString().contains("[shipID,=,123]"));
-            assertTrue(comsub.toString().contains("[level,<,3]"));
-        }
-
-        {
-            String stringRep = new String("{{[class,eq,audit]}&{[class,eq,reading],[shipID,<=,123],[level,>=,3]}}");
-            System.out.println("Input: " + stringRep);
-            CompositeSubscription comsub = MessageFactory.createCompositeSubscriptionFromString(stringRep);
-            assertTrue(comsub.toString().contains("[class,eq,audit]"));
-            assertTrue(comsub.toString().contains("[class,eq,reading]"));
-            assertTrue(comsub.toString().contains("[shipID,<=,123]"));
-            assertTrue(comsub.toString().contains("[level,>=,3]"));
-        }
-
-        {
-            String stringRep = new String("{{[class,eq,audit]}&{[class,eq,reading],[shipID,>,123],[level,isPresent,123]}}");
-            System.out.println("Input: " + stringRep);
-            CompositeSubscription comsub = MessageFactory.createCompositeSubscriptionFromString(stringRep);
-            assertTrue(comsub.toString().contains("[class,eq,audit]"));
-            assertTrue(comsub.toString().contains("[class,eq,reading]"));
-            assertTrue(comsub.toString().contains("[shipID,>,123]"));
-            assertTrue(comsub.toString().contains("[level,isPresent,123]"));
-        }
+    public void should_parse_composit_with_asterisk_types_string_isPresent() throws ParseException {
+        String stringRep = new String("{{[class,eq,audit]}&{[class,eq,reading],[level,isPresent,abc]}}");
+        CompositeSubscription comsub = MessageFactory.createCompositeSubscriptionFromString(stringRep);
+        assertTrue(comsub.toString().contains("[class,eq,audit]"));
+        assertTrue(comsub.toString().contains("[class,eq,reading]"));
+        assertTrue(comsub.toString().contains("[level,isPresent,\"abc\"]"));
     }
 
     @Test
-    public void testCompositeSelectDoubleWithDifferentOperators() throws ParseException {
-        {
-            String stringRep = new String("{{[class,eq,audit]}&{[class,eq,reading],[shipID,>,123.456]}}");
-            System.out.println("Input: " + stringRep);
-            CompositeSubscription comsub = MessageFactory.createCompositeSubscriptionFromString(stringRep);
-            assertTrue(comsub.toString().contains("[class,eq,audit]"));
-            assertTrue(comsub.toString().contains("[class,eq,reading]"));
-            assertTrue(comsub.toString().contains("[shipID,>,123.456]"));
-        }
-
-        {
-            String stringRep = new String("{{[class,eq,audit]}&{[class,eq,reading],[shipID,=,123.456],[level,<,3.456]}}");
-            System.out.println("Input: " + stringRep);
-            CompositeSubscription comsub = MessageFactory.createCompositeSubscriptionFromString(stringRep);
-            assertTrue(comsub.toString().contains("[class,eq,audit]"));
-            assertTrue(comsub.toString().contains("[class,eq,reading]"));
-            assertTrue(comsub.toString().contains("[shipID,=,123.456]"));
-            assertTrue(comsub.toString().contains(",[level,<,3.456]"));
-        }
-
-        {
-            String stringRep = new String("{{[class,eq,audit]}&{[class,eq,reading],[shipID,<=,123.567],[level,>=,3.456]}}");
-            System.out.println("Input: " + stringRep);
-            CompositeSubscription comsub = MessageFactory.createCompositeSubscriptionFromString(stringRep);
-            assertTrue(comsub.toString().contains("[class,eq,audit]"));
-            assertTrue(comsub.toString().contains("[class,eq,reading]"));
-            assertTrue(comsub.toString().contains("[shipID,<=,123.567]"));
-            assertTrue(comsub.toString().contains("[level,>=,3.456]"));
-        }
-
-        {
-            String stringRep = new String("{{[class,eq,audit]}&{[class,eq,reading],[shipID,>,123.345],[level,isPresent,123.123]}}");
-            System.out.println("Input: " + stringRep);
-            CompositeSubscription comsub = MessageFactory.createCompositeSubscriptionFromString(stringRep);
-            assertTrue(comsub.toString().contains("[class,eq,audit]"));
-            assertTrue(comsub.toString().contains("[class,eq,reading]"));
-            assertTrue(comsub.toString().contains("[shipID,>,123.345]"));
-            assertTrue(comsub.toString().contains("[level,isPresent,123.123]"));
-        }
+    public void should_parse_composite_with_asterisk_types_float() throws ParseException {
+        String stringRep = new String("{{[class,eq,audit]}&{[class,eq,reading],[level,isPresent,123.123]}}");
+        CompositeSubscription comsub = MessageFactory.createCompositeSubscriptionFromString(stringRep);
+        assertTrue(comsub.toString().contains("[class,eq,audit]"));
+        assertTrue(comsub.toString().contains("[class,eq,reading]"));
+        assertTrue(comsub.toString().contains("[level,isPresent,123.123]"));
     }
 
     @Test
-    public void testCompositeSelectStringWithDifferentOperators() throws ParseException {
-        {
-            String stringRep = new String("{{[class,eq,audit]}&{[class,eq,reading],[shipID,str-gt,abc]}}");
-            System.out.println("Input: " + stringRep);
-            CompositeSubscription comsub = MessageFactory.createCompositeSubscriptionFromString(stringRep);
-            assertTrue(comsub.toString().contains("[class,eq,audit]"));
-            assertTrue(comsub.toString().contains("[class,eq,reading]"));
-            assertTrue(comsub.toString().contains("[shipID,str-gt,\"abc\"]"));
-        }
-
-        {
-            String stringRep = new String("{{[class,eq,audit]}&{[class,eq,reading],[shipID,eq,abc],[level,str-lt,abcd]}}");
-            System.out.println("Input: " + stringRep);
-            CompositeSubscription comsub = MessageFactory.createCompositeSubscriptionFromString(stringRep);
-            assertTrue(comsub.toString().contains("[class,eq,audit]"));
-            assertTrue(comsub.toString().contains("[class,eq,reading]"));
-            assertTrue(comsub.toString().contains("[shipID,eq,\"abc\"]"));
-            assertTrue(comsub.toString().contains("[level,str-lt,\"abcd\"]"));
-        }
-
-        {
-            String stringRep = new String("{{[class,eq,audit]}&{[class,eq,reading],[shipID,str-le,abc],[level,str-ge,abcd]}}");
-            System.out.println("Input: " + stringRep);
-            CompositeSubscription comsub = MessageFactory.createCompositeSubscriptionFromString(stringRep);
-            assertTrue(comsub.toString().contains("[class,eq,audit]"));
-            assertTrue(comsub.toString().contains("[class,eq,reading]"));
-            assertTrue(comsub.toString().contains("[shipID,str-le,\"abc\"]"));
-            assertTrue(comsub.toString().contains("[level,str-ge,\"abcd\"]"));
-        }
-
-        {
-            String stringRep = new String("{{[class,eq,audit]}&{[class,eq,reading],[shipID,str-gt,abc],[level,isPresent,abc]}}");
-            System.out.println("Input: " + stringRep);
-            CompositeSubscription comsub = MessageFactory.createCompositeSubscriptionFromString(stringRep);
-            assertTrue(comsub.toString().contains("[class,eq,audit]"));
-            assertTrue(comsub.toString().contains("[class,eq,reading]"));
-            assertTrue(comsub.toString().contains("[shipID,str-gt,\"abc\"]"));
-            assertTrue(comsub.toString().contains("[level,isPresent,\"abc\"]"));
-        }
+    public void should_parse_composite_with_asterisk_types_integer() throws ParseException {
+        String stringRep = new String("{{[class,eq,audit]}&{[class,eq,reading],[shipID,=,123]}}");
+        CompositeSubscription comsub = MessageFactory.createCompositeSubscriptionFromString(stringRep);
+        assertTrue(comsub.toString().contains("[class,eq,audit]"));
+        assertTrue(comsub.toString().contains("[class,eq,reading]"));
+        assertTrue(comsub.toString().contains("[shipID,=,123]"));
     }
 
     @Test
-    public void testCompositeSelectMixedTypes() throws ParseException {
-        {
-            String stringRep = new String("{{[class,eq,audit]}&{[class,eq,audit],[firm,isPresent,abc],[trust,>=,0.0]}}");
-            System.out.println("Input: " + stringRep);
-            CompositeSubscription comsub = MessageFactory.createCompositeSubscriptionFromString(stringRep);
-            assertTrue(comsub.toString().contains("[class,eq,audit]"));
-            assertTrue(comsub.toString().contains("[firm,isPresent,\"abc\"]"));
-            assertTrue(comsub.toString().contains("[trust,>=,0.0]"));
-        }
-
-        {
-            String stringRep = new String("{{[class,eq,audit]}&{[class,eq,manifest],[shipID,=,12345],[content,eq,radioactivestuff],[firm,>,12345.67]}}");
-            System.out.println("Input: " + stringRep);
-            CompositeSubscription comsub = MessageFactory.createCompositeSubscriptionFromString(stringRep);
-            assertTrue(comsub.toString().contains("[class,eq,audit]"));
-            assertTrue(comsub.toString().contains("[class,eq,manifest]"));
-            assertTrue(comsub.toString().contains("[shipID,=,12345]"));
-            assertTrue(comsub.toString().contains("[content,eq,\"radioactivestuff\"]"));
-            assertTrue(comsub.toString().contains("[firm,>,12345.67]"));
-        }
+    public void should_parse_composite_with_asterisk_types_double() throws ParseException {
+        String stringRep = new String("{{[class,eq,audit]}&{[class,eq,reading],[shipID,isPresent,123]}}");
+        CompositeSubscription comsub = MessageFactory.createCompositeSubscriptionFromString(stringRep);
+        assertTrue(comsub.toString().contains("[class,eq,audit]"));
+        assertTrue(comsub.toString().contains("[class,eq,reading]"));
+        assertTrue(comsub.toString().contains("[shipID,isPresent,123]"));
     }
 
     @Test
-    public void testCompositeSelectVariablesEqualling() throws ParseException {
-        {
-            String stringRep = new String("{{[class,eq,audit],[reading,=,$I$X0]}&{[class,eq,reading],[reading,=,$I$X0]}}");
-            System.out.println("Input: " + stringRep);
-            CompositeSubscription comsub = MessageFactory.createCompositeSubscriptionFromString(stringRep);
-            assertTrue(comsub.toString().contains("[class,eq,audit]"));
-            assertTrue(comsub.toString().contains("[class,eq,reading]"));
-            assertTrue(comsub.toString().contains("[reading,=,\"$I$X0\"]"));
-        }
+    public void should_parse_composite_with_asterisk_types_string() throws ParseException {
+        String stringRep = new String("{{[class,eq,audit]}&{[class,eq,reading],[shipID,isPresent,abc]}}");
+        CompositeSubscription comsub = MessageFactory.createCompositeSubscriptionFromString(stringRep);
+        assertTrue(comsub.toString().contains("[class,eq,audit]"));
+        assertTrue(comsub.toString().contains("[class,eq,reading]"));
+        assertTrue(comsub.toString().contains("[shipID,isPresent,\"abc\"]"));
+    }
 
-        {
-            String stringRep = new String("{{[class,eq,audit],[reading,=,$F$X0]}&{[class,eq,reading],[reading,=,$F$X0]}}");
-            System.out.println("Input: " + stringRep);
-            CompositeSubscription comsub = MessageFactory.createCompositeSubscriptionFromString(stringRep);
-            assertTrue(comsub.toString().contains("[class,eq,audit]"));
-            assertTrue(comsub.toString().contains("[class,eq,reading]"));
-            assertTrue(comsub.toString().contains("[reading,=,\"$F$X0\"]"));
-        }
+    @Test
+    public void should_parse_composite_with_multiple_attributes_1() throws ParseException {
+        String stringRep = new String("{{[class,eq,audit]}&{[class,eq,audit],[firm,isPresent,abc],[trust,>=,0]}}");
+        CompositeSubscription comsub = MessageFactory.createCompositeSubscriptionFromString(stringRep);
+        assertTrue(comsub.toString().contains("[class,eq,audit]"));
+        assertTrue(comsub.toString().contains("[firm,isPresent,\"abc\"]"));
+        assertTrue(comsub.toString().contains("[trust,>=,0]"));
+    }
 
-        {
-            String stringRep = new String("{{[class,eq,audit],[reading,eq,$S$X0]}&{[class,eq,reading],[reading,eq,$S$X0]}}");
-            System.out.println("Input: " + stringRep);
-            CompositeSubscription comsub = MessageFactory.createCompositeSubscriptionFromString(stringRep);
-            assertTrue(comsub.toString().contains("[class,eq,audit]"));
-            assertTrue(comsub.toString().contains("[class,eq,reading]"));
-            assertTrue(comsub.toString().contains("[reading,eq,\"$S$X0\"]"));
-        }
+    @Test
+    public void should_parse_composite_with_multiple_attributes_2() throws ParseException {
+        String stringRep = new String("{{[class,eq,audit]}&{[class,eq,manifest],[shipID,isPresent,123],[firm,isPresent,123.123],[content,isPresent,abc]}}");
+        CompositeSubscription comsub = MessageFactory.createCompositeSubscriptionFromString(stringRep);
+        assertTrue(comsub.toString().contains("[class,eq,audit]"));
+        assertTrue(comsub.toString().contains("[class,eq,manifest]"));
+        assertTrue(comsub.toString().contains("[shipID,isPresent,123]"));
+        assertTrue(comsub.toString().contains("[firm,isPresent,123.123]"));
+        assertTrue(comsub.toString().contains("[content,isPresent,\"abc\"]"));
 
-        {
-            String stringRep = new String("{{{[class,eq,audit]}&{[class,eq,audit]}}&{[class,eq,audit]}}");
-            System.out.println("Input: " + stringRep);
-            CompositeSubscription comsub = MessageFactory.createCompositeSubscriptionFromString(stringRep);
-            assertTrue(comsub.toString().contains("[class,eq,audit]"));
-            assertTrue(comsub.toString().substring(10).contains("[class,eq,audit]"));
-            assertTrue(comsub.toString().substring(25).contains("[class,eq,audit]"));
-        }
+    }
 
-        {
-            String stringRep = new String("{{{[class,eq,audit],[reading,=,$I$X2]}&{[class,eq,audit],[reading,=,$I$X2],[value,=,$F$X3]}}&{[class,eq,audit],[value,=,$F$X3]}}");
-            System.out.println("Input: " + stringRep);
-            CompositeSubscription comsub = MessageFactory.createCompositeSubscriptionFromString(stringRep);
-            assertTrue(comsub.toString().contains("[class,eq,audit]"));
-            assertTrue(comsub.toString().contains("[reading,=,\"$I$X2\"]"));
-            assertTrue(comsub.toString().contains("[value,=,\"$F$X3\"]"));
-        }
+    @Test
+    public void should_parse_composite_select_int_with_different_operators_1() throws ParseException {
+        String stringRep = new String("{{[class,eq,audit]}&{[class,eq,reading],[shipID,>,123]}}");
+        CompositeSubscription comsub = MessageFactory.createCompositeSubscriptionFromString(stringRep);
+        assertTrue(comsub.toString().contains("[class,eq,audit]"));
+        assertTrue(comsub.toString().contains("[class,eq,reading]"));
+        assertTrue(comsub.toString().contains("[shipID,>,123]"));
+    }
+
+    @Test
+    public void should_parse_composite_select_int_with_different_operators_2() throws ParseException {
+        String stringRep = new String("{{[class,eq,audit]}&{[class,eq,reading],[shipID,=,123],[level,<,3]}}");
+        CompositeSubscription comsub = MessageFactory.createCompositeSubscriptionFromString(stringRep);
+        assertTrue(comsub.toString().contains("[class,eq,audit]"));
+        assertTrue(comsub.toString().contains("[class,eq,reading]"));
+        assertTrue(comsub.toString().contains("[shipID,=,123]"));
+        assertTrue(comsub.toString().contains("[level,<,3]"));
+    }
+
+    @Test
+    public void should_parse_composite_select_int_with_different_operators_3() throws ParseException {
+        String stringRep = new String("{{[class,eq,audit]}&{[class,eq,reading],[shipID,<=,123],[level,>=,3]}}");
+        CompositeSubscription comsub = MessageFactory.createCompositeSubscriptionFromString(stringRep);
+        assertTrue(comsub.toString().contains("[class,eq,audit]"));
+        assertTrue(comsub.toString().contains("[class,eq,reading]"));
+        assertTrue(comsub.toString().contains("[shipID,<=,123]"));
+        assertTrue(comsub.toString().contains("[level,>=,3]"));
+    }
+
+    @Test
+    public void should_parse_composite_select_int_with_different_operators_4() throws ParseException {
+        String stringRep = new String("{{[class,eq,audit]}&{[class,eq,reading],[shipID,>,123],[level,isPresent,123]}}");
+        CompositeSubscription comsub = MessageFactory.createCompositeSubscriptionFromString(stringRep);
+        assertTrue(comsub.toString().contains("[class,eq,audit]"));
+        assertTrue(comsub.toString().contains("[class,eq,reading]"));
+        assertTrue(comsub.toString().contains("[shipID,>,123]"));
+        assertTrue(comsub.toString().contains("[level,isPresent,123]"));
+
+    }
+
+    @Test
+    public void should_parse_composite_select_double_with_different_operators_1() throws ParseException {
+
+        String stringRep = new String("{{[class,eq,audit]}&{[class,eq,reading],[shipID,>,123.456]}}");
+        CompositeSubscription comsub = MessageFactory.createCompositeSubscriptionFromString(stringRep);
+        assertTrue(comsub.toString().contains("[class,eq,audit]"));
+        assertTrue(comsub.toString().contains("[class,eq,reading]"));
+        assertTrue(comsub.toString().contains("[shipID,>,123.456]"));
+    }
+
+    @Test
+    public void should_parse_composite_select_double_with_different_operators_2() throws ParseException {
+        String stringRep = new String("{{[class,eq,audit]}&{[class,eq,reading],[shipID,=,123.456],[level,<,3.456]}}");
+        CompositeSubscription comsub = MessageFactory.createCompositeSubscriptionFromString(stringRep);
+        assertTrue(comsub.toString().contains("[class,eq,audit]"));
+        assertTrue(comsub.toString().contains("[class,eq,reading]"));
+        assertTrue(comsub.toString().contains("[shipID,=,123.456]"));
+        assertTrue(comsub.toString().contains(",[level,<,3.456]"));
+    }
+
+    @Test
+    public void should_parse_composite_select_double_with_different_operators_3() throws ParseException {
+        String stringRep = new String("{{[class,eq,audit]}&{[class,eq,reading],[shipID,<=,123.567],[level,>=,3.456]}}");
+        CompositeSubscription comsub = MessageFactory.createCompositeSubscriptionFromString(stringRep);
+        assertTrue(comsub.toString().contains("[class,eq,audit]"));
+        assertTrue(comsub.toString().contains("[class,eq,reading]"));
+        assertTrue(comsub.toString().contains("[shipID,<=,123.567]"));
+        assertTrue(comsub.toString().contains("[level,>=,3.456]"));
+    }
+
+    @Test
+    public void should_parse_composite_select_double_with_different_operators_4() throws ParseException {
+        String stringRep = new String("{{[class,eq,audit]}&{[class,eq,reading],[shipID,>,123.345],[level,isPresent,123.123]}}");
+        CompositeSubscription comsub = MessageFactory.createCompositeSubscriptionFromString(stringRep);
+        assertTrue(comsub.toString().contains("[class,eq,audit]"));
+        assertTrue(comsub.toString().contains("[class,eq,reading]"));
+        assertTrue(comsub.toString().contains("[shipID,>,123.345]"));
+        assertTrue(comsub.toString().contains("[level,isPresent,123.123]"));
     }
 
 
     @Test
-    public void testCompositeSelectBracesChecking() throws ParseException {
-        {
-            String stringRep = new String("{{{{[class,eq,fa]}&{{[class,eq,do]}||{[class,eq,re]}}}&{[class,eq,so]}}||{[class,eq,do]}}");
-            System.out.println("Input: " + stringRep);
-            CompositeSubscription comsub = MessageFactory.createCompositeSubscriptionFromString(stringRep);
-            assertTrue(comsub.toString().contains("[class,eq,fa]"));
-            assertTrue(comsub.toString().contains("[class,eq,do]"));
-            assertTrue(comsub.toString().contains("[class,eq,re]"));
-            assertTrue(comsub.toString().contains("[class,eq,so]"));
-            assertTrue(comsub.toString().contains("[class,eq,do]"));
-        }
+    public void should_parse_composite_select_string_with_different_operators_1() throws ParseException {
 
-        {
-            String stringRep = new String("{{{{[class,eq,do]}&{{{[class,eq,re]}||{[class,eq,mi]}}&{[class,eq,fa]}}}||{[class,eq,so]}}&{{{[class,eq,la]}||{[class,eq,ti]}}&{[class,eq,do]}}}");
-            System.out.println("Input: " + stringRep);
-            CompositeSubscription comsub = MessageFactory.createCompositeSubscriptionFromString(stringRep);
-            assertTrue(comsub.toString().contains("[class,eq,do]"));
-            assertTrue(comsub.toString().contains("[class,eq,re]"));
-            assertTrue(comsub.toString().contains("[class,eq,mi]"));
-            assertTrue(comsub.toString().contains("[class,eq,fa]"));
-            assertTrue(comsub.toString().contains("[class,eq,so]"));
-            assertTrue(comsub.toString().contains("[class,eq,la]"));
-            assertTrue(comsub.toString().contains("[class,eq,ti]"));
-            assertTrue(comsub.toString().contains("[class,eq,do]"));
-        }
+        String stringRep = new String("{{[class,eq,audit]}&{[class,eq,reading],[shipID,str-gt,abc]}}");
+        CompositeSubscription comsub = MessageFactory.createCompositeSubscriptionFromString(stringRep);
+        assertTrue(comsub.toString().contains("[class,eq,audit]"));
+        assertTrue(comsub.toString().contains("[class,eq,reading]"));
+        assertTrue(comsub.toString().contains("[shipID,str-gt,\"abc\"]"));
     }
 
     @Test
-    public void test1CompositeSelect() throws ParseException {
-        {
-            String stringRep = new String("{{[class,eq,reading],[level,>,3]}&{[class,eq,audit],[trust,>,7]}}");
-            System.out.println("Input: " + stringRep);
-            CompositeSubscription comsub = MessageFactory.createCompositeSubscriptionFromString(stringRep);
-            assertTrue(comsub.toString().contains("[class,eq,reading]"));
-            assertTrue(comsub.toString().contains("[level,>,3]"));
-            assertTrue(comsub.toString().contains("[class,eq,audit]"));
-            assertTrue(comsub.toString().contains("[trust,>,7]"));
-        }
+    public void should_parse_composite_select_string_with_different_operators_2() throws ParseException {
+        String stringRep = new String("{{[class,eq,audit]}&{[class,eq,reading],[shipID,eq,abc],[level,str-lt,abcd]}}");
+        CompositeSubscription comsub = MessageFactory.createCompositeSubscriptionFromString(stringRep);
+        assertTrue(comsub.toString().contains("[class,eq,audit]"));
+        assertTrue(comsub.toString().contains("[class,eq,reading]"));
+        assertTrue(comsub.toString().contains("[shipID,eq,\"abc\"]"));
+        assertTrue(comsub.toString().contains("[level,str-lt,\"abcd\"]"));
+    }
 
-        {
-            String stringRep = new String("{{[class,eq,reading],[level,>,3]}&{[class,eq,audit],[trust,>,7]}}");
-            System.out.println("Input: " + stringRep);
-            CompositeSubscription comsub = MessageFactory.createCompositeSubscriptionFromString(stringRep);
-            assertTrue(comsub.toString().contains("[class,eq,reading]"));
-            assertTrue(comsub.toString().contains("[level,>,3]"));
-            assertTrue(comsub.toString().contains("[class,eq,audit]"));
-            assertTrue(comsub.toString().contains("[trust,>,7]"));
-        }
+    @Test
+    public void should_parse_composite_select_string_with_different_operators_3() throws ParseException {
+        String stringRep = new String("{{[class,eq,audit]}&{[class,eq,reading],[shipID,str-le,abc],[level,str-ge,abcd]}}");
+        CompositeSubscription comsub = MessageFactory.createCompositeSubscriptionFromString(stringRep);
+        assertTrue(comsub.toString().contains("[class,eq,audit]"));
+        assertTrue(comsub.toString().contains("[class,eq,reading]"));
+        assertTrue(comsub.toString().contains("[shipID,str-le,\"abc\"]"));
+        assertTrue(comsub.toString().contains("[level,str-ge,\"abcd\"]"));
+    }
+
+    @Test
+    public void should_parse_composite_select_string_with_different_operators_4() throws ParseException {
+        String stringRep = new String("{{[class,eq,audit]}&{[class,eq,reading],[shipID,str-gt,abc],[level,isPresent,abc]}}");
+        CompositeSubscription comsub = MessageFactory.createCompositeSubscriptionFromString(stringRep);
+        assertTrue(comsub.toString().contains("[class,eq,audit]"));
+        assertTrue(comsub.toString().contains("[class,eq,reading]"));
+        assertTrue(comsub.toString().contains("[shipID,str-gt,\"abc\"]"));
+        assertTrue(comsub.toString().contains("[level,isPresent,\"abc\"]"));
+    }
+
+
+    @Test
+    public void test_composite_select_mixed_types1() throws ParseException {
+
+        String stringRep = new String("{{[class,eq,audit]}&{[class,eq,audit],[firm,isPresent,abc],[trust,>=,0.0]}}");
+        CompositeSubscription comsub = MessageFactory.createCompositeSubscriptionFromString(stringRep);
+        assertTrue(comsub.toString().contains("[class,eq,audit]"));
+        assertTrue(comsub.toString().contains("[firm,isPresent,\"abc\"]"));
+        assertTrue(comsub.toString().contains("[trust,>=,0.0]"));
+    }
+
+    @Test
+    public void test_composite_select_mixed_types2() throws ParseException {
+        String stringRep = new String("{{[class,eq,audit]}&{[class,eq,manifest],[shipID,=,12345],[content,eq,radioactivestuff],[firm,>,12345.67]}}");
+        CompositeSubscription comsub = MessageFactory.createCompositeSubscriptionFromString(stringRep);
+        assertTrue(comsub.toString().contains("[class,eq,audit]"));
+        assertTrue(comsub.toString().contains("[class,eq,manifest]"));
+        assertTrue(comsub.toString().contains("[shipID,=,12345]"));
+        assertTrue(comsub.toString().contains("[content,eq,\"radioactivestuff\"]"));
+        assertTrue(comsub.toString().contains("[firm,>,12345.67]"));
+
+    }
+
+    @Test
+    public void test_composite_variable_equall_1() throws ParseException {
+
+        String stringRep = new String("{{[class,eq,audit],[reading,=,$I$X0]}&{[class,eq,reading],[reading,=,$I$X0]}}");
+        CompositeSubscription comsub = MessageFactory.createCompositeSubscriptionFromString(stringRep);
+        assertTrue(comsub.toString().contains("[class,eq,audit]"));
+        assertTrue(comsub.toString().contains("[class,eq,reading]"));
+        assertTrue(comsub.toString().contains("[reading,=,\"$I$X0\"]"));
+    }
+
+    @Test
+    public void test_composite_variable_equall_2() throws ParseException {
+        String stringRep = new String("{{[class,eq,audit],[reading,=,$F$X0]}&{[class,eq,reading],[reading,=,$F$X0]}}");
+        CompositeSubscription comsub = MessageFactory.createCompositeSubscriptionFromString(stringRep);
+        assertTrue(comsub.toString().contains("[class,eq,audit]"));
+        assertTrue(comsub.toString().contains("[class,eq,reading]"));
+        assertTrue(comsub.toString().contains("[reading,=,\"$F$X0\"]"));
+    }
+
+    @Test
+    public void test_composite_variable_equall_3() throws ParseException {
+        String stringRep = new String("{{[class,eq,audit],[reading,eq,$S$X0]}&{[class,eq,reading],[reading,eq,$S$X0]}}");
+        CompositeSubscription comsub = MessageFactory.createCompositeSubscriptionFromString(stringRep);
+        assertTrue(comsub.toString().contains("[class,eq,audit]"));
+        assertTrue(comsub.toString().contains("[class,eq,reading]"));
+        assertTrue(comsub.toString().contains("[reading,eq,\"$S$X0\"]"));
+    }
+
+    @Test
+    public void test_composite_variable_equall_4() throws ParseException {
+        String stringRep = new String("{{{[class,eq,audit]}&{[class,eq,audit]}}&{[class,eq,audit]}}");
+        CompositeSubscription comsub = MessageFactory.createCompositeSubscriptionFromString(stringRep);
+        assertTrue(comsub.toString().contains("[class,eq,audit]"));
+        assertTrue(comsub.toString().substring(10).contains("[class,eq,audit]"));
+        assertTrue(comsub.toString().substring(25).contains("[class,eq,audit]"));
+    }
+
+    @Test
+    public void test_composite_variable_equall_5() throws ParseException {
+        String stringRep = new String("{{{[class,eq,audit],[reading,=,$I$X2]}&{[class,eq,audit],[reading,=,$I$X2],[value,=,$F$X3]}}&{[class,eq,audit],[value,=,$F$X3]}}");
+        CompositeSubscription comsub = MessageFactory.createCompositeSubscriptionFromString(stringRep);
+        assertTrue(comsub.toString().contains("[class,eq,audit]"));
+        assertTrue(comsub.toString().contains("[reading,=,\"$I$X2\"]"));
+        assertTrue(comsub.toString().contains("[value,=,\"$F$X3\"]"));
+    }
+
+
+    @Test
+    public void test_composite_braces_checking_1() throws ParseException {
+        String stringRep = new String("{{{{[class,eq,fa]}&{{[class,eq,do]}||{[class,eq,re]}}}&{[class,eq,so]}}||{[class,eq,do]}}");
+        CompositeSubscription comsub = MessageFactory.createCompositeSubscriptionFromString(stringRep);
+        assertTrue(comsub.toString().contains("[class,eq,fa]"));
+        assertTrue(comsub.toString().contains("[class,eq,do]"));
+        assertTrue(comsub.toString().contains("[class,eq,re]"));
+        assertTrue(comsub.toString().contains("[class,eq,so]"));
+        assertTrue(comsub.toString().contains("[class,eq,do]"));
+    }
+
+    @Test
+    public void test_composite_braces_checking_2() throws ParseException {
+        String stringRep = new String("{{{{[class,eq,do]}&{{{[class,eq,re]}||{[class,eq,mi]}}&{[class,eq,fa]}}}||{[class,eq,so]}}&{{{[class,eq,la]}||{[class,eq,ti]}}&{[class,eq,do]}}}");
+        CompositeSubscription comsub = MessageFactory.createCompositeSubscriptionFromString(stringRep);
+        assertTrue(comsub.toString().contains("[class,eq,do]"));
+        assertTrue(comsub.toString().contains("[class,eq,re]"));
+        assertTrue(comsub.toString().contains("[class,eq,mi]"));
+        assertTrue(comsub.toString().contains("[class,eq,fa]"));
+        assertTrue(comsub.toString().contains("[class,eq,so]"));
+        assertTrue(comsub.toString().contains("[class,eq,la]"));
+        assertTrue(comsub.toString().contains("[class,eq,ti]"));
+        assertTrue(comsub.toString().contains("[class,eq,do]"));
+
+    }
+
+    @Test
+    public void test_composite_select_1() throws ParseException {
+
+        String stringRep = new String("{{[class,eq,reading],[level,>,3]}&{[class,eq,audit],[trust,>,7]}}");
+        CompositeSubscription comsub = MessageFactory.createCompositeSubscriptionFromString(stringRep);
+        assertTrue(comsub.toString().contains("[class,eq,reading]"));
+        assertTrue(comsub.toString().contains("[level,>,3]"));
+        assertTrue(comsub.toString().contains("[class,eq,audit]"));
+        assertTrue(comsub.toString().contains("[trust,>,7]"));
+    }
+
+
+    @Test
+    public void test_composite_select_2() throws ParseException {
+        String stringRep = new String("{{[class,eq,reading],[level,>,3]}&{[class,eq,audit],[trust,>,7]}}");
+        CompositeSubscription comsub = MessageFactory.createCompositeSubscriptionFromString(stringRep);
+        assertTrue(comsub.toString().contains("[class,eq,reading]"));
+        assertTrue(comsub.toString().contains("[level,>,3]"));
+        assertTrue(comsub.toString().contains("[class,eq,audit]"));
+        assertTrue(comsub.toString().contains("[trust,>,7]"));
     }
 }
