@@ -190,9 +190,8 @@ public class TestMessageParser extends Assert {
     }
 
     @Test
-    public void schould_parse_isPresent_with_number() {
+    public void schould_parse_isPresent_with_number() throws ParseException {
         String stringRep = new String("[class,eq,reading],[level,isPresent,123];");
-        System.out.println("Input: " + stringRep);
         Advertisement adv = MessageFactory.createAdvertisementFromString(stringRep);
         assertTrue(adv.toString().contains("[class,eq,reading]"));
         assertTrue(adv.toString().contains("[level,isPresent,123]"));
@@ -331,327 +330,243 @@ public class TestMessageParser extends Assert {
     }
 
     @Test
-    public void testCreateTableStringWithDifferentOperators() throws ParseException {
-        {
-            String stringRep = new String("[class,eq,reading],[shipID,str-gt,abc];");
-            System.out.println("Input: " + stringRep);
-            Advertisement adv = MessageFactory.createAdvertisementFromString(stringRep);
-            assertTrue(adv.toString().contains("[class,eq,reading]"));
-            assertTrue(adv.toString().contains("[shipID,str-gt,\"abc\"]"));
-        }
+    public void should_parse_str_gt() throws ParseException {
+        String stringRep = new String("[class,eq,reading],[shipID,str-gt,abc];");
+        Advertisement adv = MessageFactory.createAdvertisementFromString(stringRep);
+        assertTrue(adv.toString().contains("[class,eq,reading]"));
+        assertTrue(adv.toString().contains("[shipID,str-gt,\"abc\"]"));
+    }
 
-        {
-            String stringRep = new String("[class,eq,reading],[shipID,eq,abc],[level,str-lt,abcd];");
-            System.out.println("Input: " + stringRep);
-            Advertisement adv = MessageFactory.createAdvertisementFromString(stringRep);
-            assertTrue(adv.toString().contains("[class,eq,reading]"));
-            assertTrue(adv.toString().contains("[shipID,eq,\"abc\"]"));
-            assertTrue(adv.toString().contains("[level,str-lt,\"abcd\"]"));
-        }
+    @Test
+    public void should_parse_str_lt() throws ParseException {
+        String stringRep = new String("[class,eq,reading],[shipID,eq,abc],[level,str-lt,abcd];");
+        Advertisement adv = MessageFactory.createAdvertisementFromString(stringRep);
+        assertTrue(adv.toString().contains("[class,eq,reading]"));
+        assertTrue(adv.toString().contains("[shipID,eq,\"abc\"]"));
+        assertTrue(adv.toString().contains("[level,str-lt,\"abcd\"]"));
+    }
 
-        {
-            String stringRep = new String("[class,eq,reading],[shipID,str-le,abc],[level,str-ge,abcd];");
-            System.out.println("Input: " + stringRep);
-            Advertisement adv = MessageFactory.createAdvertisementFromString(stringRep);
-            assertTrue(adv.toString().contains("[class,eq,reading]"));
-            assertTrue(adv.toString().contains("[shipID,str-le,\"abc\"]"));
-            assertTrue(adv.toString().contains("[level,str-ge,\"abcd\"]"));
-        }
+    @Test
+    public void should_parse_str_ge_and_str_le() throws ParseException {
+        String stringRep = new String("[class,eq,reading],[shipID,str-le,abc],[level,str-ge,abcd];");
+        Advertisement adv = MessageFactory.createAdvertisementFromString(stringRep);
+        assertTrue(adv.toString().contains("[class,eq,reading]"));
+        assertTrue(adv.toString().contains("[shipID,str-le,\"abc\"]"));
+        assertTrue(adv.toString().contains("[level,str-ge,\"abcd\"]"));
+    }
 
-        {
-            String stringRep = new String("[class,eq,reading],[shipID,str-gt,abc],[level,isPresent,abc];");
-            System.out.println("Input: " + stringRep);
-            Advertisement adv = MessageFactory.createAdvertisementFromString(stringRep);
-            assertTrue(adv.toString().contains("[class,eq,reading]"));
-            assertTrue(adv.toString().contains("[shipID,str-gt,\"abc\"]"));
-            assertTrue(adv.toString().contains("[level,isPresent,\"abc\"]"));
-        }
+    @Test
+    public void should_parse_str_gt_and_isPresent() throws ParseException {
+        String stringRep = new String("[class,eq,reading],[shipID,str-gt,abc],[level,isPresent,abc];");
+        Advertisement adv = MessageFactory.createAdvertisementFromString(stringRep);
+        assertTrue(adv.toString().contains("[class,eq,reading]"));
+        assertTrue(adv.toString().contains("[shipID,str-gt,\"abc\"]"));
+        assertTrue(adv.toString().contains("[level,isPresent,\"abc\"]"));
     }
 
     @Test
     public void testCreateTableMixedTypes() throws ParseException {
-        {
-            String stringRep = new String("[class,eq,audit],[firm,isPresent,abc],[trust,>=,0.0];");
-            System.out.println("Input: " + stringRep);
-            Advertisement adv = MessageFactory.createAdvertisementFromString(stringRep);
-            assertTrue(adv.toString().contains("[class,eq,audit]"));
-            assertTrue(adv.toString().contains("[firm,isPresent,\"abc\"]"));
-            assertTrue(adv.toString().contains("[trust,>=,0.0]"));
-        }
-
-        {
-            String stringRep = new String("[class,eq,manifest],[shipID,=,12345],[content,eq,radioactivestuff],[firm,>,12345.67];");
-            System.out.println("Input: " + stringRep);
-            Advertisement adv = MessageFactory.createAdvertisementFromString(stringRep);
-            assertTrue(adv.toString().contains("[class,eq,manifest]"));
-            assertTrue(adv.toString().contains("[shipID,=,12345]"));
-            assertTrue(adv.toString().contains("[content,eq,\"radioactivestuff\"]"));
-            assertTrue(adv.toString().contains("[firm,>,12345.67]"));
-        }
+        String stringRep = new String("[class,eq,audit],[firm,isPresent,abc],[trust,>=,0.0];");
+        Advertisement adv = MessageFactory.createAdvertisementFromString(stringRep);
+        assertTrue(adv.toString().contains("[class,eq,audit]"));
+        assertTrue(adv.toString().contains("[firm,isPresent,\"abc\"]"));
+        assertTrue(adv.toString().contains("[trust,>=,0.0]"));
     }
 
     @Test
-    public void testSelect() throws ParseException {
-        {
-            String stringRep = "[class,eq,'stock'],[price,=,100.3];";
-            System.out.println("Input: " + stringRep);
-            Subscription sub = MessageFactory.createSubscriptionFromString(stringRep);
-            assertTrue(sub.toString().contains("[price,=,100.3]"));
-        }
-
-        {
-            String stringRep = new String("[class,eq,reading];");
-            System.out.println("Input: " + stringRep);
-            Subscription sub = MessageFactory.createSubscriptionFromString(stringRep);
-            assertTrue(sub.toString().contains("[class,eq,reading]"));
-        }
-
-        {
-            String stringRep = new String("[class,eq,reading];");
-            System.out.println("Input: " + stringRep);
-            Subscription sub = MessageFactory.createSubscriptionFromString(stringRep);
-            assertTrue(sub.toString().contains("[class,eq,reading]"));
-        }
-
-        {
-            String stringRep = new String("[class,eq,reading],[level,=,5];");
-            System.out.println("Input: " + stringRep);
-            Subscription sub = MessageFactory.createSubscriptionFromString(stringRep);
-            assertTrue(sub.toString().contains("[class,eq,reading]"));
-            assertTrue(sub.toString().contains("[level,=,5]"));
-        }
-
-        {
-            String stringRep = new String("[class,eq,reading],[level,eq,\"5\"];");
-            System.out.println("Input: " + stringRep);
-            Subscription sub = MessageFactory.createSubscriptionFromString(stringRep);
-            assertTrue(sub.toString().contains("[class,eq,reading]"));
-            assertTrue(sub.toString().contains("[level,eq,\"5\"]"));
-        }
-
-        {
-            String stringRep = new String("[class,eq,reading],[level,=,5.5];");
-            System.out.println("Input: " + stringRep);
-            Subscription sub = MessageFactory.createSubscriptionFromString(stringRep);
-            assertTrue(sub.toString().contains("[class,eq,reading]"));
-            assertTrue(sub.toString().contains("[level,=,5.5]"));
-        }
+    public void should_parse_eq_and_other_operators() throws ParseException {
+        String stringRep = new String("[class,eq,manifest],[shipID,=,12345],[content,eq,radioactivestuff],[firm,>,12345.67];");
+        Advertisement adv = MessageFactory.createAdvertisementFromString(stringRep);
+        assertTrue(adv.toString().contains("[class,eq,manifest]"));
+        assertTrue(adv.toString().contains("[shipID,=,12345]"));
+        assertTrue(adv.toString().contains("[content,eq,\"radioactivestuff\"]"));
+        assertTrue(adv.toString().contains("[firm,>,12345.67]"));
     }
 
     @Test
-    public void testSelectAsteriskTypes() throws ParseException {
-        {
-            String stringRep = new String("[class,eq,reading];");
-            System.out.println("Input: " + stringRep);
-            Subscription sub = MessageFactory.createSubscriptionFromString(stringRep);
-            assertTrue(sub.toString().contains("[class,eq,reading]"));
-        }
-
-        {
-            String stringRep = new String("[class,eq,reading],[level,isPresent,123];");
-            System.out.println("Input: " + stringRep);
-            Subscription sub = MessageFactory.createSubscriptionFromString(stringRep);
-            assertTrue(sub.toString().contains("[class,eq,reading]"));
-            assertTrue(sub.toString().contains("[level,isPresent,123]"));
-        }
-
-        {
-            String stringRep = new String("[class,eq,reading],[level,isPresent,abc];");
-            System.out.println("Input: " + stringRep);
-            Subscription sub = MessageFactory.createSubscriptionFromString(stringRep);
-            assertTrue(sub.toString().contains("[class,eq,reading]"));
-            assertTrue(sub.toString().contains("[level,isPresent,\"abc\"]"));
-        }
-
-        {
-            String stringRep = new String("[class,eq,reading],[level,isPresent,123.123];");
-            System.out.println("Input: " + stringRep);
-            Subscription sub = MessageFactory.createSubscriptionFromString(stringRep);
-            assertTrue(sub.toString().contains("[class,eq,reading]"));
-            assertTrue(sub.toString().contains("[level,isPresent,123.123]"));
-        }
-
-        {
-            String stringRep = new String("[class,eq,reading],[shipID,=,123];");
-            System.out.println("Input: " + stringRep);
-            Subscription sub = MessageFactory.createSubscriptionFromString(stringRep);
-            assertTrue(sub.toString().contains("[class,eq,reading]"));
-            assertTrue(sub.toString().contains("[shipID,=,123]"));
-        }
-
-        {
-            String stringRep = new String("[class,eq,reading],[shipID,isPresent,123];");
-            System.out.println("Input: " + stringRep);
-            Subscription sub = MessageFactory.createSubscriptionFromString(stringRep);
-            assertTrue(sub.toString().contains("[class,eq,reading]"));
-            assertTrue(sub.toString().contains("[shipID,isPresent,123]"));
-        }
-
-        {
-            String stringRep = new String("[class,eq,reading],[shipID,isPresent,abc];");
-            System.out.println("Input: " + stringRep);
-            Subscription sub = MessageFactory.createSubscriptionFromString(stringRep);
-            assertTrue(sub.toString().contains("[class,eq,reading]"));
-            assertTrue(sub.toString().contains("[shipID,isPresent,\"abc\"]"));
-        }
+    public void should_parse_price_with_prependend_komma() throws ParseException {
+        String stringRep = "[class,eq,'stock'],[price,=,100.3];";
+        Subscription sub = MessageFactory.createSubscriptionFromString(stringRep);
+        assertTrue(sub.toString().contains("[price,=,100.3]"));
     }
 
     @Test
-    public void testSelectMultipleAttributes() throws ParseException {
-        {
-            String stringRep = new String("[class,eq,audit],[firm,isPresent,abc],[trust,>=,0];");
-            System.out.println("Input: " + stringRep);
-            Subscription sub = MessageFactory.createSubscriptionFromString(stringRep);
-            assertTrue(sub.toString().contains("[class,eq,audit]"));
-            assertTrue(sub.toString().contains("[firm,isPresent,\"abc\"]"));
-            assertTrue(sub.toString().contains("[trust,>=,0]"));
-        }
+    public void should_parse_equal() throws ParseException {
+        String stringRep = new String("[class,eq,reading];");
+        Subscription sub = MessageFactory.createSubscriptionFromString(stringRep);
+        assertTrue(sub.toString().contains("[class,eq,reading]"));
+    }
 
-        {
-            String stringRep = new String("[class,eq,manifest],[shipID,isPresent,123],[firm,isPresent,123.123],[content,isPresent,abc];");
-            System.out.println("Input: " + stringRep);
-            Subscription sub = MessageFactory.createSubscriptionFromString(stringRep);
-            assertTrue(sub.toString().contains("[class,eq,manifest]"));
-            assertTrue(sub.toString().contains("[shipID,isPresent,123]"));
-            assertTrue(sub.toString().contains("[firm,isPresent,123.123]"));
-            assertTrue(sub.toString().contains("[content,isPresent,\"abc\"]"));
-        }
+    @Test
+    public void should_parse_equal_and_equal_with_number() throws ParseException {
+        String stringRep = new String("[class,eq,reading],[level,=,5];");
+        Subscription sub = MessageFactory.createSubscriptionFromString(stringRep);
+        assertTrue(sub.toString().contains("[class,eq,reading]"));
+        assertTrue(sub.toString().contains("[level,=,5]"));
+    }
+
+    @Test
+    public void should_parse_equal_and_escaped_number() throws ParseException {
+        String stringRep = new String("[class,eq,reading],[level,eq,\"5\"];");
+        Subscription sub = MessageFactory.createSubscriptionFromString(stringRep);
+        assertTrue(sub.toString().contains("[class,eq,reading]"));
+        assertTrue(sub.toString().contains("[level,eq,\"5\"]"));
+    }
+
+    @Test
+    public void should_parse_equal_and_number_with_prepended_komma() throws ParseException {
+        String stringRep = new String("[class,eq,reading],[level,=,5.5];");
+        Subscription sub = MessageFactory.createSubscriptionFromString(stringRep);
+        assertTrue(sub.toString().contains("[class,eq,reading]"));
+        assertTrue(sub.toString().contains("[level,=,5.5]"));
+    }
+
+    @Test
+    public void should_parse_select_on_multiple_properties() throws ParseException {
+        String stringRep = new String("[class,eq,audit],[firm,isPresent,abc],[trust,>=,0];");
+        Subscription sub = MessageFactory.createSubscriptionFromString(stringRep);
+        assertTrue(sub.toString().contains("[class,eq,audit]"));
+        assertTrue(sub.toString().contains("[firm,isPresent,\"abc\"]"));
+        assertTrue(sub.toString().contains("[trust,>=,0]"));
+    }
+
+    @Test
+    public void should_parse_select_multiple_properties_and_isPresent() throws ParseException {
+        String stringRep = new String("[class,eq,manifest],[shipID,isPresent,123],[firm,isPresent,123.123],[content,isPresent,abc];");
+        Subscription sub = MessageFactory.createSubscriptionFromString(stringRep);
+        assertTrue(sub.toString().contains("[class,eq,manifest]"));
+        assertTrue(sub.toString().contains("[shipID,isPresent,123]"));
+        assertTrue(sub.toString().contains("[firm,isPresent,123.123]"));
+        assertTrue(sub.toString().contains("[content,isPresent,\"abc\"]"));
     }
 
     @Test
     public void testSelectIntWithDifferentOperators() throws ParseException {
-        {
-            String stringRep = new String("[class,eq,reading],[shipID,>,123];");
-            System.out.println("Input: " + stringRep);
-            Subscription sub = MessageFactory.createSubscriptionFromString(stringRep);
-            assertTrue(sub.toString().contains("[class,eq,reading]"));
-            assertTrue(sub.toString().contains("[shipID,>,123]"));
-        }
 
-        {
-            String stringRep = new String("[class,eq,reading],[shipID,=,123],[level,<,3];");
-            System.out.println("Input: " + stringRep);
-            Subscription sub = MessageFactory.createSubscriptionFromString(stringRep);
-            assertTrue(sub.toString().contains("[class,eq,reading]"));
-            assertTrue(sub.toString().contains("[shipID,=,123]"));
-            assertTrue(sub.toString().contains("[level,<,3]"));
-        }
+        String stringRep = new String("[class,eq,reading],[shipID,>,123];");
+        System.out.println("Input: " + stringRep);
+        Subscription sub = MessageFactory.createSubscriptionFromString(stringRep);
+        assertTrue(sub.toString().contains("[class,eq,reading]"));
+        assertTrue(sub.toString().contains("[shipID,>,123]"));
+    }
 
-        {
-            String stringRep = new String("[class,eq,reading],[shipID,<=,123],[level,>=,3];");
-            System.out.println("Input: " + stringRep);
-            Subscription sub = MessageFactory.createSubscriptionFromString(stringRep);
-            assertTrue(sub.toString().contains("[class,eq,reading]"));
-            assertTrue(sub.toString().contains("[shipID,<=,123]"));
-            assertTrue(sub.toString().contains("[level,>=,3]"));
-        }
+    @Test
+    public void should_select_equal_integer() throws ParseException {
+        String stringRep = new String("[class,eq,reading],[shipID,=,123],[level,<,3];");
+        Subscription sub = MessageFactory.createSubscriptionFromString(stringRep);
+        assertTrue(sub.toString().contains("[class,eq,reading]"));
+        assertTrue(sub.toString().contains("[shipID,=,123]"));
+        assertTrue(sub.toString().contains("[level,<,3]"));
+    }
 
-        {
-            String stringRep = new String("[class,eq,reading],[shipID,>,123],[level,isPresent,123];");
-            System.out.println("Input: " + stringRep);
-            Subscription sub = MessageFactory.createSubscriptionFromString(stringRep);
-            assertTrue(sub.toString().contains("[class,eq,reading]"));
-            assertTrue(sub.toString().contains("[shipID,>,123]"));
-            assertTrue(sub.toString().contains("[level,isPresent,123]"));
-        }
+    @Test
+    public void should_select_smaller_integer() throws ParseException {
+        String stringRep = new String("[class,eq,reading],[shipID,<=,123],[level,>=,3];");
+        Subscription sub = MessageFactory.createSubscriptionFromString(stringRep);
+        assertTrue(sub.toString().contains("[class,eq,reading]"));
+        assertTrue(sub.toString().contains("[shipID,<=,123]"));
+        assertTrue(sub.toString().contains("[level,>=,3]"));
+    }
+
+    @Test
+    public void should_select_bigger_integer() throws ParseException {
+        String stringRep = new String("[class,eq,reading],[shipID,>,123],[level,isPresent,123];");
+        Subscription sub = MessageFactory.createSubscriptionFromString(stringRep);
+        assertTrue(sub.toString().contains("[class,eq,reading]"));
+        assertTrue(sub.toString().contains("[shipID,>,123]"));
+        assertTrue(sub.toString().contains("[level,isPresent,123]"));
     }
 
     @Test
     public void testSelectDoubleWithDifferentOperators() throws ParseException {
-        {
-            String stringRep = new String("[class,eq,reading],[shipID,>,123.456];");
-            System.out.println("Input: " + stringRep);
-            Subscription sub = MessageFactory.createSubscriptionFromString(stringRep);
-            assertTrue(sub.toString().contains("[class,eq,reading]"));
-            assertTrue(sub.toString().contains("[shipID,>,123.456]"));
-        }
-
-        {
-            String stringRep = new String("[class,eq,reading],[shipID,=,123.456],[level,<,3.456];");
-            System.out.println("Input: " + stringRep);
-            Subscription sub = MessageFactory.createSubscriptionFromString(stringRep);
-            assertTrue(sub.toString().contains("[class,eq,reading]"));
-            assertTrue(sub.toString().contains("[shipID,=,123.456]"));
-            assertTrue(sub.toString().contains("[level,<,3.456]"));
-        }
-
-        {
-            String stringRep = new String("[class,eq,reading],[shipID,<=,123.567],[level,>=,3.456];");
-            System.out.println("Input: " + stringRep);
-            Subscription sub = MessageFactory.createSubscriptionFromString(stringRep);
-            assertTrue(sub.toString().contains("[class,eq,reading]"));
-            assertTrue(sub.toString().contains("[shipID,<=,123.567]"));
-            assertTrue(sub.toString().contains("[level,>=,3.456]"));
-        }
-
-        {
-            String stringRep = new String("[class,eq,reading],[shipID,>,123.345],[level,isPresent,\"123.123\"];");
-            System.out.println("Input: " + stringRep);
-            Subscription sub = MessageFactory.createSubscriptionFromString(stringRep);
-            assertTrue(sub.toString().contains("[class,eq,reading]"));
-            assertTrue(sub.toString().contains("[shipID,>,123.345]"));
-            assertTrue(sub.toString().contains("[level,isPresent,\"123.123\"]"));
-        }
+        String stringRep = new String("[class,eq,reading],[shipID,>,123.456];");
+        System.out.println("Input: " + stringRep);
+        Subscription sub = MessageFactory.createSubscriptionFromString(stringRep);
+        assertTrue(sub.toString().contains("[class,eq,reading]"));
+        assertTrue(sub.toString().contains("[shipID,>,123.456]"));
     }
 
     @Test
-    public void testSelectStringWithDifferentOperators() throws ParseException {
-        {
-            String stringRep = new String("[class,eq,reading],[shipID,str-gt,abc];");
-            System.out.println("Input: " + stringRep);
-            Subscription sub = MessageFactory.createSubscriptionFromString(stringRep);
-            assertTrue(sub.toString().contains("[class,eq,reading]"));
-            assertTrue(sub.toString().contains("[shipID,str-gt,\"abc\"]"));
-        }
-
-        {
-            String stringRep = new String("[class,eq,reading],[shipID,eq,abc],[level,str-lt,abcd];");
-            System.out.println("Input: " + stringRep);
-            Subscription sub = MessageFactory.createSubscriptionFromString(stringRep);
-            assertTrue(sub.toString().contains("[class,eq,reading]"));
-            assertTrue(sub.toString().contains("[shipID,eq,\"abc\"]"));
-            assertTrue(sub.toString().contains("[level,str-lt,\"abcd\"]"));
-        }
-
-        {
-            String stringRep = new String("[class,eq,reading],[shipID,str-le,abc],[level,str-ge,abcd];");
-            System.out.println("Input: " + stringRep);
-            Subscription sub = MessageFactory.createSubscriptionFromString(stringRep);
-            assertTrue(sub.toString().contains("[class,eq,reading]"));
-            assertTrue(sub.toString().contains("[shipID,str-le,\"abc\"]"));
-            assertTrue(sub.toString().contains("[level,str-ge,\"abcd\"]"));
-        }
-
-        {
-            String stringRep = new String("[class,eq,reading],[shipID,str-gt,abc],[level,isPresent,abc];");
-            System.out.println("Input: " + stringRep);
-            Subscription sub = MessageFactory.createSubscriptionFromString(stringRep);
-            assertTrue(sub.toString().contains("[class,eq,reading]"));
-            assertTrue(sub.toString().contains("[shipID,str-gt,\"abc\"]"));
-            assertTrue(sub.toString().contains("[level,isPresent,\"abc\"]"));
-        }
+    public void should_parse_equals_with_double() throws ParseException {
+        String stringRep = new String("[class,eq,reading],[shipID,=,123.456],[level,<,3.456];");
+        Subscription sub = MessageFactory.createSubscriptionFromString(stringRep);
+        assertTrue(sub.toString().contains("[class,eq,reading]"));
+        assertTrue(sub.toString().contains("[shipID,=,123.456]"));
+        assertTrue(sub.toString().contains("[level,<,3.456]"));
     }
 
     @Test
-    public void testSelectMixedTypes() throws ParseException {
-        {
-            String stringRep = new String("[class,eq,audit],[firm,isPresent,abc],[trust,>=,0.0];");
-            System.out.println("Input: " + stringRep);
-            Subscription sub = MessageFactory.createSubscriptionFromString(stringRep);
-            assertTrue(sub.toString().contains("[class,eq,audit]"));
-            assertTrue(sub.toString().contains("[firm,isPresent,\"abc\"]"));
-            assertTrue(sub.toString().contains("[trust,>=,0.0]"));
-        }
+    public void should_parse_bigger_with_double() throws ParseException {
+        String stringRep = new String("[class,eq,reading],[shipID,<=,123.567],[level,>=,3.456];");
+        Subscription sub = MessageFactory.createSubscriptionFromString(stringRep);
+        assertTrue(sub.toString().contains("[class,eq,reading]"));
+        assertTrue(sub.toString().contains("[shipID,<=,123.567]"));
+        assertTrue(sub.toString().contains("[level,>=,3.456]"));
+    }
 
-        {
-            String stringRep = new String("[class,eq,manifest],[shipID,=,12345],[content,eq,radioactivestuff],[firm,>,12345.67];");
-            System.out.println("Input: " + stringRep);
-            Subscription sub = MessageFactory.createSubscriptionFromString(stringRep);
-            assertTrue(sub.toString().contains("[class,eq,manifest]"));
-            assertTrue(sub.toString().contains("[shipID,=,12345]"));
-            assertTrue(sub.toString().contains("[content,eq,\"radioactivestuff\"]"));
-            assertTrue(sub.toString().contains("[firm,>,12345.67]"));
-        }
+    @Test
+    public void should_parse_smaller_with_double() throws ParseException {
+        String stringRep = new String("[class,eq,reading],[shipID,>,123.345],[level,isPresent,\"123.123\"];");
+        Subscription sub = MessageFactory.createSubscriptionFromString(stringRep);
+        assertTrue(sub.toString().contains("[class,eq,reading]"));
+        assertTrue(sub.toString().contains("[shipID,>,123.345]"));
+        assertTrue(sub.toString().contains("[level,isPresent,\"123.123\"]"));
+    }
+
+    @Test
+    public void should_parse_string_with_str_gt() throws ParseException {
+        String stringRep = new String("[class,eq,reading],[shipID,str-gt,abc];");
+        System.out.println("Input: " + stringRep);
+        Subscription sub = MessageFactory.createSubscriptionFromString(stringRep);
+        assertTrue(sub.toString().contains("[class,eq,reading]"));
+        assertTrue(sub.toString().contains("[shipID,str-gt,\"abc\"]"));
+    }
+
+    @Test
+    public void should_pares_string_with_str_lt_correct() throws ParseException {
+        String stringRep = new String("[class,eq,reading],[shipID,eq,abc],[level,str-lt,abcd];");
+        Subscription sub = MessageFactory.createSubscriptionFromString(stringRep);
+        assertTrue(sub.toString().contains("[class,eq,reading]"));
+        assertTrue(sub.toString().contains("[shipID,eq,\"abc\"]"));
+        assertTrue(sub.toString().contains("[level,str-lt,\"abcd\"]"));
+    }
+
+    @Test
+    public void should_parse_string_with_str_ge_comparison_correct() throws ParseException {
+        String stringRep = new String("[class,eq,reading],[shipID,str-le,abc],[level,str-ge,abcd];");
+        Subscription sub = MessageFactory.createSubscriptionFromString(stringRep);
+        assertTrue(sub.toString().contains("[class,eq,reading]"));
+        assertTrue(sub.toString().contains("[shipID,str-le,\"abc\"]"));
+        assertTrue(sub.toString().contains("[level,str-ge,\"abcd\"]"));
+    }
+
+    @Test
+    public void should_parse_string_with_str_gt_and_isPresent_correct() throws ParseException {
+        String stringRep = new String("[class,eq,reading],[shipID,str-gt,abc],[level,isPresent,abc];");
+        Subscription sub = MessageFactory.createSubscriptionFromString(stringRep);
+        assertTrue(sub.toString().contains("[class,eq,reading]"));
+        assertTrue(sub.toString().contains("[shipID,str-gt,\"abc\"]"));
+        assertTrue(sub.toString().contains("[level,isPresent,\"abc\"]"));
+    }
+    
+    @Test
+    public void testSelectMixedTypes_1() throws ParseException {
+        String stringRep = new String("[class,eq,audit],[firm,isPresent,abc],[trust,>=,0.0];");
+        System.out.println("Input: " + stringRep);
+        Subscription sub = MessageFactory.createSubscriptionFromString(stringRep);
+        assertTrue(sub.toString().contains("[class,eq,audit]"));
+        assertTrue(sub.toString().contains("[firm,isPresent,\"abc\"]"));
+        assertTrue(sub.toString().contains("[trust,>=,0.0]"));
+    }
+
+    @Test
+    public void testSelectMixedTypes_2() throws ParseException {
+        String stringRep = new String("[class,eq,manifest],[shipID,=,12345],[content,eq,radioactivestuff],[firm,>,12345.67];");
+        Subscription sub = MessageFactory.createSubscriptionFromString(stringRep);
+        assertTrue(sub.toString().contains("[class,eq,manifest]"));
+        assertTrue(sub.toString().contains("[shipID,=,12345]"));
+        assertTrue(sub.toString().contains("[content,eq,\"radioactivestuff\"]"));
+        assertTrue(sub.toString().contains("[firm,>,12345.67]"));
     }
 
     @Test
@@ -1036,45 +951,4 @@ public class TestMessageParser extends Assert {
             assertTrue(comsub.toString().contains("[trust,>,7]"));
         }
     }
-
-/*TODO:
-        public static Object suite() // FIXME TestSuite(){
-            TestSuite suite = new TestSuite();
-            suite.addTest(new TestMessageParser("testInsert"));
-            suite.addTest(new TestMessageParser("testInsertMultipleAttributes"));
-            suite.addTest(new TestMessageParser("testInsertMixedTypes"));
-            
-            suite.addTest(new TestMessageParser("testCreateTable"));
-            suite.addTest(new TestMessageParser("testCreateTableAsteriskTypes"));
-            suite.addTest(new TestMessageParser("testCreateTableMultipleAttributes"));
-            suite.addTest(new TestMessageParser("testCreateTableIntWithDifferentOperators"));
-            suite.addTest(new TestMessageParser("testCreateTableDoubleWithDifferentOperators"));
-            suite.addTest(new TestMessageParser("testCreateTableStringWithDifferentOperators"));
-            suite.addTest(new TestMessageParser("testCreateTableMixedTypes"));
-            
-            suite.addTest(new TestMessageParser("testSelect"));
-            suite.addTest(new TestMessageParser("testSelectAsteriskTypes"));
-            suite.addTest(new TestMessageParser("testSelectMultipleAttributes"));
-            suite.addTest(new TestMessageParser("testSelectIntWithDifferentOperators"));
-            suite.addTest(new TestMessageParser("testSelectDoubleWithDifferentOperators"));
-            suite.addTest(new TestMessageParser("testSelectStringWithDifferentOperators"));
-            suite.addTest(new TestMessageParser("testSelectMixedTypes"));
-
-
-            suite.addTest(new TestMessageParser("testCompositeSelect"));
-            suite.addTest(new TestMessageParser("testCompositeSelectAsteriskTypes"));
-            suite.addTest(new TestMessageParser("testCompositeSelectMultipleAttributes"));
-            suite.addTest(new TestMessageParser("testCompositeSelectIntWithDifferentOperators"));
-            suite.addTest(new TestMessageParser("testCompositeSelectDoubleWithDifferentOperators"));
-            suite.addTest(new TestMessageParser("testCompositeSelectStringWithDifferentOperators"));
-            suite.addTest(new TestMessageParser("testCompositeSelectMixedTypes"));
-      
-            suite.addTest(new TestMessageParser("testCompositeSelectVariablesEqualling"));
-            suite.addTest(new TestMessageParser("testCompositeSelectBracesChecking"));
-            
-            suite.addTest(new TestMessageParser("test1CompositeSelect"));
-            
-            return suite;
-      }
-  */
 }
