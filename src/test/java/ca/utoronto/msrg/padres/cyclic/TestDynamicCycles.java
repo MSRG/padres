@@ -125,8 +125,8 @@ public class TestDynamicCycles extends Assert {
      *
      * @throws ParseException
      */
-    @Test
     @Ignore("TODO: Christoph")
+    @Test
     public void testDynamicCyclicWithBusyLink() throws ParseException, InterruptedException {
         /* TODO: VINOD (DONE) */
         // Stop broker2.
@@ -290,8 +290,8 @@ public class TestDynamicCycles extends Assert {
      *
      * @throws ParseException
      */
-    @Test
     @Ignore("TODO: Christoph")
+    @Test
     public void testDynamicCyclicWithStopedLink() throws ParseException, InterruptedException {
 		/* TODO: VINOD (DONE) */
         // Stop broker2.
@@ -450,8 +450,8 @@ public class TestDynamicCycles extends Assert {
      * @throws ParseException
      * @throws InterruptedException
      */
-    @Test
     @Ignore("TODO: Christoph")
+    @Test
     public void testDynamicCyclicWithCompositeSubscription() throws ParseException, InterruptedException {
 		/* TODO: REZA (NEW-DONE) */
         _brokerTester.clearAll().

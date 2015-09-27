@@ -400,8 +400,8 @@ public class TestHistoricDataQuery extends Assert {
      * @throws ParseException
      * @throws InterruptedException
      */
-    @Test
     @Ignore("TODO: Christoph")
+    @Test
     public void testHistoricDataQueryWithOneBroker() throws SQLException, ClientException, ParseException, InterruptedException {
 		/* TODO: YOUNG (DONE) */
         clientC.connect(brokerCore1.getBrokerURI());

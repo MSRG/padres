@@ -220,8 +220,8 @@ public class TestTwoBrokers extends Assert {
      * @throws ParseException
      * @throws InterruptedException
      */
-    @Test
     @Ignore("TODO: Fix Christoph")
+    @Test
     public void testAdvSubRoutingWithOneAdv() throws ParseException, InterruptedException {
 		/* TODO: VINOD/YOUNG (DONE2) */
         // setup message filter
@@ -312,8 +312,8 @@ public class TestTwoBrokers extends Assert {
      * @throws InterruptedException
      * @see TestTwoBrokers#testAdvSubRoutingWithOneAdv()
      */
-    @Test
     @Ignore("TODO: Fix Christoph")
+    @Test
     public void testSubAdvRoutingWithOneAdv() throws ParseException, InterruptedException {
 		/* TODO: REZA (DONE2) */
         _brokerTester.clearAll().

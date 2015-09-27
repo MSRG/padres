@@ -164,8 +164,8 @@ public class TestFixedCycles extends Assert {
      * @throws ParseException
      * @throws InterruptedException
      */
-    @Test
     @Ignore("TODO: Fix Christoph")
+    @Test
     public void testNoAdvLoopInNetwork() throws ClientException, ParseException, InterruptedException {
         /* TODO: REZA (NEW-DONE) */
         // start swingClientA for Broker1
