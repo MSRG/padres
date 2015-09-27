@@ -1,12 +1,8 @@
 package ca.utoronto.msrg.padres.components;
-import org.junit.Before;
-import org.junit.After;
-
-import org.junit.Test;
+import org.junit.*;
 
 import java.sql.SQLException;
 
-import org.junit.Assert;
 import ca.utoronto.msrg.padres.broker.brokercore.BrokerCore;
 import ca.utoronto.msrg.padres.broker.brokercore.BrokerCoreException;
 import ca.utoronto.msrg.padres.broker.brokercore.InputQueueHandler;
@@ -107,6 +103,7 @@ public class TestHistoricDataQueryWithCyclicRouting extends Assert {
 	 * @throws ParseException 
 	 */
    @Test
+   @Ignore("TODO: Christoph")
 	public void testHistoricDataQueryIntersectCyclicRouting() throws SQLException,
 			BrokerCoreException, ClientException, ParseException {
 		brokerCore1.getController().getLifeCycleManager().getDBHandler().getDBConnector().clearTables();
