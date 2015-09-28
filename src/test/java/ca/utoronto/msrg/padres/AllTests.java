@@ -2,7 +2,6 @@ package ca.utoronto.msrg.padres;
 
 import java.util.Set;
 
-import org.junit.Test;
 // FIXME include in TestSuite @RunWith(Suite.class)@Suite.SuiteClasses(...)
 import ca.utoronto.msrg.padres.broker.brokercore.BrokerConfig;
 import ca.utoronto.msrg.padres.broker.brokercore.BrokerConfig.CycleType;
@@ -18,29 +17,6 @@ import ca.utoronto.msrg.padres.common.message.Publication;
 import ca.utoronto.msrg.padres.common.message.PublicationMessage;
 import ca.utoronto.msrg.padres.common.message.Subscription;
 import ca.utoronto.msrg.padres.common.message.SubscriptionMessage;
-import ca.utoronto.msrg.padres.components.TestCmdLine;
-import ca.utoronto.msrg.padres.components.TestHistoricDataQuery;
-import ca.utoronto.msrg.padres.components.TestHistoricDataQueryWithCompositeSub;
-import ca.utoronto.msrg.padres.components.TestHistoricDataQueryWithCyclicRouting;
-import ca.utoronto.msrg.padres.components.TestPropertyFileException;
-import ca.utoronto.msrg.padres.components.advcover.IsCoveredADTest;
-import ca.utoronto.msrg.padres.components.advcover.RelationADTest;
-import ca.utoronto.msrg.padres.components.advcover.RelationIdentifierADTest;
-import ca.utoronto.msrg.padres.components.scout.RelationIdentifierTest;
-import ca.utoronto.msrg.padres.components.scout.RelationTest;
-import ca.utoronto.msrg.padres.components.scout.ScoutTestAddDupChild;
-import ca.utoronto.msrg.padres.components.scout.ScoutTestAddDupChild2;
-import ca.utoronto.msrg.padres.components.scout.ScoutTestMissingExistingChildBug;
-import ca.utoronto.msrg.padres.components.scout.ScoutTestRemoveDupChildBug;
-import ca.utoronto.msrg.padres.cyclic.TestCyclicBroker;
-import ca.utoronto.msrg.padres.cyclic.TestCyclicClientsException;
-import ca.utoronto.msrg.padres.cyclic.TestCyclicHeartBeat;
-import ca.utoronto.msrg.padres.cyclic.TestCyclicMultipleBrokers;
-import ca.utoronto.msrg.padres.cyclic.TestCyclicTwoBrokers;
-import ca.utoronto.msrg.padres.cyclic.TestDynamicCycles;
-import ca.utoronto.msrg.padres.cyclic.TestFixedCycles;
-import org.junit.runner.RunWith;
-import org.junit.runners.Suite;
 
 /**
  * @author Maniy
