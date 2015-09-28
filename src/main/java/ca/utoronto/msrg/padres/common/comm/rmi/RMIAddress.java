@@ -2,14 +2,14 @@ package ca.utoronto.msrg.padres.common.comm.rmi;
 
 import ca.utoronto.msrg.padres.common.comm.CommSystem.CommSystemType;
 import ca.utoronto.msrg.padres.common.comm.CommunicationException;
-import ca.utoronto.msrg.padres.common.comm.INodeAddress;
+import ca.utoronto.msrg.padres.common.comm.NodeAddress;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static ca.utoronto.msrg.padres.common.comm.ConnectionHelper.getLocalIPAddr;
 
-public class RMIAddress implements INodeAddress {
+public class RMIAddress implements NodeAddress {
 
 	public static final String RMI_REG_EXP = "rmi://([^:/]+)(:(\\d+))?/(.+)";
     private final CommSystemType type;

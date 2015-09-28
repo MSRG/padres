@@ -4,7 +4,7 @@ import ca.utoronto.msrg.padres.broker.monitor.SystemMonitor;
 import ca.utoronto.msrg.padres.common.comm.CommSystem.CommSystemType;
 import ca.utoronto.msrg.padres.common.comm.CommunicationException;
 import ca.utoronto.msrg.padres.common.comm.ConnectionHelper;
-import ca.utoronto.msrg.padres.common.comm.INodeAddress;
+import ca.utoronto.msrg.padres.common.comm.NodeAddress;
 import ca.utoronto.msrg.padres.common.message.MessageDestination;
 
 import java.util.Collections;
@@ -162,7 +162,7 @@ public class BrokerUI {
 		mPort = "undefined";
 		mHostName = "undefined";
 		try {
-			INodeAddress brokerAddr = ConnectionHelper.getAddress(uri);
+			NodeAddress brokerAddr = ConnectionHelper.getAddress(uri);
 			if (brokerAddr.getType() == CommSystemType.RMI) {
 				mPort = String.valueOf(brokerAddr.getPort());
 				mHostName = brokerAddr.getHost();

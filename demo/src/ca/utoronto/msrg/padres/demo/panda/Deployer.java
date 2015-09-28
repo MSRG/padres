@@ -31,7 +31,7 @@ import javax.swing.Timer;
 import ca.utoronto.msrg.padres.broker.brokercore.BrokerConfig;
 import ca.utoronto.msrg.padres.client.ClientException;
 import ca.utoronto.msrg.padres.common.comm.ConnectionHelper;
-import ca.utoronto.msrg.padres.common.comm.INodeAddress;
+import ca.utoronto.msrg.padres.common.comm.NodeAddress;
 import ca.utoronto.msrg.padres.common.comm.rmi.RMIAddress;
 import ca.utoronto.msrg.padres.common.comm.socket.SocketAddress;
 //import ca.utoronto.msrg.padres.common.util.CommandLine;
@@ -341,7 +341,7 @@ public class Deployer {
 //						System.out.println("URI of broker is " + brokerUri);
 //						cmdLine.processCommandLine(cmd.split(" "));
 //						String brokerUri = cmdLine.getOptionValue(BrokerConfig.CMD_ARG_FLAG_URI);
-						INodeAddress brokerAddr = ConnectionHelper.getAddress(brokerUri);
+						NodeAddress brokerAddr = ConnectionHelper.getAddress(brokerUri);
 						
 						String brokerId = "";
 						

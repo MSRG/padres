@@ -2,7 +2,7 @@ package ca.utoronto.msrg.padres.common.comm.zero;
 
 import ca.utoronto.msrg.padres.common.comm.CommSystem;
 import ca.utoronto.msrg.padres.common.comm.CommunicationException;
-import ca.utoronto.msrg.padres.common.comm.INodeAddress;
+import ca.utoronto.msrg.padres.common.comm.NodeAddress;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -12,7 +12,7 @@ import static ca.utoronto.msrg.padres.common.comm.ConnectionHelper.getLocalIPAdd
 /**
  * Created by chris on 25.09.15.
  */
-public class ZeroAddress implements INodeAddress {
+public class ZeroAddress implements NodeAddress {
     private static final String ZERO_REG_EXP = "zero-tcp://([^:/]+)(:(\\d+))?/(.+)";;
     private final CommSystem.CommSystemType type;
     private String host;

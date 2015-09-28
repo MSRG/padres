@@ -18,7 +18,7 @@ public class ZeroSocketServer extends CommServer {
      * @param commSystem
      * @see ConnectionHelper#getAddress(String)
      */
-    public ZeroSocketServer(INodeAddress serverAddress, CommSystem commSystem) throws CommunicationException {
+    public ZeroSocketServer(NodeAddress serverAddress, CommSystem commSystem) throws CommunicationException {
         super(serverAddress);
 
     }

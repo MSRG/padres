@@ -2,7 +2,7 @@ package ca.utoronto.msrg.padres.demo.webclient.demo;
 
 import ca.utoronto.msrg.padres.client.BrokerState;
 import ca.utoronto.msrg.padres.client.ClientException;
-import ca.utoronto.msrg.padres.common.comm.INodeAddress;
+import ca.utoronto.msrg.padres.common.comm.NodeAddress;
 import ca.utoronto.msrg.padres.common.message.*;
 import ca.utoronto.msrg.padres.demo.webclient.client.*;
 
@@ -277,7 +277,7 @@ public class BaseDemo {
 
 	public Properties connect(Properties props) throws WebClientException, ClientException {
 		String address = props.getProperty(PROP_BROKER_ADDRESS);
-		INodeAddress bid = client.handleConnect(address);
+		NodeAddress bid = client.handleConnect(address);
 
 		props.setProperty(PROP_BROKER_ID, bid.getNodeURI());
 		return props;

@@ -68,7 +68,7 @@ public class Client {
 	 * The default broker to which the broker is connected. When the client is connected it can not
 	 * be null
 	 */
-	protected INodeAddress defaultBrokerAddress;
+	protected NodeAddress defaultBrokerAddress;
 
 	/**
 	 * The default MessageDestination of teh client. It is connected to the defaultBrokerAddress
@@ -85,7 +85,7 @@ public class Client {
 	 * Internal states of the client, maintained per connected broker. The size of the map has to be
 	 * at least one when the client is connected to the overlay
 	 */
-	protected Map<INodeAddress, BrokerState> brokerStates = new HashMap<INodeAddress, BrokerState>();
+	protected Map<NodeAddress, BrokerState> brokerStates = new HashMap<NodeAddress, BrokerState>();
 
 	/**
 	 * The message listener that hooks itself to the communication layer so that it can receive
@@ -258,7 +258,7 @@ public class Client {
 	 * @param msgSender
 	 * @return
 	 */
-	protected BrokerState addBrokerState(INodeAddress brokerAddress, MessageSender msgSender) {
+	protected BrokerState addBrokerState(NodeAddress brokerAddress, MessageSender msgSender) {
 		BrokerState newBrokerState = createBrokerState(brokerAddress);
 		if (msgSender != null)
 			newBrokerState.setMsgSender(msgSender);
@@ -266,7 +266,7 @@ public class Client {
 		return newBrokerState;
 	}
 
-	protected BrokerState createBrokerState(INodeAddress brokerAddress) {
+	protected BrokerState createBrokerState(NodeAddress brokerAddress) {
 		return new BrokerState(brokerAddress);
 	}
 
@@ -328,11 +328,11 @@ public class Client {
 	 * Returns the node address of the default broker the client is connected to. Generally, the
 	 * first broker the client connects to becomes the default broker, unless specified otherwise.
 	 * 
-	 * @see {@link #setDefaultBrokerAddress(INodeAddress)}
+	 * @see {@link #setDefaultBrokerAddress(NodeAddress)}
 	 * 
 	 * @return
 	 */
-	public INodeAddress getDefaultBrokerAddress() {
+	public NodeAddress getDefaultBrokerAddress() {
 		return defaultBrokerAddress;
 	}
 
@@ -342,7 +342,7 @@ public class Client {
 	 * 
 	 * @param brokerAddress
 	 */
-	public void setDefaultBrokerAddress(INodeAddress brokerAddress) {
+	public void setDefaultBrokerAddress(NodeAddress brokerAddress) {
 		defaultBrokerAddress = brokerAddress;
 		defaultClientDest = MessageDestination.formatClientDestination(clientID,
 				defaultBrokerAddress.getNodeURI());
@@ -371,7 +371,7 @@ public class Client {
 	 */
 	public BrokerState getBrokerState(String brokerURI) throws ClientException {
 		try {
-			INodeAddress brokerAddress = ConnectionHelper.getAddress(brokerURI);
+			NodeAddress brokerAddress = ConnectionHelper.getAddress(brokerURI);
 			return brokerStates.get(brokerAddress);
 		} catch (CommunicationException e) {
 			throw new ClientException("Could not get broker status: " + e.getMessage(), e);
@@ -570,7 +570,7 @@ public class Client {
 	 */
 	public BrokerState connect(String brokerURI) throws ClientException {
 		try {
-			INodeAddress brokerAddr = ConnectionHelper.getAddress(brokerURI);
+			NodeAddress brokerAddr = ConnectionHelper.getAddress(brokerURI);
 			if (brokerStates.containsKey(brokerAddr)) {
 				throw new ClientException("Server connection already exists");
 			} else {
@@ -608,11 +608,11 @@ public class Client {
 	 * @throws ClientException
 	 *             If the given URI is malformatted.
 	 * 
-	 * @see INodeAddress, {@link #connect(String)}
+	 * @see NodeAddress , {@link #connect(String)}
 	 */
 	public boolean connectionIsActive(String brokerURI) throws ClientException {
 		try {
-			INodeAddress brokerAddr = ConnectionHelper.getAddress(brokerURI);
+			NodeAddress brokerAddr = ConnectionHelper.getAddress(brokerURI);
 			return brokerStates.containsKey(brokerAddr);
 		} catch (CommunicationException e) {
 			throw new ClientException(e.getMessage(), e);
@@ -627,7 +627,7 @@ public class Client {
 	 */
 	public String disconnectAll() {
 		String outStr = "";
-		for (BrokerState brokerState : new HashMap<INodeAddress, BrokerState>(brokerStates).values()) {
+		for (BrokerState brokerState : new HashMap<NodeAddress, BrokerState>(brokerStates).values()) {
 			try {
 				disconnect(brokerState);
 				outStr += "disconnected from " + brokerState.getBrokerAddress() + "\n";
@@ -1242,7 +1242,7 @@ public class Client {
 	protected String[] getBrokerURIList() {
 		String[] brokerList = new String[brokerStates.size()];
 		int i = 0;
-		for (INodeAddress addr : brokerStates.keySet()) {
+		for (NodeAddress addr : brokerStates.keySet()) {
 			brokerList[i++] = addr.getNodeURI();
 		}
 		return brokerList;

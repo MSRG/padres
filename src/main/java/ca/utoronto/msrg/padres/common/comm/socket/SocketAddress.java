@@ -2,14 +2,14 @@ package ca.utoronto.msrg.padres.common.comm.socket;
 
 import ca.utoronto.msrg.padres.common.comm.CommSystem.CommSystemType;
 import ca.utoronto.msrg.padres.common.comm.CommunicationException;
-import ca.utoronto.msrg.padres.common.comm.INodeAddress;
+import ca.utoronto.msrg.padres.common.comm.NodeAddress;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static ca.utoronto.msrg.padres.common.comm.ConnectionHelper.getLocalIPAddr;
 
-public class SocketAddress implements INodeAddress {
+public class SocketAddress implements NodeAddress {
 
 	private static final String SOCKET_REG_EXP = "socket://([^:/]+)(:(\\d+))?/(.+)";
     private final CommSystemType type;

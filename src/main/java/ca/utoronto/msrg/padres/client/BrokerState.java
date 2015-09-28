@@ -1,6 +1,6 @@
 package ca.utoronto.msrg.padres.client;
 
-import ca.utoronto.msrg.padres.common.comm.INodeAddress;
+import ca.utoronto.msrg.padres.common.comm.NodeAddress;
 import ca.utoronto.msrg.padres.common.comm.MessageSender;
 import ca.utoronto.msrg.padres.common.message.*;
 
@@ -8,7 +8,7 @@ import java.util.*;
 
 public class BrokerState {
 
-	private INodeAddress brokerAddress;
+	private NodeAddress brokerAddress;
 
 	private MessageSender msgSender;
 
@@ -20,7 +20,7 @@ public class BrokerState {
 
 	private Set<PublicationMessage> receivedPubMessages;
 
-	public BrokerState(INodeAddress brokerAddress) {
+	public BrokerState(NodeAddress brokerAddress) {
 		this.brokerAddress = brokerAddress;
 		subMessages = new HashSet<SubscriptionMessage>();
 		csMessages = new HashSet<CompositeSubscriptionMessage>();
@@ -28,7 +28,7 @@ public class BrokerState {
 		receivedPubMessages = new HashSet<PublicationMessage>();
 	}
 
-	public INodeAddress getBrokerAddress() {
+	public NodeAddress getBrokerAddress() {
 		return brokerAddress;
 	}
 

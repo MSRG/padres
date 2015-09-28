@@ -26,7 +26,7 @@ public abstract class CommServer {
 
 	protected static Logger exceptionLogger = Logger.getLogger("Exception");
 
-	protected INodeAddress serverAddress;
+	protected NodeAddress serverAddress;
 
 	protected List<MessageListenerInterface> msgListeners;
 
@@ -45,13 +45,13 @@ public abstract class CommServer {
 	 *             When there is error is parsing the given URI
 	 * @see ConnectionHelper#getAddress(String)
 	 */
-	public CommServer(INodeAddress serverAddress) throws CommunicationException {
+	public CommServer(NodeAddress serverAddress) throws CommunicationException {
 		this.serverAddress = serverAddress;
 		msgListeners = new ArrayList<MessageListenerInterface>();
 		connectListeners = new ArrayList<ConnectionListenerInterface>();
 	}
 
-	public INodeAddress getAddress() throws CommunicationException {
+	public NodeAddress getAddress() throws CommunicationException {
 		return serverAddress;
 	}
 
@@ -60,7 +60,7 @@ public abstract class CommServer {
 	}
 
 	public boolean isSameURI(String tempURI) throws CommunicationException {
-		INodeAddress tempAddress = ConnectionHelper.getAddress(tempURI);
+		NodeAddress tempAddress = ConnectionHelper.getAddress(tempURI);
 		return serverAddress.equals(tempAddress);
 	}
 

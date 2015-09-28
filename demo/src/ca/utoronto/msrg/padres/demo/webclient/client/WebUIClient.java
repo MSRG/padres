@@ -3,7 +3,7 @@ package ca.utoronto.msrg.padres.demo.webclient.client;
 import ca.utoronto.msrg.padres.client.BrokerState;
 import ca.utoronto.msrg.padres.client.Client;
 import ca.utoronto.msrg.padres.client.ClientException;
-import ca.utoronto.msrg.padres.common.comm.INodeAddress;
+import ca.utoronto.msrg.padres.common.comm.NodeAddress;
 import ca.utoronto.msrg.padres.common.message.CompositeSubscription;
 import ca.utoronto.msrg.padres.common.message.Publication;
 import ca.utoronto.msrg.padres.common.message.parser.MessageFactory;
@@ -142,7 +142,7 @@ public class WebUIClient extends Client {
 		return unadvId;
 	}
 
-	public INodeAddress handleConnect(String addr) throws ClientException {
+	public NodeAddress handleConnect(String addr) throws ClientException {
 		// The second argument was originally for use with the client names
 		// patch, which allows clients to specify a "human readable" client
 		// name on connection. This patch is not included in the main branch
