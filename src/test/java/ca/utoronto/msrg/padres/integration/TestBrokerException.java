@@ -303,7 +303,6 @@ public class TestBrokerException extends Assert {
     }
 
     /* TODO: REZA (DONE) */
-    @Ignore("TODO: Christoph")
     @Test
     public void testBrokerConnectUnroutableIP() throws ParseException, InterruptedException {
         String ipStr = "142.150.237.234";
@@ -325,7 +324,6 @@ public class TestBrokerException extends Assert {
     }
 
     /* TODO: REZA (DONE) */
-    @Ignore("TODO: Christoph")
     @Test
     public void testBrokerConnectInvalidIP() throws ParseException, InterruptedException {
         // Invalid IP address includes a value of 400 for the last byte.

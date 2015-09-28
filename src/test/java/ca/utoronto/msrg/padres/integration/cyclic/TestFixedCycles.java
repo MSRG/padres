@@ -164,7 +164,6 @@ public class TestFixedCycles extends Assert {
      * @throws ParseException
      * @throws InterruptedException
      */
-    @Ignore("TODO: Fix Christoph")
     @Test
     public void testNoAdvLoopInNetwork() throws ClientException, ParseException, InterruptedException {
         /* TODO: REZA (NEW-DONE) */

@@ -134,7 +134,6 @@ public class TestHeartBeat extends Assert {
      * @throws ParseException
      * @throws InterruptedException
      */
-    @Ignore("TODO: Christoph")
     @Test
     public void testHeartBeatFailureDetectAndFailureCleared() throws ParseException, InterruptedException {
         // setup the message filter

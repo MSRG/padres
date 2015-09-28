@@ -125,7 +125,6 @@ public class TestDynamicCycles extends Assert {
      *
      * @throws ParseException
      */
-    @Ignore("TODO: Christoph")
     @Test
     public void testDynamicCyclicWithBusyLink() throws ParseException, InterruptedException {
         /* TODO: VINOD (DONE) */
@@ -290,7 +289,6 @@ public class TestDynamicCycles extends Assert {
      *
      * @throws ParseException
      */
-    @Ignore("TODO: Christoph")
     @Test
     public void testDynamicCyclicWithStopedLink() throws ParseException, InterruptedException {
 		/* TODO: VINOD (DONE) */
@@ -450,7 +448,6 @@ public class TestDynamicCycles extends Assert {
      * @throws ParseException
      * @throws InterruptedException
      */
-    @Ignore("TODO: Christoph")
     @Test
     public void testDynamicCyclicWithCompositeSubscription() throws ParseException, InterruptedException {
 		/* TODO: REZA (NEW-DONE) */

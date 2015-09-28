@@ -66,7 +66,6 @@ public class TestBroker extends Assert {
      *
      * @throws ParseException
      */
-    @Ignore("TODO: Christoph")
     @Test
     public void testInitialAdvMsg() throws ParseException {
         boolean foundInitialAdv = false;
@@ -94,7 +93,6 @@ public class TestBroker extends Assert {
      * @throws ParseException
      * @throws InterruptedException
      */
-    @Ignore("TODO: Christoph")
     @Test
     public void testControllerSub() throws ParseException, InterruptedException {
         /* TODO: REZA (DONE) */
@@ -122,7 +120,6 @@ public class TestBroker extends Assert {
      *
      * @throws ParseException
      */
-    @Ignore("TODO: Christoph")
     @Test
     public void testSystemMonitorSubs() throws ParseException {
 		/* TODO: REZA (DONE) */
@@ -152,7 +149,6 @@ public class TestBroker extends Assert {
      * @throws ParseException
      * @throws InterruptedException
      */
-    @Ignore("TODO: Christoph")
     @Test
     public void testHeartbeatAdvMsgs() throws ParseException, InterruptedException {
 		/* TODO: REZA (DONE) */
@@ -185,7 +181,6 @@ public class TestBroker extends Assert {
      * @throws ParseException
      * @throws InterruptedException
      */
-    @Ignore("TODO: Christoph")
     @Test
     public void testHeartbeatSubMsg() throws ParseException, InterruptedException {
 		/* TODO: REZA (DONE) */

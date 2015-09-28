@@ -103,7 +103,6 @@ public class TestHistoricDataQueryWithCyclicRouting extends Assert {
      * @throws ClientException
      * @throws ParseException
      */
-    @Ignore("TODO: Christoph")
     @Test
     public void testHistoricDataQueryIntersectCyclicRouting() throws SQLException,
             BrokerCoreException, ClientException, ParseException {

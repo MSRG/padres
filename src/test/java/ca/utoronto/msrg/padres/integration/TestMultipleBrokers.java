@@ -223,7 +223,6 @@ public class TestMultipleBrokers extends Assert {
      * @throws ParseException
      * @throws InterruptedException
      */
-    @Ignore("TODO: Fix Christoph")
     @Test
     public void testAdvFloodInNetwork() throws ParseException, InterruptedException {
 		/* TODO: VINOD (Fails at last assertion for countBroker5.) */
@@ -313,7 +312,6 @@ public class TestMultipleBrokers extends Assert {
      * @throws ParseException
      * @throws InterruptedException
      */
-    @Ignore("TODO: Fix Christoph")
     @Test
     public void testAdvSubRoutingWithOneAdvWithMoreBrokers() throws ParseException, InterruptedException {
 		/* TODO: VINOD X (DONE) (Consistently passes with versions 1, 2, 3, 4) */
@@ -388,7 +386,6 @@ public class TestMultipleBrokers extends Assert {
      * @throws InterruptedException
      * @see TestMultipleBrokers#testAdvSubRoutingWithOneAdvWithMoreBrokers()
      */
-    @Ignore("TODO: Fix Christoph")
     @Test
     public void testSubAdvRoutingWithOneAdvWithMoreBrokers() throws ParseException, InterruptedException {
 		/* TODO: VINOD (DONE) (Works with versions 3 and 4.) */
@@ -448,7 +445,6 @@ public class TestMultipleBrokers extends Assert {
      * @throws ParseException
      * @throws InterruptedException
      */
-    @Ignore("TODO: Fix Christoph")
     @Test
     public void testAdvSubRoutingWithTwoAdvsWithSameLastHopWithMoreBrokers() throws ParseException, InterruptedException {
 		/* TODO: VINOD (DONE) (Consistently passes with version 3) */
@@ -540,7 +536,6 @@ public class TestMultipleBrokers extends Assert {
      * @throws InterruptedException
      * @see TestMultipleBrokers#testAdvSubRoutingWithTwoAdvsWithSameLastHopWithMoreBrokers()
      */
-    @Ignore("TODO: Fix Christoph")
     @Test
     public void testSubAdvRoutingWithTwoAdvsWithSameLastHopWithMoreBrokers() throws ParseException, InterruptedException {
 		/* TODO: REZA (DONE) */
@@ -618,7 +613,6 @@ public class TestMultipleBrokers extends Assert {
      * @throws ParseException
      * @throws InterruptedException
      */
-    @Ignore("TODO: Christoph")
     @Test
     public void testAdvSubRoutingWithTwoAdvsWithDiffLastHopWithMoreBrokers() throws ParseException, InterruptedException {
 		/* TODO: VINOD (DONE) */
@@ -681,7 +675,6 @@ public class TestMultipleBrokers extends Assert {
      * @throws InterruptedException
      * @see TestMultipleBrokers#testAdvSubRoutingWithTwoAdvsWithDiffLastHopWithMoreBrokers
      */
-    @Ignore("TODO: Fix Christoph")
     @Test
     public void testSubAdvRoutingWithTwoAdvsWithDiffLastHopWithMoreBrokers() throws ParseException, InterruptedException {
 		/* TODO: VINOD (DONE) */
@@ -736,7 +729,6 @@ public class TestMultipleBrokers extends Assert {
      * @throws ParseException
      * @throws InterruptedException
      */
-    @Ignore("TODO: Fix Christoph")
     @Test
     public void testAdvSubAdvRoutingWithTwoAdvsWithDiffLastHopWithMoreBrokers() throws ParseException, InterruptedException {
 		/* TODO: REZA (DONE) */
@@ -792,7 +784,6 @@ public class TestMultipleBrokers extends Assert {
      * @throws ParseException
      * @throws InterruptedException
      */
-    @Ignore("TODO: Fix Christoph")
     @Test
     public void testSubPubMatchingWithOneSubWithMoreBrokers() throws ParseException, InterruptedException {
 		/* TODO: REZA (NEW-DONE) */
@@ -918,7 +909,6 @@ public class TestMultipleBrokers extends Assert {
      * @throws ParseException
      * @throws InterruptedException
      */
-    @Ignore("TODO: Fix Christoph")
     @Test
     public void testSubPubMatchingWithTwoSubsWithDiffLastHopWithMoreBrokers() throws ParseException, InterruptedException {
 		/* TODO: REZA (DONE) */
@@ -1273,7 +1263,6 @@ public class TestMultipleBrokers extends Assert {
      * @throws ParseException
      * @throws InterruptedException
      */
-    @Ignore("TODO: Fix Christoph")
     @Test
     public void testCompositeSubscriptionWithMultipleBrokers() throws ParseException, InterruptedException {
 		/* TODO: REZA (DONE) */
@@ -1348,7 +1337,6 @@ public class TestMultipleBrokers extends Assert {
      * @throws ParseException
      * @throws InterruptedException
      */
-    @Ignore("TODO: Fix Christoph")
     @Test
     public void testUnCompositeSubscriptionWithMultipleBrokers() throws ParseException, InterruptedException {
         // right now, in padres, composite subscription could not be sent first!!!

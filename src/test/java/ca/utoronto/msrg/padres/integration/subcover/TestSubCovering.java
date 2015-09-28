@@ -138,7 +138,6 @@ public class TestSubCovering extends Assert {
      * @throws InterruptedException
      */
     @Test
-    @Ignore("TODO: Christoph")
     public void testSub1CoversOrEqualsToSub2() throws ParseException, InterruptedException {
         /* TODO: VINOD/YOUNG (DONE) */
         // Send adv and wait for it to be routed.
@@ -295,7 +294,6 @@ public class TestSubCovering extends Assert {
      * @throws InterruptedException
      */
     @Test
-    @Ignore("TODO: Christoph")
     public void testSub1NoInteractWithSub2() throws ParseException, InterruptedException {
 		/* TODO: REZA (DONE) */
         _brokerTester.clearAll().
@@ -338,7 +336,6 @@ public class TestSubCovering extends Assert {
      * @throws InterruptedException
      */
     @Test
-    @Ignore("TODO: Christoph")
     public void testSub1InteractWithSub2() throws ParseException, InterruptedException {
 		/* TODO: REZA (DONE) */
         _brokerTester.clearAll().
@@ -381,7 +378,6 @@ public class TestSubCovering extends Assert {
      * @throws InterruptedException
      */
     @Test
-    @Ignore("TODO: Christoph")
     public void testSub1CoversSub2AndUnsubscribeSub2() throws ParseException, InterruptedException {
 		/* TODO: REZA (DONE) */
         _brokerTester.clearAll().
@@ -465,7 +461,6 @@ public class TestSubCovering extends Assert {
      * @throws InterruptedException
      */
     @Test
-    @Ignore("TODO: Christoph")
     public void testSub1CoversSub2AndUnsubscribeSub1() throws ParseException, InterruptedException {
 		/* REZA (NEW-DONE) */
         // reset message filter

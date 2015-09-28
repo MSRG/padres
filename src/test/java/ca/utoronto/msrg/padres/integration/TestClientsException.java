@@ -345,7 +345,6 @@ public class TestClientsException extends Assert {
      *
      * @throws ParseException
      */
-    @Ignore("TODO: Christoph")
     @Test
     public void testSubWithoutSingleQuotesInStringPredicates() throws ParseException {
         // for now padres do not throw exception, and matching can be excuted correctly

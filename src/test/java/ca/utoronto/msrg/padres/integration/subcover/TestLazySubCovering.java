@@ -45,7 +45,6 @@ public class TestLazySubCovering extends TestSubCovering {
      * @throws ParseException
      * @throws InterruptedException
      */
-    @Ignore("TODO: Christoph")
     @Test
     public void testSub1BeCoveredBySub2WithLazy() throws ParseException, InterruptedException {
         /* TODO: VINOD/YOUNG (DONE) */
@@ -107,7 +106,6 @@ public class TestLazySubCovering extends TestSubCovering {
      * @throws ParseException
      * @throws InterruptedException
      */
-    @Ignore("TODO: Christoph")
     @Test
     public void testSub1BeCoveredBySub2AndUnsubscribeSub1WithLazy() throws ParseException, InterruptedException {
 		/* TODO: VINOD/YOUNG (DONE) (Consistently passes with version 3.) */

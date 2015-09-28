@@ -400,7 +400,6 @@ public class TestHistoricDataQuery extends Assert {
      * @throws ParseException
      * @throws InterruptedException
      */
-    @Ignore("TODO: Christoph")
     @Test
     public void testHistoricDataQueryWithOneBroker() throws SQLException, ClientException, ParseException, InterruptedException {
 		/* TODO: YOUNG (DONE) */
