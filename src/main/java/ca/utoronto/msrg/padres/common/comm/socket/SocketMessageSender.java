@@ -124,8 +124,8 @@ public class SocketMessageSender extends MessageSender {
 				}
                 Socket socket = new Socket();
                 InetSocketAddress inetSocketAddress = new InetSocketAddress(socketAddress.getHost(), socketAddress.getPort());
-                socket.connect(inetSocketAddress, 1000);
-
+                socket.connect(inetSocketAddress, 2000);
+                
                 socketPipe = new SocketPipe(socket);
 
 			} catch (UnknownHostException e) {
