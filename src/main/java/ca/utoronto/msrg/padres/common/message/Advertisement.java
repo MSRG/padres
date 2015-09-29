@@ -260,6 +260,40 @@ public class Advertisement implements Serializable {
 		return true;
 	}
 
+    public boolean equalPredicatesWithoutTid(Object o) {
+        if (!(o instanceof Advertisement))
+            return false;
+        Advertisement anotherAdv = (Advertisement) o;
+        // check the sizes of the predicate maps
+        if (predicateMap.containsKey("tid") ^ anotherAdv.predicateMap.containsKey("tid")) {
+            int length = predicateMap.size() - anotherAdv.predicateMap.size();
+            if (!((length == 1) | (length == -1))) {
+                return false;
+            }
+        }
+        else if (predicateMap.size() != anotherAdv.predicateMap.size()) {
+            return false;
+        } else {
+            for (String attribute : predicateMap.keySet()) {
+                // check the existence of the same attribute in the predicate maps
+                if (attribute.equals("tid")) {
+                    continue;
+                }
+
+                if (!anotherAdv.predicateMap.containsKey(attribute)) {
+                    return false;
+                } else {
+                    // check for the equivalence of the predicates
+                    Predicate p1 = predicateMap.get(attribute);
+                    Predicate p2 = anotherAdv.predicateMap.get(attribute);
+                    if (!p1.getOp().equals(p2.getOp()) || !p1.getValue().equals(p2.getValue()))
+                        return false;
+                }
+            }
+        }
+        return true;
+    }
+
 	/**
 	 * Construct a duplicate of the current Advertisement.
 	 * 

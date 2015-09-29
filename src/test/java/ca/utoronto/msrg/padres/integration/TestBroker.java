@@ -79,7 +79,7 @@ public class TestBroker extends Assert {
             if (tempAdvMsg.getMessageID().equals(brokerCore.getBrokerID() + "-M0")) {
                 Advertisement expectedAdv = tempAdvMsg.getAdvertisement();
                 assertTrue("Initial Advertisement sent by the InputQueueHandler is malformed.",
-                        expectedAdv.equalPredicates(initialAdv));
+                        expectedAdv.equalPredicatesWithoutTid(initialAdv));
                 foundInitialAdv = true;
                 break;
             }
