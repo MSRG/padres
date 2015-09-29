@@ -3,6 +3,7 @@ package ca.utoronto.msrg.padres.integration;
 import ca.utoronto.msrg.padres.AllTests;
 import ca.utoronto.msrg.padres.MessageWatchAppender;
 import ca.utoronto.msrg.padres.PatternFilter;
+import ca.utoronto.msrg.padres.integration.tester.MessageItem;
 import org.junit.*;
 
 import ca.utoronto.msrg.padres.common.comm.ConnectionHelper;
@@ -29,6 +30,8 @@ import ca.utoronto.msrg.padres.common.message.parser.ParseException;
 import ca.utoronto.msrg.padres.common.util.LogSetup;
 import ca.utoronto.msrg.padres.integration.tester.GenericBrokerTester;
 import ca.utoronto.msrg.padres.integration.tester.TesterBrokerCore;
+
+import java.util.Queue;
 
 public class TestBrokerException extends Assert {
 
@@ -319,8 +322,8 @@ public class TestBrokerException extends Assert {
         _brokerTester.expectConnectionFail(brokerCore.getBrokerURI(), brokerURI);
         // route message
         brokerCore.routeMessage(olConnectPubmsg, MessageDestination.INPUTQUEUE);
-
-        assertTrue(_brokerTester.waitUntilExpectedEventsHappen(30000));
+        //_brokerTester.waitUntilExpectedEventsHappen(3000);
+        assertTrue(_brokerTester.waitUntilExpectedEventsHappen(3000));
     }
 
     /* TODO: REZA (DONE) */

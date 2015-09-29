@@ -102,7 +102,7 @@ public class OverlayManager implements Manager, ConnectionListenerInterface {
 						+ toBrokerURI + ".");
 			if (toBrokerURI.equals("")) {
 				overlayLogger.error("The broker " + brokerCore.getBrokerID()
-						+ " tries to connect to null remote broker.");
+                        + " tries to connect to null remote broker.");
 				exceptionLogger.error(new Exception("The broker " + brokerCore.getBrokerID()
 						+ " tries to connect to null remote broker."));
 			} else {
@@ -113,7 +113,8 @@ public class OverlayManager implements Manager, ConnectionListenerInterface {
 							// create an output queue for the neighbour and start it
 							overlayLogger.debug("Broker " + brokerCore.getBrokerID()
 									+ " is creating MessageSender for broker " + toBrokerURI);
-							MessageSender msgSender = createMessageSenderAndConnect(toBrokerURI);
+                            MessageSender msgSender = createMessageSenderAndConnect(toBrokerURI);
+
 							String toBrokerID = msgSender.getID();
 							// add to the overlay routing table
 							overlayLogger.info("Adding broker " + toBrokerID

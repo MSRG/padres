@@ -14,6 +14,7 @@
 package ca.utoronto.msrg.padres.common.comm.socket;
 
 import java.io.IOException;
+import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
@@ -121,17 +122,21 @@ public class SocketMessageSender extends MessageSender {
 					commSysLogger.info("waiting for " + connectRetryPauseTime * 1000 + "ms");
 					Thread.sleep(connectRetryPauseTime * 1000);
 				}
-				Socket socket = new Socket(socketAddress.getHost(), socketAddress.getPort());
-				socketPipe = new SocketPipe(socket);
-			} catch (InterruptedException e) {
-				exception = e;
+                Socket socket = new Socket();
+                InetSocketAddress inetSocketAddress = new InetSocketAddress(socketAddress.getHost(), socketAddress.getPort());
+                socket.connect(inetSocketAddress, 1000);
+
+                socketPipe = new SocketPipe(socket);
+
 			} catch (UnknownHostException e) {
 				exception = e;
 			} catch (IOException e) {
 				exception = e;
-			}
+			} catch (InterruptedException e) {
+                exception = e;
+            }
 
-			if (socketPipe != null) {
+            if (socketPipe != null) {
 				break;
 			}
 			// if an exception is thrown and try count is reached throw and exception
