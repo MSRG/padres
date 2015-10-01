@@ -647,7 +647,9 @@ public class BrokerCore {
 			return;
 		
 		isShutdown  = true;
-		systemMonitor.shutdownBroker();
+        if (systemMonitor != null) {
+            systemMonitor.shutdownBroker();
+        }
 		
 		// Let's be nice
 		try {
