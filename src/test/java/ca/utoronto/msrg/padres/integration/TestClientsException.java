@@ -36,6 +36,8 @@ import ca.utoronto.msrg.padres.integration.tester.GenericBrokerTester;
 import ca.utoronto.msrg.padres.integration.tester.TesterBrokerCore;
 import ca.utoronto.msrg.padres.integration.tester.TesterClient;
 
+import static ca.utoronto.msrg.padres.AllTests.setupConfigurations;
+
 /**
  * This class provides a way for exception handling test in the scenario of one broker with
  * swingRmiClient. In order to run this class, rmiregistry 1099 need to be done first.
@@ -44,12 +46,12 @@ import ca.utoronto.msrg.padres.integration.tester.TesterClient;
  */
 public class TestClientsException extends Assert {
 
-    static {
+    /*static {
         if (System.getProperty("test.version") == null)
             System.setProperty("test.version", "1");
         if (System.getProperty("test.comm_protocol") == null)
             System.setProperty("test.comm_protocol", "socket");
-    }
+    }*/
 
     protected GenericBrokerTester _brokerTester;
 
@@ -68,9 +70,13 @@ public class TestClientsException extends Assert {
     protected PatternFilter msgPatternFilter;
 
     protected PatternFilter exceptionPatternFilter;
+    private String commProtocol;
 
     @Before
     public void setUp() throws Exception {
+        commProtocol = "socket";
+        setupConfigurations(1, "socket");
+
         _brokerTester = new GenericBrokerTester();
 
         // start the broker
@@ -124,7 +130,7 @@ public class TestClientsException extends Assert {
         // start the ClientB and give a fake URI to connect to
         clientB = createNewClient("B");
         String tempAddress =
-                ConnectionHelper.makeURI(AllTests.commProtocol, "localhost", 1500, "BrokerNull");
+                ConnectionHelper.makeURI(commProtocol, "localhost", 1500, "BrokerNull");
         _brokerTester.clearAll().
                 expectConnectionFail(clientB.getClientID(), tempAddress);
         try {

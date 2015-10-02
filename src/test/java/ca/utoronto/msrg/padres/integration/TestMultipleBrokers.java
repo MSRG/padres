@@ -37,6 +37,8 @@ import ca.utoronto.msrg.padres.integration.tester.TesterBrokerCore;
 import ca.utoronto.msrg.padres.integration.tester.TesterClient;
 import ca.utoronto.msrg.padres.integration.tester.TesterMessagePredicates;
 
+import static ca.utoronto.msrg.padres.AllTests.setupConfigurations;
+
 /**
  * This class provides a way to test in the scenario of multiple brokers with multiple Clients.
  *
@@ -44,12 +46,12 @@ import ca.utoronto.msrg.padres.integration.tester.TesterMessagePredicates;
  */
 public class TestMultipleBrokers extends Assert {
 
-    static {
+/*    static {
         if (System.getProperty("test.version") == null)
             System.setProperty("test.version", "6");
         if (System.getProperty("test.comm_protocol") == null)
             System.setProperty("test.comm_protocol", "rmi");
-    }
+    }*/
 
     protected GenericBrokerTester _brokerTester;
 
@@ -79,6 +81,8 @@ public class TestMultipleBrokers extends Assert {
 
     @Before
     public void setUp() throws Exception {
+
+        setupConfigurations(6, "rmi");
         _brokerTester = new GenericBrokerTester();
 
         // configure for network type 1

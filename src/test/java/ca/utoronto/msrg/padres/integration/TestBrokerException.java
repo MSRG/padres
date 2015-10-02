@@ -33,18 +33,14 @@ import ca.utoronto.msrg.padres.integration.tester.TesterBrokerCore;
 
 import java.util.Queue;
 
-public class TestBrokerException extends Assert {
+import static ca.utoronto.msrg.padres.AllTests.setupConfigurations;
 
-    static {
-        if (System.getProperty("test.version") == null)
-            System.setProperty("test.version", "1");
-        if (System.getProperty("test.comm_protocol") == null)
-            System.setProperty("test.comm_protocol", "socket");
-    }
+public class TestBrokerException extends Assert {
 
     protected GenericBrokerTester _brokerTester;
 
     protected BrokerCore otherBroker = null;
+    private String commProtocol;
 
 
     @After
@@ -68,6 +64,10 @@ public class TestBrokerException extends Assert {
 
     @Before
     public void setUp() throws Exception {
+        commProtocol = "socket";
+        setupConfigurations(1, "socket");
+
+
         _brokerTester = new GenericBrokerTester();
 
         // start the broker
@@ -310,7 +310,7 @@ public class TestBrokerException extends Assert {
     public void testBrokerConnectUnroutableIP() throws ParseException, InterruptedException {
         String ipStr = "142.150.237.234";
         String brokerURI =
-                ConnectionHelper.makeURI(AllTests.commProtocol, ipStr, 1100,
+                ConnectionHelper.makeURI(commProtocol, ipStr, 1100,
                         "BrokerNull");
         Publication olConnectPub =
                 MessageFactory.createPublicationFromString("[class,'BROKER_CONTROL'],[brokerID,'"
@@ -332,7 +332,7 @@ public class TestBrokerException extends Assert {
         // Invalid IP address includes a value of 400 for the last byte.
         String ipStr = "142.150.237.400";
         String brokerURI =
-                ConnectionHelper.makeURI(AllTests.commProtocol, ipStr, 1100,
+                ConnectionHelper.makeURI(commProtocol, ipStr, 1100,
                         "BrokerNull");
         Publication olConnectPub =
                 MessageFactory.createPublicationFromString("[class,'BROKER_CONTROL'],[brokerID,'"
@@ -355,7 +355,7 @@ public class TestBrokerException extends Assert {
         // No broker listening at this port.
         int port = 4000;
         String brokerURI =
-                ConnectionHelper.makeURI(AllTests.commProtocol, ipStr, port,
+                ConnectionHelper.makeURI(commProtocol, ipStr, port,
                         "BrokerNull");
         Publication olConnectPub =
                 MessageFactory.createPublicationFromString("[class,'BROKER_CONTROL'],[brokerID,'"

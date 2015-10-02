@@ -24,23 +24,10 @@ import ca.utoronto.msrg.padres.common.message.SubscriptionMessage;
  */
 public class AllTests {
 
-    public static final String commProtocol;;
+    //public static final String commProtocol;;
 
-    public static final int testVersion;
+    //public static final int testVersion;
 
-    static {
-        // get test specific configuration
-        testVersion = Integer.parseInt(System.getProperty("test.version", "7"));
-        commProtocol = System.getProperty("test.comm_protocol", "rmi");
-        System.out.println("test version: " + testVersion + "; comm. protocol: " + commProtocol);
-        // load broker configurations
-        try {
-            setupConfigurations(testVersion);
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.exit(-1);
-        }
-    }
 
     public static BrokerConfig brokerConfig01;
 
@@ -137,12 +124,14 @@ public class AllTests {
         return suite;
     }*/
 
-    static void setupConfigurations(int testVersion) throws BrokerCoreException, ClientException {
-        setupBrokerConfigurations(testVersion);
+    public static void setupConfigurations(int testVersion, String protocol) throws BrokerCoreException, ClientException {
+        setupBrokerConfigurations(testVersion, protocol);
         setupClientConfigurations();
     }
 
-    private static void setupBrokerConfigurations(int testVersion) throws BrokerCoreException {
+    private static void setupBrokerConfigurations(int testVersion, String protocol) throws BrokerCoreException {
+        System.out.println("test version: " + testVersion + "; comm. protocol: " + protocol);
+
         BrokerConfig templateConfig = new BrokerConfig();
         templateConfig.setHeartBeat(true);
         templateConfig.setConnectionRetryLimit(1);
@@ -182,15 +171,15 @@ public class AllTests {
             break;
         }
         brokerConfig01 = new BrokerConfig(templateConfig);
-        brokerConfig01.setBrokerURI(commProtocol + "://localhost:3100/Broker1");
+        brokerConfig01.setBrokerURI(protocol + "://localhost:3100/Broker1");
         brokerConfig02 = new BrokerConfig(templateConfig);
-        brokerConfig02.setBrokerURI(commProtocol + "://localhost:3200/Broker2");
+        brokerConfig02.setBrokerURI(protocol + "://localhost:3200/Broker2");
         brokerConfig03 = new BrokerConfig(templateConfig);
-        brokerConfig03.setBrokerURI(commProtocol + "://localhost:3300/Broker3");
+        brokerConfig03.setBrokerURI(protocol + "://localhost:3300/Broker3");
         brokerConfig04 = new BrokerConfig(templateConfig);
-        brokerConfig04.setBrokerURI(commProtocol + "://localhost:3400/Broker4");
+        brokerConfig04.setBrokerURI(protocol + "://localhost:3400/Broker4");
         brokerConfig05 = new BrokerConfig(templateConfig);
-        brokerConfig05.setBrokerURI(commProtocol + "://localhost:3500/Broker5");
+        brokerConfig05.setBrokerURI(protocol + "://localhost:3500/Broker5");
     }
 
     public static void setupClientConfigurations() throws ClientException {
