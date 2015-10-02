@@ -662,8 +662,9 @@ public class BrokerCore {
 			e.printStackTrace();
 			exceptionLogger.error(e.getMessage());
 		}
-		
-		controller.shutdown();
+		if(controller != null) {
+            controller.shutdown();
+        }
 		inputQueue.shutdown(); 
 		timerThread.shutdown(); 
 		heartbeatPublisher.shutdown();
