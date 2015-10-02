@@ -665,10 +665,18 @@ public class BrokerCore {
 		if(controller != null) {
             controller.shutdown();
         }
-		inputQueue.shutdown(); 
-		timerThread.shutdown(); 
-		heartbeatPublisher.shutdown();
-		heartbeatSubscriber.shutdown();	
+        if(inputQueue != null) {
+            inputQueue.shutdown();
+        }
+        if(timerThread != null) {
+            timerThread.shutdown();
+        }
+        if(heartbeatPublisher != null) {
+            heartbeatPublisher.shutdown();
+        }
+        if(heartbeatSubscriber != null) {
+            heartbeatSubscriber.shutdown();
+        }
 	}
 
 	/**
