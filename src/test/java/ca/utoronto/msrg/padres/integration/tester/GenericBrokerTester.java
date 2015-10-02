@@ -33,9 +33,9 @@ import ca.utoronto.msrg.padres.common.message.UnsubscriptionMessage;
  */
 public class GenericBrokerTester implements IBrokerTester {
 
-	public static int DEFAULT_WAIT = 10000;  // millisec.
-	public static int DEFAULT_SHUTDOWN_WAIT = 15000; // millisec.
-	public static int DEFAULT_START_WAIT = 10000; // millisec.
+    public static int DEFAULT_WAIT = 20000;
+	public static int DEFAULT_SHUTDOWN_WAIT = 25000; // millisec.
+	public static int DEFAULT_START_WAIT = 20000; // millisec.
 	public static boolean PRODUCE_PRINT_TRACES = false;
 	public static boolean lookAtPubs = false;
 	public static boolean lookAtSubs = false;
@@ -46,7 +46,7 @@ public class GenericBrokerTester implements IBrokerTester {
 	public List<SimpleExpectedEvent> _simpleExpectedEvents =
 		new LinkedList<SimpleExpectedEvent>();
 
-	enum SimpleExpectedEventType {
+    enum SimpleExpectedEventType {
 		QUEUE_HANDLER_STOP,
 		QUEUE_HANDLER_START,
 		QUEUE_HANDLER_SHUTDOWN,
@@ -595,6 +595,10 @@ public class GenericBrokerTester implements IBrokerTester {
 			int waitMillis) throws InterruptedException {
 		return waitUntilExpectedEventsHappen(waitMillis, true);
 	}
+
+    public boolean waitUntilExpectedEventsHappen(boolean printError) throws InterruptedException {
+        return waitUntilExpectedEventsHappen(DEFAULT_SHUTDOWN_WAIT, printError);
+    }
 	
 	public boolean waitUntilExpectedEventsHappen(
 			int waitMillis, boolean printErrors) throws InterruptedException {

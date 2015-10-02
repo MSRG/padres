@@ -169,7 +169,7 @@ public class TestCyclicTwoBrokers extends TestTwoBrokers {
 					addPredicate("number", ">", 50L),
 				null);
 		clientB.handleCommand("s [class,eq,'stock'],[number,>,50]");
-		assertTrue(_brokerTester.waitUntilExpectedEventsHappen(2000));
+		assertTrue(_brokerTester.waitUntilExpectedEventsHappen());
 		
 		subscriptionHasbeenSeen =
 			_brokerTester.checkFirstMessageItem(
@@ -207,7 +207,7 @@ public class TestCyclicTwoBrokers extends TestTwoBrokers {
 		// adv and sub has no intersect
 		clientB.handleCommand("s [class,eq,'stock'],[price,<,50]");
 		// waiting for routing finished
-		assertTrue(_brokerTester.waitUntilExpectedEventsHappen(2000));
+		assertTrue(_brokerTester.waitUntilExpectedEventsHappen());
 	}
 
 	/**
@@ -244,7 +244,7 @@ public class TestCyclicTwoBrokers extends TestTwoBrokers {
 		// adv and sub has no intersect
 		clientB.handleCommand("s [class,eq,'stock'],[price,>,200]");
 		assertTrue("The subscriptions [class,eq,'stock'],[price,>,100] and [class,eq,'stock'],[price,>,200] should not be sent to Broker1",
-				_brokerTester.waitUntilExpectedEventsHappen(2000));
+				_brokerTester.waitUntilExpectedEventsHappen());
 		
 		
 		_brokerTester.clearAll().
@@ -340,7 +340,7 @@ public class TestCyclicTwoBrokers extends TestTwoBrokers {
 		// this sub has no overlap with both of them
 		clientB.handleCommand("s [class,eq,'stock'],[price,=,70]");
 		// waiting for routing finished
-		assertTrue(_brokerTester.waitUntilExpectedEventsHappen(2000));
+		assertTrue(_brokerTester.waitUntilExpectedEventsHappen());
 	}
 
 	/**
@@ -467,7 +467,7 @@ public class TestCyclicTwoBrokers extends TestTwoBrokers {
 		brokerCore1.routeMessage(advMsg, MessageDestination.INPUTQUEUE);
 		clientB.handleCommand("s [class,eq,'stock'],[price,=,100]");
 		assertTrue("The subscription [class,eq,'stock'],[price,=,100] should be sent to Broker1",
-				_brokerTester.waitUntilExpectedEventsHappen(2000));		
+				_brokerTester.waitUntilExpectedEventsHappen());
 
 		_brokerTester.clearAll().
 			expectSend(
@@ -498,7 +498,7 @@ public class TestCyclicTwoBrokers extends TestTwoBrokers {
 		clientA.handleCommand("p [class,'stock'],[price,120]");
 		assertTrue("Publication [class,eq,'stock'],[price,=,100] should be sent to clientB " +
 				"and Publication [class,eq,'stock'],[price,=,120] should not",
-				_brokerTester.waitUntilExpectedEventsHappen(2000));
+				_brokerTester.waitUntilExpectedEventsHappen());
 	}
 
 	/**

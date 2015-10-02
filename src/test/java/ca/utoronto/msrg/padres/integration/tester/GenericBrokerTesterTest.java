@@ -22,8 +22,6 @@ import org.junit.Assert;
  */
 public class GenericBrokerTesterTest extends Assert {
 
-	static final int DEFAULT_WAIT_TIME = 1000;
-	
 	GenericBrokerTester _brokerTester;
 	String brokerURI0 = "socket://127.0.0.1:8000/broker0";
 	String brokerURI1 = "socket://127.0.0.1:8000/broker1";
@@ -86,28 +84,28 @@ public class GenericBrokerTesterTest extends Assert {
 				messagePredicates100);
 		
 		// No events happened yet.
-		assertFalse(_brokerTester.waitUntilExpectedEventsHappen(DEFAULT_WAIT_TIME, false));
+		assertFalse(_brokerTester.waitUntilExpectedEventsHappen(false));
 		
 		// Only an advertisement with equal predicates added.
 		_brokerTester.
 			routerAddAdvertisement(
 				brokerURI1,
 				new AdvertisementMessage(adv100, "ADV100"));
-		assertFalse(_brokerTester.waitUntilExpectedEventsHappen(DEFAULT_WAIT_TIME, false));
+		assertFalse(_brokerTester.waitUntilExpectedEventsHappen(false));
 		
 		// An advertisement with unequal predicates added.
 		_brokerTester.
 		routerAddAdvertisement(
 			brokerURI1,
 			new AdvertisementMessage(adv200, "ADV200"));
-		assertFalse(_brokerTester.waitUntilExpectedEventsHappen(DEFAULT_WAIT_TIME, false));
+		assertFalse(_brokerTester.waitUntilExpectedEventsHappen(false));
 		
 		// A subscription with different predicates added.
 		_brokerTester.
 			routerAddSubscription(
 				brokerURI1,
 				new SubscriptionMessage(sub200, "SUB200"));
-		assertFalse(_brokerTester.waitUntilExpectedEventsHappen(DEFAULT_WAIT_TIME, false));
+		assertFalse(_brokerTester.waitUntilExpectedEventsHappen(false));
 
 		// A subscription with equal predicates added but different destination.
 		_brokerTester.
@@ -115,7 +113,7 @@ public class GenericBrokerTesterTest extends Assert {
 				brokerURI1,
 				(SubscriptionMessage) new SubscriptionMessage(sub100, "SUB100").
 					setLastHopID(brokerDest3));
-		assertFalse(_brokerTester.waitUntilExpectedEventsHappen(DEFAULT_WAIT_TIME, false));
+		assertFalse(_brokerTester.waitUntilExpectedEventsHappen(false));
 		
 		// A subscription with equal predicates added but different broker.
 		_brokerTester.
@@ -123,7 +121,7 @@ public class GenericBrokerTesterTest extends Assert {
 			brokerURI0,
 			(SubscriptionMessage) new SubscriptionMessage(sub100, "SUB100").
 				setLastHopID(brokerDest2));
-		assertFalse(_brokerTester.waitUntilExpectedEventsHappen(DEFAULT_WAIT_TIME, false));	
+		assertFalse(_brokerTester.waitUntilExpectedEventsHappen(false));
 		
 		// A subscription with equal predicates added to the right broker.
 		_brokerTester.
@@ -131,7 +129,7 @@ public class GenericBrokerTesterTest extends Assert {
 			brokerURI1,
 			(SubscriptionMessage) new SubscriptionMessage(sub100, "SUB100").
 				setLastHopID(brokerDest2));
-		assertTrue(_brokerTester.waitUntilExpectedEventsHappen(DEFAULT_WAIT_TIME));	
+		assertTrue(_brokerTester.waitUntilExpectedEventsHappen());
 	}
 	
 }

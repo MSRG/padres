@@ -348,7 +348,7 @@ public class TestTwoBrokers extends Assert {
         // adv and sub has no intersect
         clientB.handleCommand("s [class,eq,'stock'],[price,>,200]");
         assertTrue("The subscriptions [class,eq,'stock'],[price,>,100] and [class,eq,'stock'],[price,>,200] should not be sent to Broker1",
-                _brokerTester.waitUntilExpectedEventsHappen(2000));
+                _brokerTester.waitUntilExpectedEventsHappen());
 
 
         _brokerTester.clearAll().
@@ -497,7 +497,7 @@ public class TestTwoBrokers extends Assert {
                                 addPredicate("price", "=", 70L));
         clientB.handleCommand("s [class,eq,'stock'],[price,=,70]");
         assertTrue("There should be no msg routed out on Broker2",
-                _brokerTester.waitUntilExpectedEventsHappen(2000));
+                _brokerTester.waitUntilExpectedEventsHappen());
     }
 
     /**
@@ -570,7 +570,7 @@ public class TestTwoBrokers extends Assert {
                                 addPredicate("price", "<", 50L),
                         "INPUTQUEUE");
         clientA.handleCommand("a [class,eq,'stock'],[price,<,50]");
-        assertTrue(_brokerTester.waitUntilExpectedEventsHappen(2000));
+        assertTrue(_brokerTester.waitUntilExpectedEventsHappen());
 
         _brokerTester.clearAll().
                 expectReceipt(
@@ -604,7 +604,7 @@ public class TestTwoBrokers extends Assert {
         clientB.handleCommand("s [class,eq,'stock'],[attribute,>,70]");
         clientA.handleCommand("a [class,eq,'stock'],[attribute,<,50]");
         assertTrue("There should be no msg routed to Broker1",
-                _brokerTester.waitUntilExpectedEventsHappen(2000));
+                _brokerTester.waitUntilExpectedEventsHappen());
 
         _brokerTester.clearAll().
                 expectReceipt(
@@ -652,7 +652,7 @@ public class TestTwoBrokers extends Assert {
         clientA.handleCommand("a [class,eq,'stock'],[attribute1,<,50]");
         clientA.handleCommand("a [class,eq,'stock'],[attribute1,>,100]");
         assertTrue("There should be no msg routed out on Broker1",
-                _brokerTester.waitUntilExpectedEventsHappen(2000));
+                _brokerTester.waitUntilExpectedEventsHappen());
     }
 
     /**
@@ -722,7 +722,7 @@ public class TestTwoBrokers extends Assert {
                                 addPredicate("class", "eq", "stock").
                                 addPredicate("price", "=", 120L));
         clientA.handleCommand("p [class,'stock'],[price,120]");
-        assertTrue(_brokerTester.waitUntilExpectedEventsHappen(2000));
+        assertTrue(_brokerTester.waitUntilExpectedEventsHappen());
     }
 
     /**
@@ -810,7 +810,7 @@ public class TestTwoBrokers extends Assert {
         // this pub match both of two subs, however, only one pub routed out on Broker2
         clientA.handleCommand("p [class,'stock'],[price,100]");
         assertTrue("The publication [class,stock],[price,100] should be sent to clientB",
-                _brokerTester.waitUntilExpectedEventsHappen(3000));
+                _brokerTester.waitUntilExpectedEventsHappen());
 
 
         _brokerTester.clearAll().
@@ -837,7 +837,7 @@ public class TestTwoBrokers extends Assert {
         // this pub match one of them
         clientA.handleCommand("p [class,'stock'],[price,90]");
         assertTrue("The publication [class,stock],[price,90] should be sent to clientB",
-                _brokerTester.waitUntilExpectedEventsHappen(3000));
+                _brokerTester.waitUntilExpectedEventsHappen());
 
 
         _brokerTester.clearAll().
@@ -858,7 +858,7 @@ public class TestTwoBrokers extends Assert {
         // this pub match one of them
         clientA.handleCommand("p [class,'stock'],[price,130]");
         assertTrue("There should be no pub routed out on Broker1",
-                _brokerTester.waitUntilExpectedEventsHappen(2000));
+                _brokerTester.waitUntilExpectedEventsHappen());
     }
 
 }

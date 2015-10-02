@@ -567,7 +567,7 @@ public class TestFixedCycles extends Assert {
         clientA.handleCommand("p [class,'stock'],[price,140]");
         clientC.handleCommand("p [class,'stock'],[price,145]");
 
-        assertTrue(_brokerTester.waitUntilExpectedEventsHappen(2000));
+        assertTrue(_brokerTester.waitUntilExpectedEventsHappen());
 
 
         _brokerTester.clearAll().
@@ -581,7 +581,7 @@ public class TestFixedCycles extends Assert {
         String subId2 = brokerCore5.getNewMessageID();
         SubscriptionMessage subMsg2 = new SubscriptionMessage(sub2, subId2, mdB);
         brokerCore5.routeMessage(subMsg2, MessageDestination.INPUTQUEUE);
-        assertTrue(_brokerTester.waitUntilExpectedEventsHappen(2000));
+        assertTrue(_brokerTester.waitUntilExpectedEventsHappen());
 
 
         _brokerTester.clearAll().
@@ -594,7 +594,7 @@ public class TestFixedCycles extends Assert {
         UnsubscriptionMessage unsubMsg2 = new UnsubscriptionMessage(unsub2,
                 brokerCore5.getNewMessageID(), mdB);
         brokerCore5.routeMessage(unsubMsg2, MessageDestination.INPUTQUEUE);
-        assertTrue(_brokerTester.waitUntilExpectedEventsHappen(2000));
+        assertTrue(_brokerTester.waitUntilExpectedEventsHappen());
 
 
         Set<Message> messages = brokerCore5.getInputQueue().getCurrentMessagesToRoute();

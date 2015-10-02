@@ -62,7 +62,7 @@ public class TestCyclicHeartBeat extends TestHeartBeat {
 					addPredicate("detectorID", "eq", brokerCore1.getBrokerID()),
 				brokerCore1.getBrokerURI() + "-" +  padresMonitor.getMonitorID());
 		padresMonitor.getOverlayManager().stopBroker(brokerCore2.getBrokerID());
-		assertTrue(_brokerTester.waitUntilExpectedEventsHappen(40000));
+		assertTrue(_brokerTester.waitUntilExpectedEventsHappen());
 
 		// Resume broker 2 and wait for the failure to be cleared.
 		// TODO: Also test for tid attribute?
@@ -77,6 +77,6 @@ public class TestCyclicHeartBeat extends TestHeartBeat {
 					addPredicate("detectorID", "eq", brokerCore1.getBrokerID()),
 				brokerCore1.getBrokerURI() + "-" +  padresMonitor.getMonitorID());
 		padresMonitor.getOverlayManager().resumeBroker(brokerCore2.getBrokerID());
-		assertTrue(_brokerTester.waitUntilExpectedEventsHappen(40000));
+		assertTrue(_brokerTester.waitUntilExpectedEventsHappen());
 	}
 }

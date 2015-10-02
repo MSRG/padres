@@ -575,7 +575,7 @@ public class TestMultipleBrokers extends Assert {
         // the following sub has overlap with the second adv
         clientC.handleCommand("s [class,eq,'stock'],[attribute,>,70]");
         clientA.handleCommand("a [class,eq,'stock'],[attribute,<,50]");
-        assertTrue(_brokerTester.waitUntilExpectedEventsHappen(2000));
+        assertTrue(_brokerTester.waitUntilExpectedEventsHappen());
 
 
         _brokerTester.clearAll().
@@ -597,7 +597,7 @@ public class TestMultipleBrokers extends Assert {
                                 addPredicate("attribute1", "=", 70L));
         clientC.handleCommand("s [class,eq,'stock'],[attribute1,=,70]");
         clientA.handleCommand("a [class,eq,'stock'],[attribute1,<,50]");
-        assertTrue(_brokerTester.waitUntilExpectedEventsHappen(2000));
+        assertTrue(_brokerTester.waitUntilExpectedEventsHappen());
 
         _brokerTester.clearAll().
                 expectRouterNotAddSubscription(
@@ -607,7 +607,7 @@ public class TestMultipleBrokers extends Assert {
                                 addPredicate("class", "eq", "stock").
                                 addPredicate("attribute1", "=", 70L));
         clientA.handleCommand("a [class,eq,'stock'],[attribute1,>,100]");
-        assertTrue(_brokerTester.waitUntilExpectedEventsHappen(2000));
+        assertTrue(_brokerTester.waitUntilExpectedEventsHappen());
     }
 
     /**
@@ -779,7 +779,7 @@ public class TestMultipleBrokers extends Assert {
                                 addPredicate("class", "eq", "stock").
                                 addPredicate("price", "<", 150L));
         clientC.handleCommand("a [class,eq,'stock'],[price,<,50]");
-        assertTrue(_brokerTester.waitUntilExpectedEventsHappen(2000));
+        assertTrue(_brokerTester.waitUntilExpectedEventsHappen());
     }
 
     /**
@@ -1145,7 +1145,7 @@ public class TestMultipleBrokers extends Assert {
         clientA.handleCommand("p [class,'stock'],[price,110]");
 
         assertTrue("There should be no pub routed out on Broker2",
-                _brokerTester.waitUntilExpectedEventsHappen(2000));
+                _brokerTester.waitUntilExpectedEventsHappen());
     }
 
     /**
@@ -1298,7 +1298,7 @@ public class TestMultipleBrokers extends Assert {
                                 addPredicate("class", "eq", "stock").
                                 addPredicate("price", "<", 80L));
         clientA.handleCommand("cs {{[class,eq,'stock'],[number,>,120]}&{[class,eq,'stock'],[price,<,80]}}");
-        assertTrue(_brokerTester.waitUntilExpectedEventsHappen(2000));
+        assertTrue(_brokerTester.waitUntilExpectedEventsHappen());
 
         _brokerTester.clearAll().
                 expectRouterAddSubscription(

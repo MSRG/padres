@@ -320,7 +320,7 @@ public class TestBrokerException extends Assert {
         // route message
         brokerCore.routeMessage(olConnectPubmsg, MessageDestination.INPUTQUEUE);
         //_brokerTester.waitUntilExpectedEventsHappen(3000);
-        assertTrue(_brokerTester.waitUntilExpectedEventsHappen(3000));
+        assertTrue(_brokerTester.waitUntilExpectedEventsHappen());
     }
 
     /* TODO: REZA (DONE) */
@@ -342,7 +342,7 @@ public class TestBrokerException extends Assert {
         // route message
         brokerCore.routeMessage(olConnectPubmsg, MessageDestination.INPUTQUEUE);
 
-        assertTrue(_brokerTester.waitUntilExpectedEventsHappen(30000));
+        assertTrue(_brokerTester.waitUntilExpectedEventsHappen());
     }
 
     /* TODO: REZA */
@@ -365,7 +365,7 @@ public class TestBrokerException extends Assert {
         // route message
         brokerCore.routeMessage(olConnectPubmsg, MessageDestination.INPUTQUEUE);
 
-        assertTrue(_brokerTester.waitUntilExpectedEventsHappen(30000));
+        assertTrue(_brokerTester.waitUntilExpectedEventsHappen());
     }
 
     /* TODO: REZA (DOES NOT WORK) */
@@ -392,6 +392,6 @@ public class TestBrokerException extends Assert {
         // route message
         brokerCore.routeMessage(olConnectPubmsg, MessageDestination.INPUTQUEUE);
 
-        assertTrue(_brokerTester.waitUntilExpectedEventsHappen(3000000));
+        assertTrue(_brokerTester.waitUntilExpectedEventsHappen());
     }
 }
