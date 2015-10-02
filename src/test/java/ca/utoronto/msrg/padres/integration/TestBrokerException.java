@@ -54,7 +54,6 @@ public class TestBrokerException extends Assert {
         commProtocol = "socket";
         setupConfigurations(1, "socket");
 
-
         _brokerTester = new GenericBrokerTester();
 
         // start the broker

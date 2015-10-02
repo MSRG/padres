@@ -837,7 +837,7 @@ public class TestTwoBrokers extends Assert {
         // this pub match one of them
         clientA.handleCommand("p [class,'stock'],[price,90]");
         assertTrue("The publication [class,stock],[price,90] should be sent to clientB",
-                _brokerTester.waitUntilExpectedEventsHappen());
+                _brokerTester.waitUntilExpectedEventsHappen(3000));
 
 
         _brokerTester.clearAll().
