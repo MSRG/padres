@@ -27,6 +27,8 @@ import ca.utoronto.msrg.padres.integration.tester.TesterBrokerCore;
 import ca.utoronto.msrg.padres.integration.tester.TesterClient;
 import ca.utoronto.msrg.padres.integration.tester.TesterMessagePredicates;
 
+import static ca.utoronto.msrg.padres.AllTests.setupConfigurations;
+
 /**
  * This class provides a way for testing cycles function.
  *
@@ -61,6 +63,8 @@ public class TestDynamicCycles extends Assert {
 
     @Before
     public void setUp() throws Exception {
+        setupConfigurations(7, "socket");
+
         _brokerTester = new GenericBrokerTester();
 
         // setup the configurations for a cyclic network
