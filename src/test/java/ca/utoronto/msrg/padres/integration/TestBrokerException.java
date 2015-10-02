@@ -43,19 +43,6 @@ public class TestBrokerException extends Assert {
     private String commProtocol;
 
 
-    @After
-    public void tearDown() throws Exception {
-
-
-        LogSetup.removeAppender("Exception", exceptionAppender);
-        brokerCore.shutdown();
-        _brokerTester = null;
-        if (otherBroker != null) {
-            otherBroker.shutdown();
-            otherBroker = null;
-        }
-    }
-
     protected BrokerCore brokerCore;
 
     private MessageWatchAppender exceptionAppender;
@@ -78,6 +65,17 @@ public class TestBrokerException extends Assert {
         exceptionAppender.addFilter(patternFilter);
         LogSetup.addAppender("Exception", exceptionAppender);
     }
+
+    @After
+    public void tearDown() throws Exception {
+        LogSetup.removeAppender("Exception", exceptionAppender);
+        brokerCore.shutdown();
+        _brokerTester = null;
+        if (otherBroker != null) {
+            otherBroker.shutdown();
+        }
+    }
+
 
     protected BrokerCore createNewBrokerCore(BrokerConfig brokerConfig) throws BrokerCoreException {
         return new TesterBrokerCore(_brokerTester, brokerConfig);

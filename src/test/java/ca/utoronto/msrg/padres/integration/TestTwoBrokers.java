@@ -24,6 +24,8 @@ import ca.utoronto.msrg.padres.common.util.LogSetup;
 
 import java.util.Queue;
 
+import static ca.utoronto.msrg.padres.AllTests.setupConfigurations;
+
 /**
  * This class provides a way for test in the scenario of two brokers with multiple Clients.
  *
@@ -48,6 +50,9 @@ public class TestTwoBrokers extends Assert {
 
     @Before
     public void setUp() throws Exception {
+
+        setupConfigurations(1, "socket");
+
         _brokerTester = new GenericBrokerTester();
 
         // setup the standard overlay B1-B2
