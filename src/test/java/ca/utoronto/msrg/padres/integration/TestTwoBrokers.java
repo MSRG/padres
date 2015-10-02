@@ -810,7 +810,7 @@ public class TestTwoBrokers extends Assert {
         // this pub match both of two subs, however, only one pub routed out on Broker2
         clientA.handleCommand("p [class,'stock'],[price,100]");
         assertTrue("The publication [class,stock],[price,100] should be sent to clientB",
-                _brokerTester.waitUntilExpectedEventsHappen());
+                _brokerTester.waitUntilExpectedEventsHappen(3000));
 
 
         _brokerTester.clearAll().
