@@ -674,4 +674,49 @@ public class TestMultipleBrokersTwo extends Assert {
         assertTrue("The subscription [class,eq,stock],[price,<,150] should be sent to Broker2", checkSubInBroker2);
         assertTrue("The subscription [class,eq,stock],[price,<,150] should be sent to Broker4", checkSubInBroker4);
     }
+
+    /**
+     * Test sub/pub match in three brokers, where pub and sub are sent on different brokers. Two
+     * subs are sent on the different brokers.
+     *
+     * @throws ParseException
+     * @throws InterruptedException
+     */
+    @Test
+    public void testSubPubMatchingWithTwoSubsWithDiffLastHopWithMoreBrokers() throws ParseException, InterruptedException {
+		/* TODO: REZA (DONE) */
+        _brokerTester.
+                expectRouterAddAdvertisement(
+                        brokerCore3.getBrokerURI(),
+                        brokerCore1.getBrokerDestination(),
+                        new TesterMessagePredicates().
+                                addPredicate("class", "eq", "stock").
+                                addPredicate("price", ">", 80L)).
+                expectRouterAddSubscription(
+                        brokerCore2.getBrokerURI(),
+                        brokerCore1.getBrokerDestination(),
+                        new TesterMessagePredicates().
+                                addPredicate("class", "eq", "stock").
+                                addPredicate("price", "<", 120L));
+        clientA.handleCommand("a [class,eq,'stock'],[price,>,80]");
+        clientB.handleCommand("s [class,eq,'stock'],[price,=,100]");
+        clientC.handleCommand("s [class,eq,'stock'],[price,<,120]");
+        assertTrue(_brokerTester.waitUntilExpectedEventsHappen());
+
+        _brokerTester.clearAll().
+                expectClientReceivePublication(
+                        clientB.getClientID(),
+                        new TesterMessagePredicates().
+                                addPredicate("class", "eq", "stock").
+                                addPredicate("price", "=", 100L)).
+                expectClientReceivePublication(
+                        clientC.getClientID(),
+                        new TesterMessagePredicates().
+                                addPredicate("class", "eq", "stock").
+                                addPredicate("price", "=", 100L));
+        clientA.handleCommand("p [class,'stock'],[price,100]");
+
+        assertTrue("The publication [class,'stock'],[price,100] should be sent to clientB/clientC",
+                _brokerTester.waitUntilExpectedEventsHappen());
+    }
 }

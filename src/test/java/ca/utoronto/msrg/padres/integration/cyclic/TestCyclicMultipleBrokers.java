@@ -1036,7 +1036,6 @@ public class TestCyclicMultipleBrokers extends TestMultipleBrokers {
      * @throws ParseException
      * @throws InterruptedException
      */
-    @Override
     @Test
     public void testSubPubMatchingWithTwoSubsWithDiffLastHopWithMoreBrokers() throws ParseException, InterruptedException {
 		/* REZA (NEW) */

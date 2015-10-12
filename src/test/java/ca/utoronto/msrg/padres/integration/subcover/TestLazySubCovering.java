@@ -35,10 +35,9 @@ public class TestLazySubCovering extends TestSubCovering {
     @Override
     @Before
     public void setUp() throws Exception {
-        setupConfigurations(3, "socket");
 
+        //setupConfigurations(3, "socket");
         _brokerTester = new GenericBrokerTester();
-
         super.setUp();
     }
 
