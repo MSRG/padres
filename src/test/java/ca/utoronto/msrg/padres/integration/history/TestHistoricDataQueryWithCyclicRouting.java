@@ -27,7 +27,7 @@ import ca.utoronto.msrg.padres.PatternFilter;
  *
  * @author shou, Bala Maniymaran
  */
-
+@Ignore
 public class TestHistoricDataQueryWithCyclicRouting extends Assert {
 
     private BrokerCore brokerCore1;
