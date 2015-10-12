@@ -108,169 +108,6 @@ public class TestCyclicMultipleBrokers extends TestMultipleBrokers {
     }
 
     /**
-     * Test advertisement flooding is correct in the network, where these brokers are established
-     * like a star. Broker1 is the core, other four brokers connect to Broker1 seperately.
-     *
-     * @throws ParseException
-     * @throws InterruptedException
-     */
-    @Override
-    @Test
-    public void testAdvFloodInNetwork() throws ParseException, InterruptedException {
-        // send an advertisement
-        MessageDestination mdA = clientA.getClientDest();
-        Advertisement adv = MessageFactory.createAdvertisementFromString("[class,eq,'stock'],[price,>,10]");
-        String advId = brokerCore2.getNewMessageID();
-        AdvertisementMessage advMsg = new AdvertisementMessage(adv, advId, mdA);
-
-        _brokerTester.clearAll().
-                expectReceipt(
-                        brokerCore1.getBrokerURI(),
-                        MessageType.ADVERTISEMENT,
-                        new TesterMessagePredicates().
-                                addPredicate("class", "eq", "stock").
-                                addPredicate("price", ">", 10L).
-                                addPredicate("tid", "eq", advId),
-                        "INPUTQUEUE").
-                expectReceipt(
-                        brokerCore3.getBrokerURI(),
-                        MessageType.ADVERTISEMENT,
-                        new TesterMessagePredicates().
-                                addPredicate("class", "eq", "stock").
-                                addPredicate("price", ">", 10L).
-                                addPredicate("tid", "eq", advId),
-                        "INPUTQUEUE").
-                expectReceipt(
-                        brokerCore4.getBrokerURI(),
-                        MessageType.ADVERTISEMENT,
-                        new TesterMessagePredicates().
-                                addPredicate("class", "eq", "stock").
-                                addPredicate("price", ">", 10L).
-                                addPredicate("tid", "eq", advId),
-                        "INPUTQUEUE").
-                expectReceipt(
-                        brokerCore5.getBrokerURI(),
-                        MessageType.ADVERTISEMENT,
-                        new TesterMessagePredicates().
-                                addPredicate("class", "eq", "stock").
-                                addPredicate("price", ">", 10L).
-                                addPredicate("tid", "eq", advId),
-                        "INPUTQUEUE").
-                expectRouterHandle(
-                        brokerCore1.getBrokerURI(),
-                        brokerCore2.getBrokerDestination(),
-                        MessageType.ADVERTISEMENT,
-                        new TesterMessagePredicates().
-                                addPredicate("class", "eq", "stock").
-                                addPredicate("price", ">", 10L).
-                                addPredicate("tid", "eq", advId)).
-                expectRouterHandle(
-                        brokerCore3.getBrokerURI(),
-                        brokerCore1.getBrokerDestination(),
-                        MessageType.ADVERTISEMENT,
-                        new TesterMessagePredicates().
-                                addPredicate("class", "eq", "stock").
-                                addPredicate("price", ">", 10L).
-                                addPredicate("tid", "eq", advId)).
-                expectRouterHandle(
-                        brokerCore4.getBrokerURI(),
-                        brokerCore1.getBrokerDestination(),
-                        MessageType.ADVERTISEMENT,
-                        new TesterMessagePredicates().
-                                addPredicate("class", "eq", "stock").
-                                addPredicate("price", ">", 10L).
-                                addPredicate("tid", "eq", advId)).
-                expectRouterHandle(
-                        brokerCore5.getBrokerURI(),
-                        brokerCore1.getBrokerDestination(),
-                        MessageType.ADVERTISEMENT,
-                        new TesterMessagePredicates().
-                                addPredicate("class", "eq", "stock").
-                                addPredicate("price", ">", 10L).
-                                addPredicate("tid", "eq", advId));
-
-        brokerCore2.routeMessage(advMsg, MessageDestination.INPUTQUEUE);
-        assertTrue("The advertisement[class,eq,stock],[price,>,10] should be sent to Broker1,3-5",
-                _brokerTester.waitUntilExpectedEventsHappen(EXTENDED_WAIT_TIME));
-
-        // send another adv
-        MessageDestination mdB = clientB.getClientDest();
-        Advertisement adv1 = MessageFactory.createAdvertisementFromString("[class,eq,'stock'],[price,=,10]");
-        String advId1 = brokerCore3.getNewMessageID();
-        AdvertisementMessage advMsg1 = new AdvertisementMessage(adv1, advId1, mdB);
-
-        _brokerTester.clearAll().
-                expectReceipt(
-                        brokerCore1.getBrokerURI(),
-                        MessageType.ADVERTISEMENT,
-                        new TesterMessagePredicates().
-                                addPredicate("class", "eq", "stock").
-                                addPredicate("price", "=", 10L).
-                                addPredicate("tid", "eq", advId1),
-                        "INPUTQUEUE").
-                expectReceipt(
-                        brokerCore2.getBrokerURI(),
-                        MessageType.ADVERTISEMENT,
-                        new TesterMessagePredicates().
-                                addPredicate("class", "eq", "stock").
-                                addPredicate("price", "=", 10L).
-                                addPredicate("tid", "eq", advId1),
-                        "INPUTQUEUE").
-                expectReceipt(
-                        brokerCore4.getBrokerURI(),
-                        MessageType.ADVERTISEMENT,
-                        new TesterMessagePredicates().
-                                addPredicate("class", "eq", "stock").
-                                addPredicate("price", "=", 10L).
-                                addPredicate("tid", "eq", advId1),
-                        "INPUTQUEUE").
-                expectReceipt(
-                        brokerCore5.getBrokerURI(),
-                        MessageType.ADVERTISEMENT,
-                        new TesterMessagePredicates().
-                                addPredicate("class", "eq", "stock").
-                                addPredicate("price", "=", 10L).
-                                addPredicate("tid", "eq", advId1),
-                        "INPUTQUEUE").
-                expectRouterHandle(
-                        brokerCore1.getBrokerURI(),
-                        brokerCore3.getBrokerDestination(),
-                        MessageType.ADVERTISEMENT,
-                        new TesterMessagePredicates().
-                                addPredicate("class", "eq", "stock").
-                                addPredicate("price", "=", 10L).
-                                addPredicate("tid", "eq", advId1)).
-                expectRouterHandle(
-                        brokerCore2.getBrokerURI(),
-                        brokerCore1.getBrokerDestination(),
-                        MessageType.ADVERTISEMENT,
-                        new TesterMessagePredicates().
-                                addPredicate("class", "eq", "stock").
-                                addPredicate("price", "=", 10L).
-                                addPredicate("tid", "eq", advId1)).
-                expectRouterHandle(
-                        brokerCore4.getBrokerURI(),
-                        brokerCore1.getBrokerDestination(),
-                        MessageType.ADVERTISEMENT,
-                        new TesterMessagePredicates().
-                                addPredicate("class", "eq", "stock").
-                                addPredicate("price", "=", 10L).
-                                addPredicate("tid", "eq", advId1)).
-                expectRouterHandle(
-                        brokerCore5.getBrokerURI(),
-                        brokerCore1.getBrokerDestination(),
-                        MessageType.ADVERTISEMENT,
-                        new TesterMessagePredicates().
-                                addPredicate("class", "eq", "stock").
-                                addPredicate("price", "=", 10L).
-                                addPredicate("tid", "eq", advId1));
-
-        brokerCore3.routeMessage(advMsg1, MessageDestination.INPUTQUEUE);
-        assertTrue("The advertisement[class,eq,stock],[price,=,10] should be sent to Broker1-2,4-5",
-                _brokerTester.waitUntilExpectedEventsHappen(EXTENDED_WAIT_TIME));
-    }
-
-    /**
      * Test adv/sub route in three brokers, where both broker2 and broker3 connect to broker1. Adv
      * is sent on broker2, and sub is sent on broker3. That is, adv/sub are on uncontiguous brokers.
      *
@@ -766,7 +603,6 @@ public class TestCyclicMultipleBrokers extends TestMultipleBrokers {
      * @throws ParseException
      * @throws InterruptedException
      */
-    @Override
     @Test
     public void testAdvSubRoutingWithTwoAdvsWithDiffLastHopWithMoreBrokers() throws ParseException, InterruptedException {
         // send adv
@@ -867,7 +703,6 @@ public class TestCyclicMultipleBrokers extends TestMultipleBrokers {
      * @throws InterruptedException
      * @see TestCyclicMultipleBrokers#testAdvSubRoutingWithTwoAdvsWithDiffLastHopWithMoreBrokers
      */
-    @Override
     @Test
     public void testSubAdvRoutingWithTwoAdvsWithDiffLastHopWithMoreBrokers() throws ParseException, InterruptedException {
         // send adv
@@ -1513,7 +1348,6 @@ public class TestCyclicMultipleBrokers extends TestMultipleBrokers {
      * @throws ParseException
      * @throws InterruptedException
      */
-    @Override
     @Test
     public void testUnCompositeSubscriptionWithMultipleBrokers() throws ParseException, InterruptedException {
         // right now, in padres, composite subscription could not be sent first!!!
