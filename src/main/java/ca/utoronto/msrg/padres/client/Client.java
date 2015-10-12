@@ -184,8 +184,7 @@ public class Client {
 			MessageSender.setConnectRetryLimit(clientConfig.connectionRetries);
 			MessageSender.setConnectRetryPauseTime(clientConfig.retryPauseTime);
 			if (clientConfig.connectBrokerList != null) {
-				String[] brokerList = clientConfig.connectBrokerList;
-				for (String brokerURI : brokerList) {
+				for (String brokerURI : clientConfig.connectBrokerList) {
 					connect(brokerURI);
 				}
 			}

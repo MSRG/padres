@@ -653,7 +653,7 @@ public class BrokerCore {
 		
 		// Let's be nice
 		try {
-//			stop();
+			stop();
 			brokerCoreLogger.info("BrokerCore is shutting down.");
 //			orderQueuesTo("SHUTDOWN");
 			if (commSystem != null)
@@ -676,6 +676,13 @@ public class BrokerCore {
         }
         if(heartbeatSubscriber != null) {
             heartbeatSubscriber.shutdown();
+        }
+
+        if (webuiMonitor != null) {
+            webuiMonitor.shutdownBroker();
+        }
+        if(timerThread != null) {
+            timerThread.shutdown();
         }
 	}
 

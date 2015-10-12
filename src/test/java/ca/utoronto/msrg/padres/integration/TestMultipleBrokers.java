@@ -46,13 +46,6 @@ import static ca.utoronto.msrg.padres.AllTests.setupConfigurations;
  */
 public class TestMultipleBrokers extends Assert {
 
-/*    static {
-        if (System.getProperty("test.version") == null)
-            System.setProperty("test.version", "6");
-        if (System.getProperty("test.comm_protocol") == null)
-            System.setProperty("test.comm_protocol", "rmi");
-    }*/
-
     protected GenericBrokerTester _brokerTester;
 
     protected final int DEFAULT_WAIT_TIME = 10000;

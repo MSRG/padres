@@ -46,16 +46,7 @@ import static ca.utoronto.msrg.padres.AllTests.setupConfigurations;
  */
 public class TestClientsException extends Assert {
 
-    /*static {
-        if (System.getProperty("test.version") == null)
-            System.setProperty("test.version", "1");
-        if (System.getProperty("test.comm_protocol") == null)
-            System.setProperty("test.comm_protocol", "socket");
-    }*/
-
     protected GenericBrokerTester _brokerTester;
-
-    protected BrokerCore otherBroker = null;
 
     protected BrokerCore brokerCore;
 

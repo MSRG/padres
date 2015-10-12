@@ -1,5 +1,7 @@
 package ca.utoronto.msrg.padres.client;
 
+import ca.utoronto.msrg.padres.common.util.CommandLine;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -8,8 +10,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
-
-import ca.utoronto.msrg.padres.common.util.CommandLine;
 
 public class ClientConfig {
 
@@ -52,7 +52,7 @@ public class ClientConfig {
 
 	public String clientID = null;
 
-	public String[] connectBrokerList = null;
+	public ArrayList<String> connectBrokerList = null;
 
 	public int connectionRetries = -1;
 
@@ -79,9 +79,9 @@ public class ClientConfig {
 			clientID = clientProps.getProperty("client.id");
 			String neighborList = clientProps.getProperty("client.remoteBrokers");
 			if (neighborList != null)
-				connectBrokerList = neighborList.split(",\\s*");
+				connectBrokerList = new ArrayList<>(Arrays.asList(neighborList.split(",\\s*")));
 			else
-				connectBrokerList = new String[0];
+				connectBrokerList = new ArrayList<>();
 			connectionRetries = Integer.parseInt(clientProps.getProperty("connection.retries"));
 			retryPauseTime = Integer.parseInt(clientProps.getProperty("connection.retry.pauseTime"));
 			detailState = clientProps.getProperty("client.store_detail_state", "OFF").toLowerCase().trim().equals(
@@ -99,8 +99,7 @@ public class ClientConfig {
 	public ClientConfig(ClientConfig origConfig) {
 		configFile = origConfig.configFile;
 		clientID = origConfig.clientID;
-		connectBrokerList = Arrays.copyOf(origConfig.connectBrokerList,
-				origConfig.connectBrokerList.length);
+		connectBrokerList = (ArrayList<String>) origConfig.connectBrokerList.clone();
 		connectionRetries = origConfig.connectionRetries;
 		retryPauseTime = origConfig.retryPauseTime;
 		detailState = origConfig.detailState;
@@ -127,7 +126,7 @@ public class ClientConfig {
 		if ((buffer = cmdLine.getOptionValue(CLI_OPTION_ID)) != null)
 			clientID = buffer.trim();
 		if ((buffer = cmdLine.getOptionValue(CLI_OPTION_BROKER_LIST)) != null)
-			connectBrokerList = buffer.trim().split(",");
+			connectBrokerList = new ArrayList<>(Arrays.asList(buffer.trim().split(",")));
 		if ((buffer = cmdLine.getOptionValue(CLI_OPTION_CONNECT_RETRY)) != null)
 			connectionRetries = Integer.parseInt(buffer.trim());
 		if ((buffer = cmdLine.getOptionValue(CLI_OPTION_CONNECT_PAUSE)) != null)
@@ -138,7 +137,7 @@ public class ClientConfig {
 
 	public String toString() {
 		String outString = "\nClient ID: " + clientID;
-		outString += "\nBroker Connections: " + Arrays.toString(connectBrokerList);
+		outString += "\nBroker Connections: " + Arrays.toString(connectBrokerList.toArray());
 		outString += "\nConfig File: " + configFile;
 		outString += "\nConnection Retries: " + connectionRetries;
 		outString += "\nConnection Retry Pause: " + retryPauseTime;

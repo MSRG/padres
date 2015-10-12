@@ -77,8 +77,6 @@ public class TestHeartBeat extends Assert {
     @After
     public void tearDown() throws Exception {
 
-        // TODO: remove this line
-        // padresMonitor.exitMonitor();
         padresMonitor.shutdown();
         brokerCore1.shutdown();
         brokerCore2.shutdown();
