@@ -20,6 +20,8 @@ import ca.utoronto.msrg.padres.integration.tester.TesterMessagePredicates;
 import ca.utoronto.msrg.padres.tools.padresmonitor.MonitorFrame;
 import ca.utoronto.msrg.padres.tools.padresmonitor.OverlayManager;
 
+import static ca.utoronto.msrg.padres.AllTests.setupConfigurations;
+
 /**
  * This class provides a way to test HeartBeat functionality. In order to run this class,
  * rmiregistry 1099 and 1100 need to be done first.
@@ -27,13 +29,6 @@ import ca.utoronto.msrg.padres.tools.padresmonitor.OverlayManager;
  * @author Shuang Hou
  */
 public class TestHeartBeat extends Assert {
-
-    static {
-        if (System.getProperty("test.version") == null)
-            System.setProperty("test.version", "5");
-        if (System.getProperty("test.comm_protocol") == null)
-            System.setProperty("test.comm_protocol", "socket");
-    }
 
     protected GenericBrokerTester _brokerTester;
 
@@ -49,6 +44,8 @@ public class TestHeartBeat extends Assert {
 
     @Before
     public void setUp() throws Exception {
+        setupConfigurations(5, "socket");
+
         _brokerTester = new GenericBrokerTester();
 
         // start the broker

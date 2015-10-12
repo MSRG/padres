@@ -28,25 +28,20 @@ import ca.utoronto.msrg.padres.integration.TestMultipleBrokers;
 import ca.utoronto.msrg.padres.integration.tester.GenericBrokerTester;
 import ca.utoronto.msrg.padres.integration.tester.TesterMessagePredicates;
 
+import static ca.utoronto.msrg.padres.AllTests.setupConfigurations;
+
 /**
  * This class provides a way to test in the scenario of multiple brokers with multiple Clients.
  *
  * @author Bala Maniymaran
  */
 public class TestCyclicMultipleBrokers extends TestMultipleBrokers {
-
-    static {
-        if (System.getProperty("test.version") == null)
-            System.setProperty("test.version", "6");
-        if (System.getProperty("test.comm_protocol") == null)
-            System.setProperty("test.comm_protocol", "socket");
-    }
-
     public static int EXTENDED_WAIT_TIME = 20000;
 
     @Override
     @Before
     public void setUp() throws Exception {
+        setupConfigurations(6, "socket");
         _brokerTester = new GenericBrokerTester();
 
         // configure for network type 1
@@ -99,6 +94,17 @@ public class TestCyclicMultipleBrokers extends TestMultipleBrokers {
     @After
     public void tearDown() throws Exception {
         super.tearDown();
+
+        clientA.shutdown();
+        clientB.shutdown();
+        clientC.shutdown();
+        clientD.shutdown();
+
+        brokerCore1.shutdown();
+        brokerCore2.shutdown();
+        brokerCore3.shutdown();
+        brokerCore4.shutdown();
+        brokerCore5.shutdown();
     }
 
     /**

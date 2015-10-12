@@ -38,14 +38,9 @@ import ca.utoronto.msrg.padres.integration.tester.TesterBrokerCore;
 import ca.utoronto.msrg.padres.integration.tester.TesterClient;
 import ca.utoronto.msrg.padres.integration.tester.TesterMessagePredicates;
 
-public class TestFixedCycles extends Assert {
+import static ca.utoronto.msrg.padres.AllTests.setupConfigurations;
 
-    static {
-        if (System.getProperty("test.version") == null)
-            System.setProperty("test.version", "6");
-        if (System.getProperty("test.comm_protocol") == null)
-            System.setProperty("test.comm_protocol", "socket");
-    }
+public class TestFixedCycles extends Assert {
 
     protected GenericBrokerTester _brokerTester;
 
@@ -71,6 +66,8 @@ public class TestFixedCycles extends Assert {
 
     @Before
     public void setUp() throws Exception {
+        setupConfigurations(6, "socket");
+
         _brokerTester = new GenericBrokerTester();
 
         // setup configurations according a cyclic network

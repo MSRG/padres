@@ -35,14 +35,6 @@ import static ca.utoronto.msrg.padres.AllTests.setupConfigurations;
  * @author Shuang Hou
  */
 public class TestDynamicCycles extends Assert {
-
-    static {
-        if (System.getProperty("test.version") == null)
-            System.setProperty("test.version", "7");
-        if (System.getProperty("test.comm_protocol") == null)
-            System.setProperty("test.comm_protocol", "socket");
-    }
-
     protected GenericBrokerTester _brokerTester;
 
     protected BrokerCore brokerCore1;

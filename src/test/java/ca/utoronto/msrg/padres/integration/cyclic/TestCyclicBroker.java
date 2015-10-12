@@ -1,5 +1,7 @@
 package ca.utoronto.msrg.padres.integration.cyclic;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Map;
@@ -13,14 +15,19 @@ import ca.utoronto.msrg.padres.common.message.parser.ParseException;
 import ca.utoronto.msrg.padres.integration.TestBroker;
 import ca.utoronto.msrg.padres.integration.tester.TesterMessagePredicates;
 
+import static ca.utoronto.msrg.padres.AllTests.setupConfigurations;
+
 public class TestCyclicBroker extends TestBroker {
 
-    static {
-        // get test specific configuration
-        if (System.getProperty("test.version") == null)
-            System.setProperty("test.version", "5");
-        if (System.getProperty("test.comm_protocol") == null)
-            System.setProperty("test.comm_protocol", "socket");
+    @Before
+    public void setUp() throws Exception {
+        setupConfigurations(5, "socket");
+        super.setUp();
+    }
+
+    @After
+    public void tearDown() throws Exception {
+        super.tearDown();
     }
 
     /**
