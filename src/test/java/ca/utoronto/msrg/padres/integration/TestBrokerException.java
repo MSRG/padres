@@ -51,14 +51,16 @@ public class TestBrokerException extends Assert {
 
     @Before
     public void setUp() throws Exception {
-        commProtocol = "socket";
         setupConfigurations(1, "socket");
+
+        commProtocol = "socket";
 
         _brokerTester = new GenericBrokerTester();
 
         // start the broker
         brokerCore = createNewBrokerCore(AllTests.brokerConfig01);
         brokerCore.initialize();
+
         exceptionAppender = new MessageWatchAppender();
         patternFilter = new PatternFilter(OverlayManager.class.getName());
         exceptionAppender.addFilter(patternFilter);
@@ -69,6 +71,8 @@ public class TestBrokerException extends Assert {
     public void tearDown() throws Exception {
         LogSetup.removeAppender("Exception", exceptionAppender);
         brokerCore.shutdown();
+        brokerCore = null;
+
         _brokerTester = null;
         if (otherBroker != null) {
             otherBroker.shutdown();
