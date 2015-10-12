@@ -27,6 +27,8 @@ import ca.utoronto.msrg.padres.integration.tester.TesterBrokerCore;
 import ca.utoronto.msrg.padres.integration.tester.TesterClient;
 import ca.utoronto.msrg.padres.integration.tester.TesterMessagePredicates;
 
+import static ca.utoronto.msrg.padres.AllTests.setupConfigurations;
+
 /**
  * This class provides a way to test subscription covering function with
  * LAZY/ACTIVE strategy. Any other test suites for sub covering must extend this
@@ -66,6 +68,8 @@ public class TestSubCovering extends Assert {
 
     @Before
     public void setUp() throws Exception {
+        setupConfigurations(2, "socket");
+
         _brokerTester = new GenericBrokerTester();
 
         // setup configurations for a star network

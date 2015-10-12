@@ -25,6 +25,8 @@ import ca.utoronto.msrg.padres.integration.tester.TesterBrokerCore;
 import ca.utoronto.msrg.padres.integration.tester.TesterClient;
 import ca.utoronto.msrg.padres.integration.tester.TesterMessagePredicates;
 
+import static ca.utoronto.msrg.padres.AllTests.setupConfigurations;
+
 /**
  * This class provides a way to test historic data query function. In order to run this class,
  * database postgresql need to be set up first, and related tables need to be created. Please refer
@@ -37,12 +39,6 @@ import ca.utoronto.msrg.padres.integration.tester.TesterMessagePredicates;
  */
 public class TestHistoricDataQuery extends Assert {
 
-    static {
-        if (System.getProperty("test.version") == null)
-            System.setProperty("test.version", "1");
-        if (System.getProperty("test.comm_protocol") == null)
-            System.setProperty("test.comm_protocol", "socket");
-    }
 
     protected GenericBrokerTester _brokerTester;
 
@@ -72,6 +68,8 @@ public class TestHistoricDataQuery extends Assert {
 
     @Before
     public void setUp() throws Exception {
+        setupConfigurations(1, "socket");
+
         _brokerTester = new GenericBrokerTester();
 
         propsFileName1 = BrokerConfig.PADRES_HOME + "etc" + File.separator + "db" + File.separator

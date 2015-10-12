@@ -1,5 +1,7 @@
 package ca.utoronto.msrg.padres.integration.subcover;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -17,6 +19,8 @@ import ca.utoronto.msrg.padres.PatternFilter;
 import ca.utoronto.msrg.padres.integration.tester.GenericBrokerTester;
 import ca.utoronto.msrg.padres.integration.tester.TesterMessagePredicates;
 
+import static ca.utoronto.msrg.padres.AllTests.setupConfigurations;
+
 /**
  * This class provides a way to test subscription covering function with LAZY
  * strategy.
@@ -26,15 +30,24 @@ import ca.utoronto.msrg.padres.integration.tester.TesterMessagePredicates;
 
 public class TestLazySubCovering extends TestSubCovering {
 
+    protected GenericBrokerTester _brokerTester;
 
-    static {
-        if (System.getProperty("test.version") == null)
-            System.setProperty("test.version", "3");
-        if (System.getProperty("test.comm_protocol") == null)
-            System.setProperty("test.comm_protocol", "socket");
+    @Override
+    @Before
+    public void setUp() throws Exception {
+        setupConfigurations(3, "socket");
+
+        _brokerTester = new GenericBrokerTester();
+
+        super.setUp();
     }
 
-    protected GenericBrokerTester _brokerTester;
+    @Override
+    @After
+    public void tearDown() throws Exception {
+        super.tearDown();
+        _brokerTester = null;
+    }
 
     /**
      * Test covering with multibrokers, where broker1 is the core, broker2,3,4
