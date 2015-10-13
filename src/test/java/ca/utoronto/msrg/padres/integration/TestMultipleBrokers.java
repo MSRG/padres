@@ -75,7 +75,7 @@ public class TestMultipleBrokers extends Assert {
     @Before
     public void setUp() throws Exception {
 
-        setupConfigurations(6, "rmi");
+        setupConfigurations(6, "socket");
         _brokerTester = new GenericBrokerTester();
 
         // configure for network type 1
