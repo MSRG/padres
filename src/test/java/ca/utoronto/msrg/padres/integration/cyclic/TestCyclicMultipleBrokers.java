@@ -90,21 +90,10 @@ public class TestCyclicMultipleBrokers extends TestMultipleBrokers {
         _brokerTester.waitUntilExpectedStartsHappen();
     }
 
-    @Override
     @After
+    @Override
     public void tearDown() throws Exception {
         super.tearDown();
-
-        clientA.shutdown();
-        clientB.shutdown();
-        clientC.shutdown();
-        clientD.shutdown();
-
-        brokerCore1.shutdown();
-        brokerCore2.shutdown();
-        brokerCore3.shutdown();
-        brokerCore4.shutdown();
-        brokerCore5.shutdown();
     }
 
     /**
