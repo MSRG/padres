@@ -152,6 +152,6 @@ public class TestCyclicHeartBeat extends Assert {
                                 addPredicate("detectorID", "eq", brokerCore1.getBrokerID()),
                         brokerCore1.getBrokerURI() + "-" + padresMonitor.getMonitorID());
         padresMonitor.getOverlayManager().resumeBroker(brokerCore2.getBrokerID());
-        assertTrue(_brokerTester.waitUntilExpectedEventsHappen());
+        assertTrue(_brokerTester.waitUntilExpectedEventsHappen(16000));
     }
 }
