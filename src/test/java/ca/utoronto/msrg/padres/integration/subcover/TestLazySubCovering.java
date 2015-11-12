@@ -1,9 +1,17 @@
 package ca.utoronto.msrg.padres.integration.subcover;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
+import ca.utoronto.msrg.padres.AllTests;
+import ca.utoronto.msrg.padres.MessageWatchAppender;
+import ca.utoronto.msrg.padres.broker.brokercore.BrokerConfig;
+import ca.utoronto.msrg.padres.broker.brokercore.BrokerCore;
+import ca.utoronto.msrg.padres.broker.brokercore.BrokerCoreException;
+import ca.utoronto.msrg.padres.broker.brokercore.InputQueueHandler;
+import ca.utoronto.msrg.padres.client.ClientConfig;
+import ca.utoronto.msrg.padres.client.ClientException;
+import ca.utoronto.msrg.padres.common.util.LogSetup;
+import ca.utoronto.msrg.padres.integration.tester.TesterBrokerCore;
+import ca.utoronto.msrg.padres.integration.tester.TesterClient;
+import org.junit.*;
 
 import ca.utoronto.msrg.padres.client.Client;
 import ca.utoronto.msrg.padres.common.message.MessageDestination;
@@ -28,26 +36,93 @@ import static ca.utoronto.msrg.padres.AllTests.setupConfigurations;
  * @author Shuang Hou, Bala Maniymaran
  */
 
-public class TestLazySubCovering extends TestSubCovering {
+public class TestLazySubCovering extends Assert {
 
     protected GenericBrokerTester _brokerTester;
 
-    @Override
+    protected BrokerCore brokerCore1;
+
+    protected BrokerCore brokerCore2;
+
+    protected BrokerCore brokerCore3;
+
+    protected BrokerCore brokerCore4;
+
+    protected Client clientA;
+
+    protected Client clientB;
+
+    protected Client clientC;
+
+    protected MessageWatchAppender messageWatcher;
+
+    protected PatternFilter msgFilter;
+
     @Before
     public void setUp() throws Exception {
+        setupConfigurations(3, "socket");
 
-        //setupConfigurations(3, "socket");
         _brokerTester = new GenericBrokerTester();
-        super.setUp();
+
+        // setup configurations for a star network
+        AllTests.setupStarNetwork01();
+
+        // setup message watcher
+        messageWatcher = new MessageWatchAppender();
+        msgFilter = new PatternFilter(InputQueueHandler.class.getName());
+        messageWatcher.addFilter(msgFilter);
+
+        // start the brokers
+        brokerCore1 = createNewBrokerCore(AllTests.brokerConfig01);
+        brokerCore1.initialize();
+        brokerCore2 = createNewBrokerCore(AllTests.brokerConfig02);
+        brokerCore2.initialize();
+        brokerCore3 = createNewBrokerCore(AllTests.brokerConfig03);
+        brokerCore3.initialize();
+        brokerCore4 = createNewBrokerCore(AllTests.brokerConfig04);
+        brokerCore4.initialize();
+
+        // wait for all the connections done
+        msgFilter.setPattern(brokerCore4.getBrokerURI()
+                + ".+got message.+Publication.+OVERLAY-CONNECT_REQ.+");
+        LogSetup.addAppender("MessagePath", messageWatcher);
+        messageWatcher.getMessage(5);
+
+        Thread.sleep(500);
+
+        // start clients //
+        clientA = createNewClient(AllTests.clientConfigA);
+        clientA.connect(brokerCore2.getBrokerURI());
+        clientB = createNewClient(AllTests.clientConfigB);
+        clientB.connect(brokerCore3.getBrokerURI());
+        clientC = createNewClient(AllTests.clientConfigC);
+        clientC.connect(brokerCore4.getBrokerURI());
     }
 
-    @Override
+    protected Client createNewClient(ClientConfig newConfig) throws ClientException {
+        return new TesterClient(_brokerTester, newConfig);
+    }
+
+    protected BrokerCore createNewBrokerCore(BrokerConfig brokerConfig) throws BrokerCoreException {
+        return new TesterBrokerCore(_brokerTester, brokerConfig);
+    }
+
     @After
     public void tearDown() throws Exception {
-        super.tearDown();
+
+        clientA.shutdown();
+        clientB.shutdown();
+        clientC.shutdown();
+        brokerCore1.shutdown();
+        brokerCore2.shutdown();
+        brokerCore3.shutdown();
+        brokerCore4.shutdown();
+        LogSetup.removeAppender("MessagePath", messageWatcher);
+
+        clientA = clientB = clientC = null;
+        brokerCore1 = brokerCore2 = brokerCore3 = brokerCore4 = null;
         _brokerTester = null;
     }
-
     /**
      * Test covering with multibrokers, where broker1 is the core, broker2,3,4
      * connect to broker1 seperately. clientA,B,C connect to broker2,3,4
