@@ -1,5 +1,19 @@
 package ca.utoronto.msrg.padres.integration.cyclic;
 
+import ca.utoronto.msrg.padres.AllTests;
+import ca.utoronto.msrg.padres.MessageWatchAppender;
+import ca.utoronto.msrg.padres.PatternFilter;
+import ca.utoronto.msrg.padres.broker.brokercore.BrokerConfig;
+import ca.utoronto.msrg.padres.broker.brokercore.BrokerCore;
+import ca.utoronto.msrg.padres.broker.brokercore.BrokerCoreException;
+import ca.utoronto.msrg.padres.client.Client;
+import ca.utoronto.msrg.padres.common.util.LogSetup;
+import ca.utoronto.msrg.padres.integration.tester.GenericBrokerTester;
+import ca.utoronto.msrg.padres.integration.tester.TesterBrokerCore;
+import org.apache.log4j.Level;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
 import ca.utoronto.msrg.padres.common.message.Advertisement;
@@ -13,13 +27,75 @@ import ca.utoronto.msrg.padres.common.message.parser.MessageFactory;
 import ca.utoronto.msrg.padres.common.message.parser.ParseException;
 import ca.utoronto.msrg.padres.integration.TestClientsException;
 
+import static ca.utoronto.msrg.padres.AllTests.setupConfigurations;
+
 /**
  * This class provides a way for exception handling test in the scenario of one broker with
  * swingRmiClient. In order to run this class, rmiregistry 1099 need to be done first.
  * 
  * @author Bala Maniymaran
  */
-public class TestCyclicClientsException extends TestClientsException {
+public class TestCyclicClientsException extends Assert {
+
+    protected GenericBrokerTester _brokerTester;
+
+    protected BrokerCore brokerCore;
+
+    protected Client clientA;
+
+    protected Client clientB;
+
+    protected MessageWatchAppender exceptionAppender;
+
+    protected MessageWatchAppender messageWatcher;
+
+    protected PatternFilter msgPatternFilter;
+
+    protected PatternFilter exceptionPatternFilter;
+    private String commProtocol;
+
+    @Before
+    public void setUp() throws Exception {
+        commProtocol = "socket";
+        setupConfigurations(6, "socket");
+
+        _brokerTester = new GenericBrokerTester();
+
+        // start the broker
+        brokerCore = createNewBrokerCore(AllTests.brokerConfig01);
+        brokerCore.initialize();
+        clientA = new Client(AllTests.clientConfigA);
+        clientA.connect(brokerCore.getBrokerURI());
+        exceptionAppender = new MessageWatchAppender();
+        exceptionPatternFilter = new PatternFilter(Subscription.class.getName());
+        exceptionPatternFilter.setLevel(Level.ERROR);
+        exceptionPatternFilter.setPattern(".*" + ParseException.class.getName() + ".+(\\s*.*)*");
+        exceptionAppender.addFilter(exceptionPatternFilter);
+        LogSetup.addAppender("Exception", exceptionAppender);
+        messageWatcher = new MessageWatchAppender();
+        msgPatternFilter = new PatternFilter(Client.class.getName());
+        messageWatcher.addFilter(msgPatternFilter);
+        LogSetup.addAppender("MessagePath", messageWatcher);
+    }
+
+    protected BrokerCore createNewBrokerCore(BrokerConfig brokerConfig) throws BrokerCoreException {
+        return new TesterBrokerCore(_brokerTester, brokerConfig);
+    }
+
+
+    @After
+    public void tearDown() throws Exception {
+
+        LogSetup.removeAppender("Exception", exceptionAppender);
+        LogSetup.removeAppender("MessagePath", messageWatcher);
+        clientA.shutdown();
+
+        if (clientB != null)
+            clientB.shutdown();
+
+        brokerCore.shutdown();
+        _brokerTester = null;
+    }
 
 	/**
 	 * Test for exception that subscription without single quotes in string predicate.
