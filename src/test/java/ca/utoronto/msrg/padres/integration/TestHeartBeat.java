@@ -44,7 +44,7 @@ public class TestHeartBeat extends Assert {
 
     @Before
     public void setUp() throws Exception {
-        setupConfigurations(5, "socket");
+        setupConfigurations(4, "socket");
 
         _brokerTester = new GenericBrokerTester();
 
@@ -81,7 +81,7 @@ public class TestHeartBeat extends Assert {
         padresMonitor = null;
 
         // TODO: remove this line
-        // padresMonitor.exitMonitor();
+        padresMonitor.exitMonitor();
         brokerCore1 = null;
         brokerCore2 = null;
         _brokerTester = null;
