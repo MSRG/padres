@@ -21,7 +21,11 @@ import ca.utoronto.msrg.padres.common.message.MessageType;
 import ca.utoronto.msrg.padres.common.message.parser.MessageFactory;
 import ca.utoronto.msrg.padres.common.message.parser.ParseException;
 import ca.utoronto.msrg.padres.common.util.LogSetup;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
 
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Queue;
 
 import static ca.utoronto.msrg.padres.AllTests.setupConfigurations;
@@ -32,7 +36,21 @@ import static ca.utoronto.msrg.padres.AllTests.setupConfigurations;
  * @author Shuang Hou, Bala Maniymaran
  */
 
+@RunWith(Parameterized.class)
 public class TestTwoBrokers extends Assert {
+
+    @Parameterized.Parameter(value = 0)
+    public int configuration;
+
+    @Parameterized.Parameter(value = 1)
+    public String method;
+
+    @Parameterized.Parameters
+    public static Collection<Object[]> data() {
+        return Arrays.asList(new Object[][] {
+                { 1, "socket" }, { 1, "rmi" }, { 2, "socket" }, { 3, "rmi" }, { 3, "socket" }, { 3, "rmi" },{ 4, "socket" }, { 4, "rmi" }
+        });
+    }
 
     protected GenericBrokerTester _brokerTester;
 
@@ -51,7 +69,7 @@ public class TestTwoBrokers extends Assert {
     @Before
     public void setUp() throws Exception {
 
-        setupConfigurations(1, "socket");
+        setupConfigurations(configuration, method);
 
         _brokerTester = new GenericBrokerTester();
 
