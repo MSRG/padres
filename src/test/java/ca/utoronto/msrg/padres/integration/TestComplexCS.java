@@ -22,6 +22,8 @@ import ca.utoronto.msrg.padres.common.message.parser.MessageFactory;
 import ca.utoronto.msrg.padres.common.message.parser.ParseException;
 import ca.utoronto.msrg.padres.common.util.LogSetup;
 
+import static ca.utoronto.msrg.padres.AllTests.setupConfigurations;
+
 /**
  * This class provides a way to test in the scenario of one broker with swingRmiClient. In order to
  * run this class, rmiregistry 1099 need to be done first.
@@ -45,6 +47,9 @@ public class TestComplexCS extends Assert {
 
     @Before
     public void setUp() throws Exception {
+        setupConfigurations(1, "socket");
+
+
         brokerCore = new BrokerCore(AllTests.brokerConfig01);
         brokerCore.initialize();
         clientA = new Client(AllTests.clientConfigA);
