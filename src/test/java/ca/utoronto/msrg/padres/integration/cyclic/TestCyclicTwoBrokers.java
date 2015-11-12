@@ -1,5 +1,20 @@
 package ca.utoronto.msrg.padres.integration.cyclic;
 
+import ca.utoronto.msrg.padres.AllTests;
+import ca.utoronto.msrg.padres.MessageWatchAppender;
+import ca.utoronto.msrg.padres.broker.brokercore.BrokerConfig;
+import ca.utoronto.msrg.padres.broker.brokercore.BrokerCore;
+import ca.utoronto.msrg.padres.broker.brokercore.BrokerCoreException;
+import ca.utoronto.msrg.padres.broker.brokercore.InputQueueHandler;
+import ca.utoronto.msrg.padres.client.ClientConfig;
+import ca.utoronto.msrg.padres.client.ClientException;
+import ca.utoronto.msrg.padres.common.util.LogSetup;
+import ca.utoronto.msrg.padres.integration.tester.GenericBrokerTester;
+import ca.utoronto.msrg.padres.integration.tester.TesterBrokerCore;
+import ca.utoronto.msrg.padres.integration.tester.TesterClient;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
 import ca.utoronto.msrg.padres.client.Client;
@@ -14,13 +29,88 @@ import ca.utoronto.msrg.padres.PatternFilter;
 import ca.utoronto.msrg.padres.integration.TestTwoBrokers;
 import ca.utoronto.msrg.padres.integration.tester.TesterMessagePredicates;
 
+import static ca.utoronto.msrg.padres.AllTests.setupConfigurations;
+
 /**
  * This class provides a way for test in the scenario of two brokers with multiple Clients.
  *
  * @author Bala Maniymaran
  */
 
-public class TestCyclicTwoBrokers extends TestTwoBrokers {
+public class TestCyclicTwoBrokers extends Assert {
+
+    protected GenericBrokerTester _brokerTester;
+
+    protected BrokerCore brokerCore1;
+
+    protected BrokerCore brokerCore2;
+
+    protected Client clientA;
+
+    protected Client clientB;
+
+    protected MessageWatchAppender messageWatcher;
+
+    protected PatternFilter msgFilter;
+
+    @Before
+    public void setUp() throws Exception {
+
+        setupConfigurations(6, "socket");
+
+        _brokerTester = new GenericBrokerTester();
+
+        // setup the standard overlay B1-B2
+        AllTests.setupStarNetwork01();
+        // start the broker
+        // AllTests.brokerConfig01.setHeartBeat(false);
+        brokerCore1 = createNewBrokerCore(AllTests.brokerConfig01);
+        brokerCore1.initialize();
+        // start broker 2
+        // AllTests.brokerConfig02.setHeartBeat(false);
+        brokerCore2 = createNewBrokerCore(AllTests.brokerConfig02);
+        brokerCore2.initialize();
+        // setup filter
+        messageWatcher = new MessageWatchAppender();
+        msgFilter = new PatternFilter(InputQueueHandler.class.getName());
+        msgFilter.setPattern(".*" + brokerCore1.getBrokerURI()
+                + ".+got message.+Publication.+OVERLAY-CONNECT_ACK.+");
+        messageWatcher.addFilter(msgFilter);
+        LogSetup.addAppender("MessagePath", messageWatcher);
+        // start swingClientA for Broker1
+        clientA = createNewClient(AllTests.clientConfigA);
+        clientA.connect(brokerCore1.getBrokerURI());
+        // start swingClientB for Broker2
+        clientB = createNewClient(AllTests.clientConfigB);
+        clientB.connect(brokerCore2.getBrokerURI());
+    }
+
+    protected Client createNewClient(ClientConfig newConfig) throws ClientException {
+        return new TesterClient(_brokerTester, newConfig);
+    }
+
+    protected BrokerCore createNewBrokerCore(BrokerConfig brokerConfig) throws BrokerCoreException {
+        return new TesterBrokerCore(_brokerTester, brokerConfig);
+    }
+
+    @After
+    public void tearDown() throws Exception {
+
+        clientA.shutdown();
+        clientB.shutdown();
+        brokerCore1.shutdown();
+        brokerCore2.shutdown();
+        brokerCore1 = null;
+        brokerCore2 = null;
+        clientA = null;
+        clientB = null;
+        messageWatcher = null;
+        _brokerTester = null;
+
+        LogSetup.removeAppender("MessagePath", messageWatcher);
+    }
+
+
 
     @Test
     public void testConnectionAndPubSubMatchingBetweenTwoExistingBrokers() throws ParseException, InterruptedException {
