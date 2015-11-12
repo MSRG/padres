@@ -158,7 +158,7 @@ public class TestHistoricDataQuery extends Assert {
      * @throws ParseException
      * @throws InterruptedException
      */
-    @Test
+    //@Test
     public void testHistoricDataQueryWithMultipleBrokers() throws SQLException, BrokerCoreException, ClientException, ParseException, InterruptedException {
         /* TODO: YOUNG (DONE) */
         clientC.connect(brokerCore2.getBrokerURI());
@@ -398,7 +398,7 @@ public class TestHistoricDataQuery extends Assert {
      * @throws ParseException
      * @throws InterruptedException
      */
-    @Test
+    //@Test
     public void testHistoricDataQueryWithOneBroker() throws SQLException, ClientException, ParseException, InterruptedException {
 		/* TODO: YOUNG (DONE) */
         clientC.connect(brokerCore1.getBrokerURI());
@@ -528,7 +528,7 @@ public class TestHistoricDataQuery extends Assert {
      * @throws ParseException
      * @throws InterruptedException
      */
-    @Test
+    //@Test
     public void testHistoricDataQueryWithOneBrokerWithRegularSub() throws SQLException, ClientException, ParseException, InterruptedException {
 		/* TODO: YOUNG (DONE) */
         clientC.connect(brokerCore1.getBrokerURI());
@@ -674,7 +674,7 @@ public class TestHistoricDataQuery extends Assert {
      * @throws ParseException
      * @throws InterruptedException
      */
-    @Test
+    //@Test
     public void testHistoricDataQueryWithOneBrokerWithSubHavingMoreAttributes() throws SQLException, ClientException, ParseException, InterruptedException {
 		/* TODO: YOUNG (DONE) */
         clientC.connect(brokerCore1.getBrokerURI());

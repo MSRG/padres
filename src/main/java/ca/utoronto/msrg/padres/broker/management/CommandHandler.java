@@ -173,6 +173,7 @@ public class CommandHandler {
 		return respProp;
 	}
 
+    //TODO: Java 8 Lambda
 	public Properties printSubscriptions(String[] args) {
 		Properties props = new Properties();
 

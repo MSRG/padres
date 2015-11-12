@@ -44,7 +44,7 @@ public class TestHeartBeat extends Assert {
 
     @Before
     public void setUp() throws Exception {
-        setupConfigurations(4, "socket");
+        setupConfigurations(4, "rmi");
 
         _brokerTester = new GenericBrokerTester();
 
