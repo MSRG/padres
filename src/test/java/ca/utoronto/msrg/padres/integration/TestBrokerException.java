@@ -30,17 +30,30 @@ import ca.utoronto.msrg.padres.common.message.parser.ParseException;
 import ca.utoronto.msrg.padres.common.util.LogSetup;
 import ca.utoronto.msrg.padres.integration.tester.GenericBrokerTester;
 import ca.utoronto.msrg.padres.integration.tester.TesterBrokerCore;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
 
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Queue;
 
 import static ca.utoronto.msrg.padres.AllTests.setupConfigurations;
 
+@RunWith(Parameterized.class)
 public class TestBrokerException extends Assert {
+    @Parameterized.Parameter(value = 0)
+    public int configuration;
 
+    @Parameterized.Parameter(value = 1)
+    public String commProtocol;
+
+    @Parameterized.Parameters
+    public static Collection<Object[]> data() {
+        return Arrays.asList(new Object[][] { { 1, "socket" }, }); //TODO: enable RMI { 1, "rmi" }
+    }
     protected GenericBrokerTester _brokerTester;
 
     protected BrokerCore otherBroker = null;
-    private String commProtocol;
 
 
     protected BrokerCore brokerCore;
@@ -51,9 +64,7 @@ public class TestBrokerException extends Assert {
 
     @Before
     public void setUp() throws Exception {
-        setupConfigurations(1, "socket");
-
-        commProtocol = "socket";
+        setupConfigurations(configuration, commProtocol);
 
         _brokerTester = new GenericBrokerTester();
 
