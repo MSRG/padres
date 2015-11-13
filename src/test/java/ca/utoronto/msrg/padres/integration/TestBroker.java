@@ -5,6 +5,8 @@ import ca.utoronto.msrg.padres.MessageWatchAppender;
 import ca.utoronto.msrg.padres.PatternFilter;
 import org.junit.*;
 
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -26,8 +28,23 @@ import ca.utoronto.msrg.padres.common.util.LogSetup;
 import ca.utoronto.msrg.padres.integration.tester.GenericBrokerTester;
 import ca.utoronto.msrg.padres.integration.tester.TesterBrokerCore;
 import ca.utoronto.msrg.padres.integration.tester.TesterMessagePredicates;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
 
+import static ca.utoronto.msrg.padres.AllTests.setupConfigurations;
+
+@RunWith(Parameterized.class)
 public class TestBroker extends Assert {
+    @Parameterized.Parameter(value = 0)
+    public int configuration;
+
+    @Parameterized.Parameter(value = 1)
+    public String method;
+
+    @Parameterized.Parameters
+    public static Collection<Object[]> data() {
+        return Arrays.asList(new Object[][] { { 1, "socket" }, { 1, "rmi" } });
+    }
 
     protected GenericBrokerTester _brokerTester;
 
@@ -39,6 +56,10 @@ public class TestBroker extends Assert {
 
     @Before
     public void setUp() throws BrokerCoreException, Exception {
+
+        setupConfigurations(configuration, method);
+        AllTests.setupStarNetwork01();
+
         _brokerTester = new GenericBrokerTester();
 
         // start the broker
