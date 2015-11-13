@@ -79,6 +79,9 @@ public class LifeCycleManager implements Manager {
 	 * startHandlers() doesn't return until all handlers are started.
 	 */
 	private void startHandlers() {
+        if(handlers == null) //Sometimes this method is called altough handlers is null, Why is this? TODO CD
+            return;
+
 		for (QueueHandler handler : handlers.values()) {
 			handler.start();
 			lifeCycleLogger.debug("Starting " + handler.getName() + ".");

@@ -36,6 +36,11 @@ import ca.utoronto.msrg.padres.integration.tester.GenericBrokerTester;
 import ca.utoronto.msrg.padres.integration.tester.TesterBrokerCore;
 import ca.utoronto.msrg.padres.integration.tester.TesterClient;
 import ca.utoronto.msrg.padres.integration.tester.TesterMessagePredicates;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
+
+import java.util.Arrays;
+import java.util.Collection;
 
 import static ca.utoronto.msrg.padres.AllTests.setupConfigurations;
 
@@ -44,7 +49,21 @@ import static ca.utoronto.msrg.padres.AllTests.setupConfigurations;
  *
  * @author Shuang Hou, Bala Maniymaran
  */
+@RunWith(Parameterized.class)
 public class TestMultipleBrokers extends Assert {
+    @Parameterized.Parameter(value = 0)
+    public int configuration;
+
+    @Parameterized.Parameter(value = 1)
+    public String method;
+
+    @Parameterized.Parameters
+    public static Collection<Object[]> data() {
+        return Arrays.asList(new Object[][]{
+                {1, "socket"}, {1, "rmi"}, {2, "socket"}, {3, "rmi"}, {3, "socket"}, {3, "rmi"}, {4, "socket"}, {4, "rmi"}
+        });
+    }
+
 
     protected GenericBrokerTester _brokerTester;
 
@@ -75,11 +94,11 @@ public class TestMultipleBrokers extends Assert {
     @Before
     public void setUp() throws Exception {
 
-        setupConfigurations(6, "socket");
-        _brokerTester = new GenericBrokerTester();
-
+        setupConfigurations(configuration, method);
         // configure for network type 1
         AllTests.setupStarNetwork01();
+        _brokerTester = new GenericBrokerTester();
+
         // start the brokers
         brokerCore1 = createNewBrokerCore(AllTests.brokerConfig01);
         brokerCore2 = createNewBrokerCore(AllTests.brokerConfig02);
