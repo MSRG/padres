@@ -1,5 +1,6 @@
 package ca.utoronto.msrg.padres.common.comm.rmi;
 
+import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -162,10 +163,11 @@ public class RMIServer extends CommServer implements RMIServerInterface {
 	public void shutDown() throws CommunicationException {
 		// bind the server to the registry
 		try {
-			UnicastRemoteObject.unexportObject(this, true);
-			Registry registry = LocateRegistry.getRegistry(((RMIAddress) serverAddress).getHost(),
-					((RMIAddress) serverAddress).getPort());
-			registry.unbind(((RMIAddress) serverAddress).getNodeID());
+			if(UnicastRemoteObject.unexportObject(this, true)) {
+                Registry registry = LocateRegistry.getRegistry(((RMIAddress) serverAddress).getPort());
+                registry.unbind(((RMIAddress) serverAddress).getNodeID());
+            }
+
 		} catch (RemoteException e) {
 			throw new CommunicationException("Error in shutting down RMI Server: " + e.getMessage());
 		} catch (NotBoundException e) {

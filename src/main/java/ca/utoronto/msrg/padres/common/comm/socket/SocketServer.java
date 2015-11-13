@@ -30,7 +30,9 @@ public class SocketServer extends CommServer {
 
 	@Override
 	public void shutDown() throws CommunicationException {
-		connectionListener.interrupt();
+
+        connectionListener.interrupt();
+
 		try {
 			connectionListener.closeSocket();
 		} catch (IOException e) {

@@ -48,7 +48,8 @@ public class TestTwoBrokers extends Assert {
     @Parameterized.Parameters
     public static Collection<Object[]> data() {
         return Arrays.asList(new Object[][] {
-                { 1, "socket" }, { 1, "rmi" }, { 2, "socket" }, { 3, "rmi" }, { 3, "socket" }, { 3, "rmi" },{ 4, "socket" }, { 4, "rmi" }
+                { 1, "socket" }, { 2, "socket" }, { 3, "socket" }, { 4, "socket" },
+                { 1, "rmi" }, { 3, "rmi" }, { 3, "rmi" },{ 4, "rmi" }
         });
     }
 
@@ -70,11 +71,11 @@ public class TestTwoBrokers extends Assert {
     public void setUp() throws Exception {
 
         setupConfigurations(configuration, method);
+        AllTests.setupStarNetwork01();
 
         _brokerTester = new GenericBrokerTester();
 
         // setup the standard overlay B1-B2
-        AllTests.setupStarNetwork01();
         // start the broker
         // AllTests.brokerConfig01.setHeartBeat(false);
         brokerCore1 = createNewBrokerCore(AllTests.brokerConfig01);
@@ -108,19 +109,19 @@ public class TestTwoBrokers extends Assert {
 
     @After
     public void tearDown() throws Exception {
+        LogSetup.removeAppender("MessagePath", messageWatcher);
 
         clientA.shutdown();
         clientB.shutdown();
+        clientA = null;
+        clientB = null;
         brokerCore1.shutdown();
         brokerCore2.shutdown();
         brokerCore1 = null;
         brokerCore2 = null;
-        clientA = null;
-        clientB = null;
         messageWatcher = null;
         _brokerTester = null;
 
-        LogSetup.removeAppender("MessagePath", messageWatcher);
     }
 
     /**

@@ -1,6 +1,8 @@
 package ca.utoronto.msrg.padres.common.comm.socket;
 
 import java.io.IOException;
+import java.io.SyncFailedException;
+import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 
 import ca.utoronto.msrg.padres.common.comm.CommunicationException;
@@ -14,7 +16,8 @@ public class SocketConnectionListener extends Thread {
 	public SocketConnectionListener(SocketAddress serverAddress, SocketServer parentServer)
 			throws CommunicationException {
 		try {
-			serverSocket = new ServerSocket(serverAddress.getPort());
+			serverSocket = new ServerSocket();
+            serverSocket.bind(new InetSocketAddress("0.0.0.0", serverAddress.getPort()));
 		} catch (IOException e) {
 			throw new CommunicationException("Error in starting socket server (" + serverAddress
 					+ "): " + e.getMessage());
@@ -67,7 +70,8 @@ public class SocketConnectionListener extends Thread {
 	 *             Error in closing the server socket
 	 */
 	public void closeSocket() throws IOException {
-		serverSocket.close();
+        serverSocket.close();
+        System.out.println("closed");
 	}
 
 }

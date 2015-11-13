@@ -64,11 +64,11 @@ public class TestHeartBeat extends Assert {
     @Before
     public void setUp() throws Exception {
         setupConfigurations(this.configuration, this.method);
+        AllTests.setupStarNetwork01();
 
         _brokerTester = new GenericBrokerTester();
 
         // start the broker
-        AllTests.setupStarNetwork01();
         brokerCore1 = createNewBrokerCore(AllTests.brokerConfig01);
         brokerCore1.initialize();
         brokerCore2 = createNewBrokerCore(AllTests.brokerConfig02);
@@ -100,7 +100,9 @@ public class TestHeartBeat extends Assert {
         padresMonitor = null;
 
         // TODO: remove this line
-        padresMonitor.exitMonitor();
+        if(padresMonitor != null) {
+            padresMonitor.exitMonitor();
+        }
         brokerCore1 = null;
         brokerCore2 = null;
         _brokerTester = null;
