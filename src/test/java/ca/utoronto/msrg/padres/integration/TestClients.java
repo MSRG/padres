@@ -12,6 +12,8 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Collection;
 
 import org.junit.Assert;
 import ca.utoronto.msrg.padres.broker.brokercore.BrokerConfig;
@@ -41,6 +43,10 @@ import ca.utoronto.msrg.padres.integration.tester.GenericBrokerTester;
 import ca.utoronto.msrg.padres.integration.tester.TesterBrokerCore;
 import ca.utoronto.msrg.padres.integration.tester.TesterClient;
 import ca.utoronto.msrg.padres.integration.tester.TesterMessagePredicates;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
+
+import static ca.utoronto.msrg.padres.AllTests.setupConfigurations;
 
 /**
  * This class provides a way to test in the scenario of one broker with multiple Clients.
@@ -48,7 +54,21 @@ import ca.utoronto.msrg.padres.integration.tester.TesterMessagePredicates;
  * @author Shuang Hou, Bala Maniymaran, and Vinod Muthusamy
  */
 
+@RunWith(Parameterized.class)
 public class TestClients extends Assert {
+
+    @Parameterized.Parameter(value = 0)
+    public int configuration;
+
+    @Parameterized.Parameter(value = 1)
+    public String method;
+
+    @Parameterized.Parameters
+    public static Collection<Object[]> data() {
+        return Arrays.asList(new Object[][] {
+                { 1, "socket" }, { 1, "rmi" }
+        });
+    }
 
     protected GenericBrokerTester _brokerTester;
 
@@ -66,6 +86,9 @@ public class TestClients extends Assert {
 
     @Before
     public void setUp() throws Exception {
+        setupConfigurations(configuration, method);
+        //AllTests.setupStarNetwork01();
+
         _brokerTester = new GenericBrokerTester();
 
         // start the broker
