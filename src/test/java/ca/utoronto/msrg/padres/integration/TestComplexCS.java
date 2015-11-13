@@ -8,6 +8,11 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
+
+import java.util.Arrays;
+import java.util.Collection;
 
 /**
  * This class provides a way to test in the scenario of one broker with swingRmiClient. In order to
@@ -15,15 +20,26 @@ import org.junit.Test;
  *
  * @author Shuang Hou
  */
-
+@RunWith(Parameterized.class)
 public class TestComplexCS extends Assert {
+    @Parameterized.Parameter(value = 0)
+    public int configuration;
 
+    @Parameterized.Parameter(value = 1)
+    public String method;
+
+    @Parameterized.Parameters
+    public static Collection<Object[]> data() {
+        return Arrays.asList(new Object[][] {
+                { 1, "socket" }, { 1, "rmi" }
+        });
+    }
 
     private CoreAndThreeClients env;
 
     @Before
     public void setUp() throws Exception {
-        env = new CoreAndThreeClients(1, "socket");
+        env = new CoreAndThreeClients(configuration, method);
     }
 
     @After
@@ -653,7 +669,7 @@ public class TestComplexCS extends Assert {
      * @throws ParseException
      */
     @Test
-    public void testCompositeSubscriptionWithOrAnd() throws ParseException {
+    public void testCompositeSubscriptionWithOrAnd() throws ParseException, InterruptedException {
         // clientA,B is publisher, clientC is subscriber
         MessageDestination mdA = env.clientA.getClientDest();
         MessageDestination mdB = env.clientB.getClientDest();
