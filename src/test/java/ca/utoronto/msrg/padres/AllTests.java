@@ -171,15 +171,25 @@ public class AllTests {
             break;
         }
         brokerConfig01 = new BrokerConfig(templateConfig);
-        brokerConfig01.setBrokerURI(protocol + "://localhost:3100/Broker1");
         brokerConfig02 = new BrokerConfig(templateConfig);
-        brokerConfig02.setBrokerURI(protocol + "://localhost:3200/Broker2");
         brokerConfig03 = new BrokerConfig(templateConfig);
-        brokerConfig03.setBrokerURI(protocol + "://localhost:3300/Broker3");
         brokerConfig04 = new BrokerConfig(templateConfig);
-        brokerConfig04.setBrokerURI(protocol + "://localhost:3400/Broker4");
         brokerConfig05 = new BrokerConfig(templateConfig);
-        brokerConfig05.setBrokerURI(protocol + "://localhost:3500/Broker5");
+        if (protocol.equalsIgnoreCase("socket")) {
+            brokerConfig01.setBrokerURI(protocol + "://localhost:3100/Broker1");
+            brokerConfig02.setBrokerURI(protocol + "://localhost:3200/Broker2");
+            brokerConfig03.setBrokerURI(protocol + "://localhost:3300/Broker3");
+            brokerConfig04.setBrokerURI(protocol + "://localhost:3400/Broker4");
+            brokerConfig05.setBrokerURI(protocol + "://localhost:3500/Broker5");
+        }
+        if (protocol.equalsIgnoreCase("rmi")) {
+            brokerConfig01.setBrokerURI(protocol + "://localhost:3101/Broker1");
+            brokerConfig02.setBrokerURI(protocol + "://localhost:3201/Broker2");
+            brokerConfig03.setBrokerURI(protocol + "://localhost:3301/Broker3");
+            brokerConfig04.setBrokerURI(protocol + "://localhost:3401/Broker4");
+            brokerConfig05.setBrokerURI(protocol + "://localhost:3501/Broker5");
+        }
+
     }
 
     public static void setupClientConfigurations() throws ClientException {

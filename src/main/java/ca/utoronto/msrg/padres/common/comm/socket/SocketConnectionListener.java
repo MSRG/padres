@@ -71,7 +71,5 @@ public class SocketConnectionListener extends Thread {
 	 */
 	public void closeSocket() throws IOException {
         serverSocket.close();
-        System.out.println("closed");
 	}
-
 }

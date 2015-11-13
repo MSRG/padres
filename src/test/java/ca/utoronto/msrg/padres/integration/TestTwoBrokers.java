@@ -48,8 +48,10 @@ public class TestTwoBrokers extends Assert {
     @Parameterized.Parameters
     public static Collection<Object[]> data() {
         return Arrays.asList(new Object[][] {
-                { 1, "socket" }, { 2, "socket" }, { 3, "socket" }, { 4, "socket" },
-                { 1, "rmi" }, { 3, "rmi" }, { 3, "rmi" },{ 4, "rmi" }
+                { 1, "socket" }, { 1, "rmi" },
+                { 2, "socket" }, { 2, "rmi" },
+                { 3, "socket" }, { 3, "rmi" },
+                { 4, "socket" }, { 4, "rmi" }
         });
     }
 
