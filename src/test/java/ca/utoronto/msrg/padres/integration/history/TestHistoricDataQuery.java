@@ -133,6 +133,11 @@ public class TestHistoricDataQuery extends Assert {
         return new TesterBrokerCore(_brokerTester, args);
     }
 
+    @Test
+    public void toremove() {
+
+    }
+
     @After
     public void tearDown() throws Exception {
 
