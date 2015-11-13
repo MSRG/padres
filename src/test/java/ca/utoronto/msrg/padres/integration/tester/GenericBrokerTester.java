@@ -33,9 +33,9 @@ import ca.utoronto.msrg.padres.common.message.UnsubscriptionMessage;
  */
 public class GenericBrokerTester implements IBrokerTester {
 
-    public static int DEFAULT_WAIT = 8000;
+    public static int DEFAULT_WAIT = 10000;
 	public static int DEFAULT_SHUTDOWN_WAIT = 25000; // millisec.
-	public static int DEFAULT_START_WAIT = 10000; // millisec.
+	public static int DEFAULT_START_WAIT = 12000; // millisec.
 	public static boolean PRODUCE_PRINT_TRACES = false;
 	public static boolean lookAtPubs = false;
 	public static boolean lookAtSubs = false;
