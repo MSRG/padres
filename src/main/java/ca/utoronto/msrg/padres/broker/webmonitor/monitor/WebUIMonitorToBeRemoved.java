@@ -26,13 +26,13 @@ import ca.utoronto.msrg.padres.common.message.parser.MessageFactory;
 import ca.utoronto.msrg.padres.common.message.parser.MessageParser;
 import ca.utoronto.msrg.padres.common.message.parser.ParseException;
 
-public class WebUIMonitor {
+public class WebUIMonitorToBeRemoved {
 
 	protected static final int HTTP_PORT = 9595;
 
 	protected static final String DEFAULT_MONITOR_NAME = "Default Monitor Name";
 
-	// private static WebUIMonitor monitor = null;
+	// private static WebUIMonitorToBeRemoved monitor = null;
 
 	protected static SimpleServer simpleServer = null;
 
@@ -44,7 +44,7 @@ public class WebUIMonitor {
 
 	static Logger exceptionLogger = Logger.getLogger("Exception");
 
-	public WebUIMonitor(BrokerCore broker) {
+	public WebUIMonitorToBeRemoved(BrokerCore broker) {
 		brokercore = broker;
 	}
 
@@ -93,7 +93,7 @@ public class WebUIMonitor {
 
 		}
 
-		// monitor = brokercore.getWebuiMonitor();
+		// monitor = brokercore.getWebuiMonitorToBeRemoved();
 
 		eventQueues = new HashMap<String, EventQueue>();
 
@@ -293,7 +293,7 @@ public class WebUIMonitor {
 		return monitorName;
 	}
 
-	public static WebUIMonitor getMonitor() {
+	public static WebUIMonitorToBeRemoved getMonitor() {
 		return null;
 	}
 

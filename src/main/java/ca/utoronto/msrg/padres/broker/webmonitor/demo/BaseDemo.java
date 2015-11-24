@@ -13,7 +13,7 @@ import ca.utoronto.msrg.padres.broker.controller.ServerInjectionManager;
 import ca.utoronto.msrg.padres.broker.webmonitor.monitor.EventQueue;
 import ca.utoronto.msrg.padres.broker.webmonitor.monitor.MonitorEvent;
 import ca.utoronto.msrg.padres.broker.webmonitor.monitor.MonitorException;
-import ca.utoronto.msrg.padres.broker.webmonitor.monitor.WebUIMonitor;
+import ca.utoronto.msrg.padres.broker.webmonitor.monitor.WebUIMonitorToBeRemoved;
 import ca.utoronto.msrg.padres.common.message.Publication;
 import ca.utoronto.msrg.padres.common.message.parser.MessageFactory;
 import ca.utoronto.msrg.padres.common.message.parser.ParseException;
@@ -32,14 +32,14 @@ public class BaseDemo {
 
 	private static final int NUM_OF_LOG_FILE = 10;
 
-	private WebUIMonitor monitor;
+	private WebUIMonitorToBeRemoved monitor;
 
 	private static final String FILE_SEPARATOR = System.getProperty("file.separator");
 
 	private static String LOG_FILE_PATH = System.getProperty("user.dir");
 
 	public BaseDemo(BrokerCore broker) {
-		monitor = broker.getWebuiMonitor();
+		monitor = broker.getWebuiMonitorToBeRemoved();
 	}
 
 	public Properties getMonitorName(Properties props) {

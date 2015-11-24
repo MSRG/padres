@@ -34,7 +34,7 @@ import ca.utoronto.msrg.padres.broker.monitor.SystemMonitor;
 import ca.utoronto.msrg.padres.broker.router.Router;
 import ca.utoronto.msrg.padres.broker.router.RouterFactory;
 import ca.utoronto.msrg.padres.broker.router.matching.MatcherException;
-import ca.utoronto.msrg.padres.broker.webmonitor.monitor.WebUIMonitor;
+import ca.utoronto.msrg.padres.broker.webmonitor.monitor.WebUIMonitorToBeRemoved;
 import ca.utoronto.msrg.padres.common.message.AdvertisementMessage;
 import ca.utoronto.msrg.padres.common.message.Message;
 import ca.utoronto.msrg.padres.common.message.MessageDestination;
@@ -70,7 +70,7 @@ public class BrokerCore {
 
 	protected Router router;
 
-	protected WebUIMonitor webuiMonitor;
+	protected WebUIMonitorToBeRemoved webuiMonitorToBeRemoved;
 
 	protected TimerThread timerThread;
 
@@ -463,8 +463,8 @@ public class BrokerCore {
 	protected void initManagementInterface() {
 		if (brokerConfig.isManagementInterface()) {			
 			// start the management interface web server
-			webuiMonitor = new WebUIMonitor(this);
-			webuiMonitor.initialize();
+			webuiMonitorToBeRemoved = new WebUIMonitorToBeRemoved(this);
+			webuiMonitorToBeRemoved.initialize();
 			brokerCoreLogger.info("ManagementInterface is started.");
 		}
 	}
@@ -483,8 +483,8 @@ public class BrokerCore {
 		return brokerConfig;
 	}
 
-	public WebUIMonitor getWebuiMonitor() {
-		return webuiMonitor;
+	public WebUIMonitorToBeRemoved getWebuiMonitorToBeRemoved() {
+		return webuiMonitorToBeRemoved;
 	}
 
 	/**
@@ -678,8 +678,8 @@ public class BrokerCore {
             heartbeatSubscriber.shutdown();
         }
 
-        if (webuiMonitor != null) {
-            webuiMonitor.shutdownBroker();
+        if (webuiMonitorToBeRemoved != null) {
+            webuiMonitorToBeRemoved.shutdownBroker();
         }
         if(timerThread != null) {
             timerThread.shutdown();
