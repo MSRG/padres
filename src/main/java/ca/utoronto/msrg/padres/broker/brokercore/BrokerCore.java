@@ -433,10 +433,8 @@ public class BrokerCore {
 
 	protected void initWebInterface() {
 		if (brokerConfig.isWebInterface()) {
-			// start the management interface web server
-			webuiMonitor = new WebUIMonitor(this);
-			webuiMonitor.initialize();
-			brokerCoreLogger.info("ManagementInterface is started.");
+			ManagementServer managementServer = new ManagementServer(this);
+			managementServer.start();
 		}
 	}
 
@@ -463,9 +461,11 @@ public class BrokerCore {
 	}
 
 	protected void initManagementInterface() {
-		if (brokerConfig.isManagementInterface()) {
-			ManagementServer managementServer = new ManagementServer(this);
-			managementServer.start();
+		if (brokerConfig.isManagementInterface()) {			
+			// start the management interface web server
+			webuiMonitor = new WebUIMonitor(this);
+			webuiMonitor.initialize();
+			brokerCoreLogger.info("ManagementInterface is started.");
 		}
 	}
 
