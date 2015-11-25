@@ -10,6 +10,8 @@ import org.junit.Before;
 
 import org.junit.Test;
 
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Map;
 
 import org.junit.Assert;
@@ -17,6 +19,10 @@ import ca.utoronto.msrg.padres.broker.router.scout.Relation;
 import ca.utoronto.msrg.padres.broker.router.scout.RelationIdentifier;
 import ca.utoronto.msrg.padres.common.message.Predicate;
 import ca.utoronto.msrg.padres.common.message.parser.MessageFactory;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
+
+import static ca.utoronto.msrg.padres.AllTests.setupConfigurations;
 
 /**
  * @author cheung
@@ -25,6 +31,7 @@ import ca.utoronto.msrg.padres.common.message.parser.MessageFactory;
  *         Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
  */
 public class RelationIdentifierTest extends Assert {
+
 
     // Allows us to easily compose a predicate map
     Map[] predIBM = new Map[14];

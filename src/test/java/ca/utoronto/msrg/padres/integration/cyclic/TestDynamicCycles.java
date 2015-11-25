@@ -2,6 +2,8 @@ package ca.utoronto.msrg.padres.integration.cyclic;
 
 import org.junit.*;
 
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Map;
 
 import ca.utoronto.msrg.padres.broker.brokercore.BrokerConfig;
@@ -26,6 +28,8 @@ import ca.utoronto.msrg.padres.integration.tester.GenericBrokerTester;
 import ca.utoronto.msrg.padres.integration.tester.TesterBrokerCore;
 import ca.utoronto.msrg.padres.integration.tester.TesterClient;
 import ca.utoronto.msrg.padres.integration.tester.TesterMessagePredicates;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
 
 import static ca.utoronto.msrg.padres.AllTests.setupConfigurations;
 
@@ -34,7 +38,22 @@ import static ca.utoronto.msrg.padres.AllTests.setupConfigurations;
  *
  * @author Shuang Hou
  */
+@RunWith(Parameterized.class)
 public class TestDynamicCycles extends Assert {
+    @Parameterized.Parameter(value = 0)
+    public int configuration;
+
+    @Parameterized.Parameter(value = 1)
+    public String method;
+
+    @Parameterized.Parameters
+    public static Collection<Object[]> data() {
+        return Arrays.asList(new Object[][]{
+                {7, "socket"}, {7, "rmi"}
+        });
+    }
+
+
     protected GenericBrokerTester _brokerTester;
 
     protected BrokerCore brokerCore1;
@@ -55,7 +74,7 @@ public class TestDynamicCycles extends Assert {
 
     @Before
     public void setUp() throws Exception {
-        setupConfigurations(7, "socket");
+        setupConfigurations(configuration, method);
 
         _brokerTester = new GenericBrokerTester();
 

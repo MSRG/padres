@@ -27,6 +27,11 @@ import ca.utoronto.msrg.padres.PatternFilter;
 import ca.utoronto.msrg.padres.integration.TestMultipleBrokers;
 import ca.utoronto.msrg.padres.integration.tester.GenericBrokerTester;
 import ca.utoronto.msrg.padres.integration.tester.TesterMessagePredicates;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
+
+import java.util.Arrays;
+import java.util.Collection;
 
 import static ca.utoronto.msrg.padres.AllTests.setupConfigurations;
 
@@ -35,13 +40,29 @@ import static ca.utoronto.msrg.padres.AllTests.setupConfigurations;
  *
  * @author Bala Maniymaran
  */
+@RunWith(Parameterized.class)
+
 public class TestCyclicMultipleBrokers extends TestMultipleBrokers {
     public static int EXTENDED_WAIT_TIME = 20000;
+
+    @Parameterized.Parameter(value = 0)
+    public int configuration;
+
+    @Parameterized.Parameter(value = 1)
+    public String method;
+
+    @Parameterized.Parameters
+    public static Collection<Object[]> data() {
+        return Arrays.asList(new Object[][]{
+                {6, "socket"}, {6, "rmi"},
+                {7, "socket"}, {7, "rmi"}
+        });
+    }
 
     @Override
     @Before
     public void setUp() throws Exception {
-        setupConfigurations(6, "socket");
+        setupConfigurations(configuration, method);
         _brokerTester = new GenericBrokerTester();
 
         // configure for network type 1

@@ -4,6 +4,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Map;
 
 import ca.utoronto.msrg.padres.common.message.Advertisement;
@@ -14,14 +16,30 @@ import ca.utoronto.msrg.padres.common.message.parser.MessageFactory;
 import ca.utoronto.msrg.padres.common.message.parser.ParseException;
 import ca.utoronto.msrg.padres.integration.TestBroker;
 import ca.utoronto.msrg.padres.integration.tester.TesterMessagePredicates;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
 
 import static ca.utoronto.msrg.padres.AllTests.setupConfigurations;
 
+@RunWith(Parameterized.class)
 public class TestCyclicBroker extends TestBroker {
+    @Parameterized.Parameter(value = 0)
+    public int configuration;
+
+    @Parameterized.Parameter(value = 1)
+    public String method;
+
+    @Parameterized.Parameters
+    public static Collection<Object[]> data() {
+        return Arrays.asList(new Object[][]{
+                {6, "socket"}, {6, "rmi"},
+                {7, "socket"}, {7, "rmi"}
+        });
+    }
 
     @Before
     public void setUp() throws Exception {
-        setupConfigurations(5, "socket");
+        setupConfigurations(configuration, method);
         super.setUp();
     }
 

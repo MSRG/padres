@@ -20,6 +20,11 @@ import ca.utoronto.msrg.padres.common.message.MessageType;
 import ca.utoronto.msrg.padres.common.message.parser.ParseException;
 import ca.utoronto.msrg.padres.integration.TestHeartBeat;
 import ca.utoronto.msrg.padres.integration.tester.TesterMessagePredicates;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
+
+import java.util.Arrays;
+import java.util.Collection;
 
 import static ca.utoronto.msrg.padres.AllTests.setupConfigurations;
 
@@ -28,7 +33,22 @@ import static ca.utoronto.msrg.padres.AllTests.setupConfigurations;
  *
  * @author Bala Maniymaran
  */
+@RunWith(Parameterized.class)
 public class TestCyclicHeartBeat extends Assert {
+    @Parameterized.Parameter(value = 0)
+    public int configuration;
+
+    @Parameterized.Parameter(value = 1)
+    public String method;
+
+    @Parameterized.Parameters
+    public static Collection<Object[]> data() {
+        return Arrays.asList(new Object[][]{
+                {6, "socket"}, {6, "rmi"},
+                {7, "socket"}, {7, "rmi"}
+        });
+    }
+
 
     protected GenericBrokerTester _brokerTester;
 
@@ -44,7 +64,7 @@ public class TestCyclicHeartBeat extends Assert {
 
     @Before
     public void setUp() throws Exception {
-        setupConfigurations(5, "socket");
+        setupConfigurations(configuration, method);
 
         _brokerTester = new GenericBrokerTester();
 

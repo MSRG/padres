@@ -26,6 +26,11 @@ import ca.utoronto.msrg.padres.common.message.SubscriptionMessage;
 import ca.utoronto.msrg.padres.common.message.parser.MessageFactory;
 import ca.utoronto.msrg.padres.common.message.parser.ParseException;
 import ca.utoronto.msrg.padres.integration.TestClientsException;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
+
+import java.util.Arrays;
+import java.util.Collection;
 
 import static ca.utoronto.msrg.padres.AllTests.setupConfigurations;
 
@@ -35,7 +40,21 @@ import static ca.utoronto.msrg.padres.AllTests.setupConfigurations;
  *
  * @author Bala Maniymaran
  */
+@RunWith(Parameterized.class)
 public class TestCyclicClientsException extends Assert {
+    @Parameterized.Parameter(value = 0)
+    public int configuration;
+
+    @Parameterized.Parameter(value = 1)
+    public String method;
+
+    @Parameterized.Parameters
+    public static Collection<Object[]> data() {
+        return Arrays.asList(new Object[][]{
+                {6, "socket"}, {6, "rmi"},
+                {7, "socket"}, {7, "rmi"}
+        });
+    }
 
     protected GenericBrokerTester _brokerTester;
 
@@ -56,8 +75,8 @@ public class TestCyclicClientsException extends Assert {
 
     @Before
     public void setUp() throws Exception {
-        commProtocol = "socket";
-        setupConfigurations(6, "socket");
+        commProtocol = method;
+        setupConfigurations(configuration, method);
 
         _brokerTester = new GenericBrokerTester();
 
