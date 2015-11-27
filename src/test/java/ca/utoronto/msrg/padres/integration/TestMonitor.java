@@ -75,7 +75,7 @@ public class TestMonitor extends Assert {
     public void tearDown() {
         try {
             monitorFrame.shutdown();
-        } catch (ClientException e) {
+        } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
