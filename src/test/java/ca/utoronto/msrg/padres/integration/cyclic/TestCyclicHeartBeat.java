@@ -94,7 +94,9 @@ public class TestCyclicHeartBeat extends Assert {
     @After
     public void tearDown() throws Exception {
 
-        padresMonitor.shutdown();
+        if(padresMonitor != null) {
+            padresMonitor.shutdown();
+        }
         brokerCore1.shutdown();
         brokerCore2.shutdown();
         LogSetup.removeAppender("MessagePath", messageWatcher);
