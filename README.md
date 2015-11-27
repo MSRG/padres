@@ -1,6 +1,4 @@
-#PADRES v2.0
-
-[![Build status](https://travis-ci.org/chrido/padres.svg?branch=master)](https://travis-ci.org/chrido/padres)
+#PADRES v2.1
 
 PADRES is a distributed content-based publish/subscribe system 
 middleware. This middleware can be used to create a pub/sub broker 

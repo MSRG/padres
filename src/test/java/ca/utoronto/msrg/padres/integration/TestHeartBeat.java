@@ -100,6 +100,7 @@ public class TestHeartBeat extends Assert {
             padresMonitor.shutdown();
         }catch (Exception ex)
         {
+            System.out.println("TODO: this should be started properly in the first place, get rid of user interface to run it headless");
             ex.printStackTrace();
         }
         brokerCore1.shutdown();

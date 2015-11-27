@@ -130,7 +130,7 @@ public class AllTests {
     }
 
     private static void setupBrokerConfigurations(int testVersion, String protocol) throws BrokerCoreException {
-        System.out.println("test version: " + testVersion + "; comm. protocol: " + protocol);
+        //System.out.println("test version: " + testVersion + "; comm. protocol: " + protocol);
 
         BrokerConfig templateConfig = new BrokerConfig();
         templateConfig.setHeartBeat(true);

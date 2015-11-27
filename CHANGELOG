@@ -1,3 +1,18 @@
+PADRES v2.1
+===========
+
+No new features
+
+Architectural changes:
+- Maven based build
+- Most dependencies are taken from maven repositories
+- Version update of the dependencies
+- Java 8
+- Migration to Junit4
+- Migration from Swing based testrunner to Junit4 Parameterized tests
+- Tests can be run with CI, e.g., Jenkins
+
+
 PADRES v2.0
 ===========
 
