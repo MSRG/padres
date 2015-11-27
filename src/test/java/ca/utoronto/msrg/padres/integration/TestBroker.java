@@ -72,7 +72,11 @@ public class TestBroker extends Assert {
 
     @After
     public void tearDown() throws Exception {
-        brokerCore.shutdown();
+
+        if(brokerCore != null) {
+            brokerCore.shutdown();
+        }
+        brokerCore = null;
         LogSetup.removeAppender("MessagePath", messageWatcher);
         _brokerTester = null;
     }

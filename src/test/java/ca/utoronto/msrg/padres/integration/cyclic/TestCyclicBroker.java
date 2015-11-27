@@ -1,5 +1,11 @@
 package ca.utoronto.msrg.padres.integration.cyclic;
 
+import ca.utoronto.msrg.padres.AllTests;
+import ca.utoronto.msrg.padres.MessageWatchAppender;
+import ca.utoronto.msrg.padres.PatternFilter;
+import ca.utoronto.msrg.padres.broker.brokercore.InputQueueHandler;
+import ca.utoronto.msrg.padres.common.util.LogSetup;
+import ca.utoronto.msrg.padres.integration.tester.GenericBrokerTester;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -40,12 +46,26 @@ public class TestCyclicBroker extends TestBroker {
     @Before
     public void setUp() throws Exception {
         setupConfigurations(configuration, method);
-        super.setUp();
+        AllTests.setupStarNetwork01();
+
+        _brokerTester = new GenericBrokerTester();
+
+        // start the broker
+        brokerCore = createNewBrokerCore(AllTests.brokerConfig01);
+        brokerCore.initialize();
+        messageWatcher = new MessageWatchAppender();
+        messageWatcher.addFilter(new PatternFilter(InputQueueHandler.class.getName(), ""));
+        LogSetup.addAppender("MessagePath", messageWatcher);
     }
 
     @After
     public void tearDown() throws Exception {
-        super.tearDown();
+        if(brokerCore != null) {
+            brokerCore.shutdown();
+        }
+        brokerCore = null;
+        LogSetup.removeAppender("MessagePath", messageWatcher);
+        _brokerTester = null;
     }
 
     /**

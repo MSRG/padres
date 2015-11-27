@@ -33,7 +33,7 @@ import static ca.utoronto.msrg.padres.AllTests.setupConfigurations;
  *
  * @author Shuang Hou
  */
-@RunWith(Parameterized.class)
+@RunWith(Parameterized.class) //TODO: Currently ignored because it requires a X11 Display, run manually
 public class TestHeartBeat extends Assert {
 
     @Parameterized.Parameter(value = 0)
@@ -122,6 +122,7 @@ public class TestHeartBeat extends Assert {
      * @throws InterruptedException
      */
     @Test
+    @Ignore
     public void testHeartBeatACK() throws ParseException, InterruptedException {
         /* TODO: REZA (DONE2) */
         _brokerTester.clearAll().
@@ -156,6 +157,7 @@ public class TestHeartBeat extends Assert {
      * @throws InterruptedException
      */
     @Test
+    @Ignore
     public void testHeartBeatFailureDetectAndFailureCleared() throws ParseException, InterruptedException {
         // setup the message filter
         msgFilter = new PatternFilter(OverlayManager.class.getName());
