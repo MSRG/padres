@@ -96,16 +96,17 @@ public class TestHeartBeat extends Assert {
     @After
     public void tearDown() throws Exception {
 
-        padresMonitor.shutdown();
+        try{
+            padresMonitor.shutdown();
+        }catch (Exception ex)
+        {
+            ex.printStackTrace();
+        }
         brokerCore1.shutdown();
         brokerCore2.shutdown();
         LogSetup.removeAppender("MessagePath", messageWatcher);
         padresMonitor = null;
 
-        // TODO: remove this line
-        if(padresMonitor != null) {
-            padresMonitor.exitMonitor();
-        }
         brokerCore1 = null;
         brokerCore2 = null;
         _brokerTester = null;
