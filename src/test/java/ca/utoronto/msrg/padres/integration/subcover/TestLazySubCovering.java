@@ -110,13 +110,13 @@ public class TestLazySubCovering extends Assert {
     @After
     public void tearDown() throws Exception {
 
-        clientA.shutdown();
-        clientB.shutdown();
-        clientC.shutdown();
-        brokerCore1.shutdown();
-        brokerCore2.shutdown();
-        brokerCore3.shutdown();
-        brokerCore4.shutdown();
+        try{clientA.shutdown();}catch (Exception ex) {}
+        try{clientB.shutdown();}catch (Exception ex) {}
+        try{clientC.shutdown();}catch (Exception ex) {}
+        try{brokerCore1.shutdown();}catch (Exception ex) {}
+        try{brokerCore2.shutdown();}catch (Exception ex) {}
+        try{brokerCore3.shutdown();}catch (Exception ex) {}
+        try{brokerCore4.shutdown();}catch (Exception ex) {}
         LogSetup.removeAppender("MessagePath", messageWatcher);
 
         clientA = clientB = clientC = null;
