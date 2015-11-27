@@ -1,4 +1,5 @@
-#PADRES v2.1
+PADRES v2.1
+===========
 
 PADRES is a distributed content-based publish/subscribe system 
 middleware. This middleware can be used to create a pub/sub broker 

@@ -2,8 +2,10 @@ PADRES v2.1
 ===========
 
 No new features
+---------------------
 
-Architectural changes:
+Architectural changes
+---------------------
 - Maven based build
 - Most dependencies are taken from maven repositories
 - Version update of the dependencies
@@ -20,6 +22,7 @@ This version of PADRES includes a number of new features, architectural changes,
 demos, and performance enhancements as outlined below.
 
 New features
+---------------------
 - Support for socket communication between brokers and clients.
 - Brokers support advertisement covering.
 - Brokers can be controlled with command line and Web management interfaces.
@@ -31,6 +34,7 @@ New features
   hand-side
 
 Architectural changes
+---------------------
 - Communication layer can support pluggable protocols.
 - Broker and client URI formats are generalized for pluggable protocols.
 - More robust parsing of message formats based on a JavaCC parser.
@@ -39,6 +43,7 @@ Architectural changes
 - Client now supports a pluggable command handler.
 
 Demos
+---------------------
 - Stock quote
 - Web client
 - Historic data query
@@ -46,6 +51,7 @@ Demos
 - Fixed and dynamic cycles
 
 Performance enhancements
+---------------------
 - Faster and more robust test framework based on dependency injection pattern.
 - Faster subscription covering algorithm using a more light-weight covering 
   data structure.
