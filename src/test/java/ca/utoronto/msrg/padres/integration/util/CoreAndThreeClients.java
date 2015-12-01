@@ -47,10 +47,14 @@ public class CoreAndThreeClients {
     }
 
     public void shutdown() throws ClientException {
+        LogSetup.removeAppender("MessagePath", messageWatcher);
+
         clientA.shutdown();
         clientB.shutdown();
         clientC.shutdown();
         brokerCore.shutdown();
-        LogSetup.removeAppender("MessagePath", messageWatcher);
+
+        clientA = clientB = clientC = null;
+        brokerCore = null;
     }
 }
