@@ -30,6 +30,14 @@ Installation:
 Check the instructions in the INSTALL file.
 
 
+Development setup:
+------------------
+- Install Java 8
+- Install [Maven](http://maven.apache.org/install.html)
+- Run script: install-maven-dependencies.sh
+- Open maven project in IDE
+
+
 Documentation
 -------------
 The PADRES user guide is available at
