@@ -1,29 +1,14 @@
 package ca.utoronto.msrg.padres.demo.webclient.demo;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.PrintStream;
-import java.util.Map;
-import java.util.Properties;
-
 import ca.utoronto.msrg.padres.client.BrokerState;
 import ca.utoronto.msrg.padres.client.ClientException;
 import ca.utoronto.msrg.padres.common.comm.NodeAddress;
-import ca.utoronto.msrg.padres.common.message.Advertisement;
-import ca.utoronto.msrg.padres.common.message.AdvertisementMessage;
-import ca.utoronto.msrg.padres.common.message.CompositeSubscription;
-import ca.utoronto.msrg.padres.common.message.CompositeSubscriptionMessage;
-import ca.utoronto.msrg.padres.common.message.Subscription;
-import ca.utoronto.msrg.padres.common.message.SubscriptionMessage;
-import ca.utoronto.msrg.padres.demo.webclient.client.ClientEvent;
-import ca.utoronto.msrg.padres.demo.webclient.client.WebClientException;
-import ca.utoronto.msrg.padres.demo.webclient.client.EventQueue;
-import ca.utoronto.msrg.padres.demo.webclient.client.PageWriter;
-import ca.utoronto.msrg.padres.demo.webclient.client.WebUIClient;
+import ca.utoronto.msrg.padres.common.message.*;
+import ca.utoronto.msrg.padres.demo.webclient.client.*;
+
+import java.io.*;
+import java.util.Map;
+import java.util.Properties;
 
 /*
  * Provides all the Java code support for basic operations in the default demos

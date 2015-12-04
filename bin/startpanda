@@ -19,4 +19,4 @@ esac
 
 java -Djava.ext.dirs=${JAVA_HOME}/jre/lib/ext${PATHSEP}${PADRES_HOME}/lib \
 	 -cp ${PADRES_HOME}/build -Djava.awt.headless=true \
-	 ca.utoronto.msrg.padres.tools.panda.Panda $*
+	 ca.utoronto.msrg.padres.demo.panda.Panda $*

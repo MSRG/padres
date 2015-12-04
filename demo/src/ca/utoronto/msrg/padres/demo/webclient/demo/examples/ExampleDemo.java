@@ -4,14 +4,14 @@
  */
 package ca.utoronto.msrg.padres.demo.webclient.demo.examples;
 
-import java.util.Properties;
-
 import ca.utoronto.msrg.padres.client.ClientException;
 import ca.utoronto.msrg.padres.common.comm.NodeAddress;
 import ca.utoronto.msrg.padres.demo.webclient.client.ClientEvent;
-import ca.utoronto.msrg.padres.demo.webclient.client.WebClientException;
 import ca.utoronto.msrg.padres.demo.webclient.client.EventQueue;
+import ca.utoronto.msrg.padres.demo.webclient.client.WebClientException;
 import ca.utoronto.msrg.padres.demo.webclient.client.WebUIClient;
+
+import java.util.Properties;
 
 /*
  * Example of how to write Java code to support custom demos

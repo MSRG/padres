@@ -1,9 +1,0 @@
-.project
-.classpath
-build
-etc/pubdataset/stockquotes
-test-outputs
-AllTests-*.junit.txt
-padres-immutable2.zip
-padres-1.5.jar
-utils

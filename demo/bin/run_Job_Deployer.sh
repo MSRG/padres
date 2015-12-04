@@ -18,5 +18,5 @@ esac
 java -Xms128m -Xmx256m -cp ${PADRES_HOME}/build/ \
      -Djava.ext.dirs=${JAVA_HOME}/jre/lib/ext${PATHSEP}${PADRES_HOME}/lib \
      -Djava.security.policy=${PADRES_HOME}/etc/java.policy \
-     ca.utoronto.msrg.padres.tools.guiclient.SwingRMIDeployer $1 $2
+     ca.utoronto.msrg.padres.demo.guiclient.SwingRMIDeployer $1 $2
      

@@ -1,21 +1,19 @@
 package ca.utoronto.msrg.padres.demo.webclient.client;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
 import ca.utoronto.msrg.padres.client.BrokerState;
 import ca.utoronto.msrg.padres.client.Client;
 import ca.utoronto.msrg.padres.client.ClientException;
 import ca.utoronto.msrg.padres.common.comm.NodeAddress;
-import ca.utoronto.msrg.padres.common.message.Advertisement;
 import ca.utoronto.msrg.padres.common.message.CompositeSubscription;
 import ca.utoronto.msrg.padres.common.message.Publication;
-import ca.utoronto.msrg.padres.common.message.Subscription;
 import ca.utoronto.msrg.padres.common.message.parser.MessageFactory;
 import ca.utoronto.msrg.padres.common.message.parser.MessageParser;
 import ca.utoronto.msrg.padres.common.message.parser.ParseException;
 import ca.utoronto.msrg.padres.demo.webclient.services.PageService;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /*
  * Just run this class as a normal Java application to start the client.
