@@ -4,6 +4,7 @@ import ca.utoronto.msrg.padres.broker.brokercore.BrokerCore;
 import ca.utoronto.msrg.padres.broker.brokercore.InputQueueHandler;
 import ca.utoronto.msrg.padres.common.comm.MessageQueue;
 import ca.utoronto.msrg.padres.common.message.Message;
+import de.tum.msrg.itt.tester.TesterIttMessageQueue;
 
 /**
  * Auxiliary class used as part of test framework. The class implements
@@ -22,7 +23,7 @@ import ca.utoronto.msrg.padres.common.message.Message;
  * Created: July 26, 2011
  *
  */
-class TesterInputQueueHandler extends InputQueueHandler {
+public class TesterInputQueueHandler extends InputQueueHandler {
 
 	public final IBrokerTester _brokerTester;
 	public final String _brokerURI;
@@ -34,9 +35,9 @@ class TesterInputQueueHandler extends InputQueueHandler {
 		_brokerTester = brokerTester;
 		_brokerURI = broker.getBrokerURI();
 		
-		((TesterMessageQueue)msgQueue).setBrokerTester(_brokerTester);
-		((TesterMessageQueue)msgQueue).setMyMessageDestination(myDestination);
-		((TesterMessageQueue)msgQueue).setBrokerURI(_brokerURI);
+		((TesterIttMessageQueue)msgQueue).setBrokerTester(_brokerTester);
+		((TesterIttMessageQueue)msgQueue).setMyMessageDestination(myDestination);
+		((TesterIttMessageQueue)msgQueue).setBrokerURI(_brokerURI);
 	}
 	
 	@Override

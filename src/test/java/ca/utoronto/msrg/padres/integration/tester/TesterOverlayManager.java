@@ -1,5 +1,6 @@
 package ca.utoronto.msrg.padres.integration.tester;
 
+import ca.utoronto.msrg.padres.broker.brokercore.BrokerCore;
 import ca.utoronto.msrg.padres.broker.brokercore.BrokerCoreException;
 import ca.utoronto.msrg.padres.broker.controller.OverlayManager;
 import ca.utoronto.msrg.padres.common.comm.CommunicationException;
@@ -17,15 +18,13 @@ import ca.utoronto.msrg.padres.common.message.MessageDestination;
  * Created: July 26, 2011
  *
  */
-class TesterOverlayManager extends OverlayManager {
+public class TesterOverlayManager extends OverlayManager {
 	
 	public final IBrokerTester _brokerTester;
-	public final TesterBrokerCore _brokerCore;
+	public final BrokerCore _brokerCore;
 	
-	public TesterOverlayManager(IBrokerTester brokerTester,
-			TesterBrokerCore brokerCore) throws BrokerCoreException {
+	public TesterOverlayManager(IBrokerTester brokerTester, BrokerCore brokerCore) throws BrokerCoreException {
 		super(brokerCore);
-		
 		_brokerTester = brokerTester;
 		_brokerCore = brokerCore;
 	}

@@ -46,7 +46,7 @@ esac
 # default values
 MEMORY_MIN=16  
 MEMORY_MAX=64 
-CLIENT="ca.utoronto.msrg.padres.demo.guiclient.GUIClient"
+CLIENT="de.tum.msrg.itt.BatchClient"
 CLIENT_PATH=""
 CLIENT_ID=""
 CLIENT_IP=""
@@ -117,7 +117,7 @@ do
 	CLASSPATH="${CLASSPATH}${PATHSEP}${LIB}"
 done
 
-JVM_ARGS="-Xms${MEMORY_MIN}m -Xmx${MEMORY_MAX}m -cp ${CLASSPATH}\
+JVM_ARGS="-Xms${MEMORY_MIN}m -Xmx${MEMORY_MAX}m -cp target/padres-broker-jar-with-dependencies.jar\
      -Djava.security.policy=${PADRES_HOME}/etc/java.policy"
 
 if [ ! -z $CLIENT_IP ]; then
@@ -126,6 +126,8 @@ fi
 
 # start the client
 CMD="java $JVM_ARGS $CLIENT ${CLIENT_OPT[@]}"
+
+echo $CMD
 
 if [ -z $BG_PROCESS ]; then
 	$CMD

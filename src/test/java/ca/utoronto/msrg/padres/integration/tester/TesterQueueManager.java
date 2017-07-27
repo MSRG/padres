@@ -39,8 +39,8 @@ public class TesterQueueManager extends QueueManager {
 	@Override
 	public void registerQueue(MessageDestination msgDest, MessageQueue msgQueue) {
 		super.registerQueue(msgDest, msgQueue);
-		((TesterMessageQueue)msgQueue).setMyMessageDestination(msgDest);
-		((TesterMessageQueue)msgQueue).setBrokerTester(_brokerTester);
-		((TesterMessageQueue)msgQueue).setBrokerURI(_brokerURI);
+		((IMessageQueueTester)msgQueue).setMyMessageDestination(msgDest);
+		((IMessageQueueTester)msgQueue).setBrokerTester(_brokerTester);
+		((IMessageQueueTester)msgQueue).setBrokerURI(_brokerURI);
 	}
 }

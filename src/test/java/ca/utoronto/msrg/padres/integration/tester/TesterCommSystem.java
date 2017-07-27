@@ -19,7 +19,7 @@ import ca.utoronto.msrg.padres.common.comm.socket.SocketServer;
  * Created: July 26, 2011
  *
  */
-class TesterCommSystem extends CommSystem {
+public class TesterCommSystem extends CommSystem {
 
 	protected final IBrokerTester _brokerTester;
 	protected final String _brokerURI;

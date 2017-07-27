@@ -353,7 +353,7 @@ public interface IBrokerTester {
 	 * @param message that is being enqueued
 	 * 
 	 */
-	public void msgEnqueued(TesterMessageQueue msgQueue, Message msg);
+	public void msgEnqueued(IMessageQueueTester msgQueue, Message msg);
 
 	
 	/**
@@ -363,7 +363,7 @@ public interface IBrokerTester {
 	 * @param message that is being dequeued
 	 * 
 	 */
-	public void msgDequeued(TesterMessageQueue msgQueue, Message msg);
+	public void msgDequeued(IMessageQueueTester msgQueue, Message msg);
 	
 	
 	/**

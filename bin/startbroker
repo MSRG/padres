@@ -103,9 +103,9 @@ done
 # Start the broker
 CMD="java -Xms${MEMORY_MIN}m -Xmx${MEMORY_MAX}m 
           -Djava.rmi.server.codebase=file:${PADRES_HOME}/build/
-          -cp $CLASSPATH -Djava.awt.headless=true 
+          -cp target/padres-broker-jar-with-dependencies.jar -Djava.awt.headless=true
           -Djava.security.policy=${PADRES_HOME}/etc/java.policy 
-          ca.utoronto.msrg.padres.broker.brokercore.BrokerCore ${BROKER_OPT[@]}"
+          de.tum.msrg.itt.IttBrokerCore ${BROKER_OPT[@]}"
 
 # CMD="java -Xms${MEMORY_MIN}m -Xmx${MEMORY_MAX}m -Djava.rmi.server.hostname=${ADDR} 
 #           -cp $CLASSPATH -Djava.awt.headless=true 
