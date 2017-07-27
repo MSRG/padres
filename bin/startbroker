@@ -1,6 +1,6 @@
 #!/bin/bash
 
-USAGE="Usage: $(basename $0) -uri broker_uri [-help] [-Xms <mem_min>] [-Xmx <mem_max>] ..."
+USAGE="Usage: $(basename $0) -uri broker_uri [-itt -itt.out stats_out_file -zk zookeeper_address] [-help] [-Xms <mem_min>] [-Xmx <mem_max>] ..."
 
 # function to check whether a parameter is given to an option
 check_arg_missing()
@@ -27,6 +27,7 @@ MEMORY_MAX=512
 BROKER_URI=""
 START_BG="&"
 PATHSEP=':'
+BROKER_CLASS="ca.utoronto.msrg.padres.broker.brokercore.BrokerCore"
 
 # try to figure out the address of this machine
 . $PADRES_HOME/bin/utils.sh
@@ -66,6 +67,9 @@ while [ $# -gt 0 ]; do
 			BROKER_OPT=( ${BROKER_OPT[@]} $1)
 			START_BG=""
 			shift 1 ;;
+		( -itt )
+		    BROKER_CLASS="de.tum.msrg.itt.IttBrokerCore"
+            shift 1 ;;
 		( -help )
 			cat ${PADRES_HOME}/bin/docs/startbroker.help; 
 			exit ;;
@@ -105,12 +109,7 @@ CMD="java -Xms${MEMORY_MIN}m -Xmx${MEMORY_MAX}m
           -Djava.rmi.server.codebase=file:${PADRES_HOME}/build/
           -cp target/padres-broker-jar-with-dependencies.jar -Djava.awt.headless=true
           -Djava.security.policy=${PADRES_HOME}/etc/java.policy 
-          de.tum.msrg.itt.IttBrokerCore ${BROKER_OPT[@]}"
-
-# CMD="java -Xms${MEMORY_MIN}m -Xmx${MEMORY_MAX}m -Djava.rmi.server.hostname=${ADDR} 
-#           -cp $CLASSPATH -Djava.awt.headless=true 
-#           -Djava.security.policy=${PADRES_HOME}/etc/java.policy 
-#           ca.utoronto.msrg.padres.broker.brokercore.BrokerCore ${BROKER_OPT[@]}"
+          $BROKER_CLASS ${BROKER_OPT[@]}"
 
 # PANDA specific, please do not remove!
 if [ ! -z ${PANDA} ]; then
@@ -121,7 +120,7 @@ fi
 if [ -z ${START_BG} ]; then
 	$CMD
 else
-	$CMD &
+	echo "$CMD &"
 fi
 
 
