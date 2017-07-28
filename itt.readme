@@ -1,0 +1,27 @@
+start zookeeper server
+
+using Zookeeper client:
+  create /itt null
+  create /itt/brokers null
+
+start brokers:
+  bin/startbroker -uri socket://localhost:10000/b1 -itt -itt.out ./b1.itt -zk localhost:2181
+  bin/startbroker -uri socket://localhost:10002/b3 -itt -itt.out ./b3.itt -zk localhost:2181
+  bin/startbroker -uri socket://localhost:10001/b2 -n socket://localhost:10000/b1,socket://localhost:10002/b3 -itt -itt.out ./b1.itt -zk localhost:2181
+
+start publisher:
+  bin/startclient -i publisher -b socket://localhost:10000/b1 -cli
+  adv [class,eq,'temp'],[value,<,100]
+
+start subscriber:
+    bin/startclient -i subscriber -b socket://localhost:10002/b3 -cli
+    sub [class,eq,'temp'],[value,>,50]
+
+publish:
+    pub [class,'temp'],[value,60]
+
+reconfigure overlay:
+  python deploy_shift.py localhost:2181 socket://localhost:10000/b1 socket://localhost:10001/b2 socket://localhost:10002/b3
+
+publish again!
+  pub [class,'temp'],[value,61]
