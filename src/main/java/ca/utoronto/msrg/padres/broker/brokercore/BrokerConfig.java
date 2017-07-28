@@ -21,6 +21,7 @@ import ca.utoronto.msrg.padres.broker.router.SubscriptionFilter;
 import ca.utoronto.msrg.padres.broker.router.SubscriptionFilter.SubCoveringType;
 import ca.utoronto.msrg.padres.broker.topk.TopkInfo;
 import ca.utoronto.msrg.padres.common.util.CommandLine;
+import de.tum.msrg.itt.NodeURI;
 
 /**
  * The data structure to process broker configuration files and command line options and store the
@@ -221,7 +222,7 @@ public class BrokerConfig {
 		return properties;
 	}
 
-	protected void convertProperties(Properties properties) {
+	protected void convertProperties(Properties properties) throws BrokerCoreException {
 		// convert the properties into configuration parameters
 		brokerURI = properties.getProperty("padres.uri");
 
@@ -302,6 +303,10 @@ public class BrokerConfig {
 								Integer.parseInt(properties.getProperty("padres.W", "0")),
 								Integer.parseInt(properties.getProperty("padres.shift", "0")),
 								Integer.parseInt(properties.getProperty("padres.chunk", "0")));
+
+		zookeeperAddress = properties.getProperty("padres.itt.zk");
+		String brokerID = NodeURI.parse(brokerURI).getID();
+		ittStatsOutputFile = properties.getProperty("padres.itt.out") + "/" + brokerID + ".itt.stats";
 	}
 
 	public static String[] getCommandLineKeys() {

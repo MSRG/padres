@@ -120,7 +120,7 @@ fi
 if [ -z ${START_BG} ]; then
 	$CMD
 else
-	echo "$CMD &"
+	$CMD &
 fi
 
 

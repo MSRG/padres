@@ -46,7 +46,7 @@ esac
 # default values
 MEMORY_MIN=16  
 MEMORY_MAX=64 
-CLIENT="de.tum.msrg.itt.BatchClient"
+CLIENT="ca.utoronto.msrg.padres.demo.guiclient.GUIClient"
 CLIENT_PATH=""
 CLIENT_ID=""
 CLIENT_IP=""
@@ -126,8 +126,6 @@ fi
 
 # start the client
 CMD="java $JVM_ARGS $CLIENT ${CLIENT_OPT[@]}"
-
-echo $CMD
 
 if [ -z $BG_PROCESS ]; then
 	$CMD
