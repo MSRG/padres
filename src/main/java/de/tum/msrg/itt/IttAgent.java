@@ -272,8 +272,10 @@ public class IttAgent implements Watcher, AsyncCallback.DataCallback, AsyncCallb
                 System.out.println("There is a operation running, will not call shift!");
                 ittLogger.error("Received itt command on " + thisNodeUri.getID() + ", but current op is not finished!");
             } else {
-                System.out.println("Last operation encountered an error! Restart/recover broker first!");
-                ittLogger.error("Last operation encountered an error! Restart/recover broker first!");
+                System.out.println("Last ITT operation encountered an error! Restart/recover broker " +
+                        "first! If not successful, remove and recreate /itt/brokers in Zookeeper!");
+                ittLogger.error("Last ITT operation encountered an error! Restart/recover broker " +
+                        "first! If not successful, remove and recreate /itt/brokers in Zookeeper!");
             }
         } catch (IttException e) {
             System.err.println(e.getMessage());

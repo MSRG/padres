@@ -76,7 +76,7 @@ def main():
     if len(sys.argv) < 5:
         print(help_msg, "\n")
         print(sys.argv[0], 'zookeeper_server broker_uri_1 broker_uri_2 broker_uri_3')
-        print('Example: localhost:2181 socket://localhost:10001/broker1 '
+        print('Example:', sys.argv[0], 'localhost:2181 socket://localhost:10001/broker1 '
               'socket://localhost:10002/broker2 socket://localhost:10003/broker3')
         exit()
     zk_server = sys.argv[1]

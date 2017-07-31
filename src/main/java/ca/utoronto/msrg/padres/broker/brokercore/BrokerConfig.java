@@ -305,8 +305,13 @@ public class BrokerConfig {
 								Integer.parseInt(properties.getProperty("padres.chunk", "0")));
 
 		zookeeperAddress = properties.getProperty("padres.itt.zk");
-		String brokerID = NodeURI.parse(brokerURI).getID();
-		ittStatsOutputFile = properties.getProperty("padres.itt.out") + "/" + brokerID + ".itt.stats";
+		try {
+			String brokerID = NodeURI.parse(brokerURI).getID();
+			ittStatsOutputFile = properties.getProperty("padres.itt.out") + "/" + brokerID + ".itt.stats";
+		} catch (BrokerCoreException e) {
+			// CheckConfig is later called to verify the URI
+			System.err.println(e.getMessage());
+		}
 	}
 
 	public static String[] getCommandLineKeys() {

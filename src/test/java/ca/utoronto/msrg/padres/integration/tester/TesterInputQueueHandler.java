@@ -35,9 +35,9 @@ public class TesterInputQueueHandler extends InputQueueHandler {
 		_brokerTester = brokerTester;
 		_brokerURI = broker.getBrokerURI();
 		
-		((TesterIttMessageQueue)msgQueue).setBrokerTester(_brokerTester);
-		((TesterIttMessageQueue)msgQueue).setMyMessageDestination(myDestination);
-		((TesterIttMessageQueue)msgQueue).setBrokerURI(_brokerURI);
+		((IMessageQueueTester)msgQueue).setBrokerTester(_brokerTester);
+		((IMessageQueueTester)msgQueue).setMyMessageDestination(myDestination);
+		((IMessageQueueTester)msgQueue).setBrokerURI(_brokerURI);
 	}
 	
 	@Override
