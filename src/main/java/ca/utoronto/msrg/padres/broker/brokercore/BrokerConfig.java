@@ -21,6 +21,7 @@ import ca.utoronto.msrg.padres.broker.router.SubscriptionFilter;
 import ca.utoronto.msrg.padres.broker.router.SubscriptionFilter.SubCoveringType;
 import ca.utoronto.msrg.padres.broker.topk.TopkInfo;
 import ca.utoronto.msrg.padres.common.util.CommandLine;
+import de.tum.msrg.itt.NodeURI;
 
 /**
  * The data structure to process broker configuration files and command line options and store the
@@ -90,6 +91,10 @@ public class BrokerConfig {
 
 	private static final String CMD_ARG_FLAG_TOPK = "topk";
 
+	private static final String CMD_ARG_FLAG_ZK_ADDRESS = "zk";
+
+	private static final String CMD_ARG_FLAG_ITT_STATS_OUTPUT = "itt.out";
+
 	protected String brokerURI = "socket://localhost:1100/BrokerA";
 
 	protected String[] neighborURIs;
@@ -139,6 +144,10 @@ public class BrokerConfig {
 	private boolean topk = false;
 
 	private TopkInfo topkInfo = null;
+
+	private String zookeeperAddress;
+
+	private String ittStatsOutputFile;
 
 	public BrokerConfig() throws BrokerCoreException {
 		Properties properties;
@@ -199,6 +208,8 @@ public class BrokerConfig {
 		this.totalOrder = origConfig.totalOrder;
 		this.topk = origConfig.topk;
 		this.topkInfo = origConfig.topkInfo;
+		this.zookeeperAddress = origConfig.zookeeperAddress;
+		this.ittStatsOutputFile = origConfig.ittStatsOutputFile;
 	}
 
 
@@ -211,7 +222,7 @@ public class BrokerConfig {
 		return properties;
 	}
 
-	protected void convertProperties(Properties properties) {
+	protected void convertProperties(Properties properties) throws BrokerCoreException {
 		// convert the properties into configuration parameters
 		brokerURI = properties.getProperty("padres.uri");
 
@@ -292,6 +303,15 @@ public class BrokerConfig {
 								Integer.parseInt(properties.getProperty("padres.W", "0")),
 								Integer.parseInt(properties.getProperty("padres.shift", "0")),
 								Integer.parseInt(properties.getProperty("padres.chunk", "0")));
+
+		zookeeperAddress = properties.getProperty("padres.itt.zk");
+		try {
+			String brokerID = NodeURI.parse(brokerURI).getID();
+			ittStatsOutputFile = properties.getProperty("padres.itt.out") + "/" + brokerID + ".itt.stats";
+		} catch (BrokerCoreException e) {
+			// CheckConfig is later called to verify the URI
+			System.err.println(e.getMessage());
+		}
 	}
 
 	public static String[] getCommandLineKeys() {
@@ -316,6 +336,8 @@ public class BrokerConfig {
 		cliKeys.add(CMD_ARG_FLAG_MON_BI_ASINFO + ":");
 		cliKeys.add(CMD_ARG_FLAG_ORDER + ":");
 		cliKeys.add(CMD_ARG_FLAG_TOPK + ":");
+		cliKeys.add(CMD_ARG_FLAG_ZK_ADDRESS + ":");
+		cliKeys.add(CMD_ARG_FLAG_ITT_STATS_OUTPUT + ":");
 		return cliKeys.toArray(new String[0]);
 	}
 
@@ -363,6 +385,10 @@ public class BrokerConfig {
 			totalOrder = buffer.trim().equals("ON") ? true : false;
 		if ((buffer = cmdLine.getOptionValue(CMD_ARG_FLAG_TOPK)) != null)
 			topk = buffer.trim().equals("ON") ? true : false;
+		if((buffer = cmdLine.getOptionValue(CMD_ARG_FLAG_ZK_ADDRESS)) != null)
+			zookeeperAddress = buffer.trim();
+		if((buffer = cmdLine.getOptionValue(CMD_ARG_FLAG_ITT_STATS_OUTPUT)) != null)
+			ittStatsOutputFile = buffer.trim();
 	}
 
 	public boolean checkConfig() throws BrokerCoreException {
@@ -574,5 +600,21 @@ public class BrokerConfig {
 
 	public TopkInfo getTopk() {
 		return topkInfo ;
+	}
+
+	public String getZookeeperAddress() {
+		return zookeeperAddress;
+	}
+
+	public void setZookeeperAddress(String zookeeperAddress) {
+		this.zookeeperAddress = zookeeperAddress;
+	}
+
+	public String getIttStatsOutputFile() {
+		return ittStatsOutputFile;
+	}
+
+	public void setIttStatsOutputFile(String ittStatsOutputFile) {
+		this.ittStatsOutputFile = ittStatsOutputFile;
 	}
 }

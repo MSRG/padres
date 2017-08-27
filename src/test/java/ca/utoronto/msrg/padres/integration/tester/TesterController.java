@@ -17,18 +17,18 @@ import ca.utoronto.msrg.padres.common.comm.MessageQueue;
  * Created: July 26, 2011
  *
  */
-class TesterController extends Controller {
+public class TesterController extends Controller {
 
 	public final IBrokerTester _brokerTester;
 	public final String _brokerURI;
 	
-	public TesterController(IBrokerTester brokerTester, TesterBrokerCore broker) {
+	public TesterController(IBrokerTester brokerTester, BrokerCore broker) {
 		super(broker);
-		
+
 		_brokerTester = brokerTester;
 		_brokerURI = broker.getBrokerURI();
-		((TesterMessageQueue)inQueue).setBrokerTester(_brokerTester);
-		((TesterMessageQueue)inQueue).setBrokerURI(_brokerURI);
+		((IMessageQueueTester)inQueue).setBrokerTester(_brokerTester);
+		((IMessageQueueTester)inQueue).setBrokerURI(_brokerURI);
 	}
 
 	@Override
@@ -43,7 +43,7 @@ class TesterController extends Controller {
 	protected OverlayManager createOverlayManager()
 			throws BrokerCoreException {
 		return new TesterOverlayManager(
-				_brokerTester, (TesterBrokerCore) brokerCore);
+				_brokerTester, brokerCore);
 	}
 
 	@Override

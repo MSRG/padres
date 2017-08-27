@@ -33,9 +33,9 @@ class TesterOutputQueue extends OutputQueue {
 		if(TesterRMIMessageSender.class.isAssignableFrom(msgSender.getClass()))
 			((TesterRMIMessageSender)msgSender).setDestination(remoteDest);
 		
-		((TesterMessageQueue)msgQueue).setBrokerTester(_brokerTester);
-		((TesterMessageQueue)msgQueue).setMyMessageDestination(myDestination);
-		((TesterMessageQueue)msgQueue).setBrokerURI(_brokerURI);
+		((IMessageQueueTester)msgQueue).setBrokerTester(_brokerTester);
+		((IMessageQueueTester)msgQueue).setMyMessageDestination(myDestination);
+		((IMessageQueueTester)msgQueue).setBrokerURI(_brokerURI);
 	}
 
 	@Override

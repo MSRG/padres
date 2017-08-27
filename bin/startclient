@@ -117,7 +117,7 @@ do
 	CLASSPATH="${CLASSPATH}${PATHSEP}${LIB}"
 done
 
-JVM_ARGS="-Xms${MEMORY_MIN}m -Xmx${MEMORY_MAX}m -cp ${CLASSPATH}\
+JVM_ARGS="-Xms${MEMORY_MIN}m -Xmx${MEMORY_MAX}m -cp target/padres-broker-jar-with-dependencies.jar\
      -Djava.security.policy=${PADRES_HOME}/etc/java.policy"
 
 if [ ! -z $CLIENT_IP ]; then

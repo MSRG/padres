@@ -80,7 +80,7 @@ public class MessageQueue implements Serializable {
 	/**
 	 * The message queue is implemented as linked list
 	 */
-	private List<Message> list = null;
+	protected List<Message> list = null;
 	
 	private boolean running = false;
 	

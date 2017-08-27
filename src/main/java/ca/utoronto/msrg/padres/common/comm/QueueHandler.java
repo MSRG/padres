@@ -65,9 +65,7 @@ public abstract class QueueHandler extends Thread {
 	/**
 	 * Constructor. Build a Thread named dest with "-QueueHandler" suffix to handle queue assigned
 	 * to MessageDestination dest.
-	 * 
-	 * @param threadName
-	 *            The name of this Thread.
+	 *
 	 * @param dest
 	 *            The destination for this thread to handle.
 	 */
@@ -83,8 +81,11 @@ public abstract class QueueHandler extends Thread {
 	 * (non-Javadoc)
 	 * 
 	 * @see java.lang.Runnable#run()
+	 *
+	 * had to make this not final, since I need a new handler which can call
+	 * process message only for control messages if a pause flag is set
 	 */
-	public synchronized final void run() {
+	public synchronized void run() {
 		prelude();
 		while (!shutdown) {
 			Message msg = msgQueue.blockingRemove();
@@ -120,7 +121,7 @@ public abstract class QueueHandler extends Thread {
 	 * Wake up every SLEEP_TIME (milliseconds) to check whether we are still stopped. Since the
 	 * broker isn't doing anything when it is stopped, polling every one second ain't gonna hurt
 	 */
-	private void stopIfStopped() {
+	protected void stopIfStopped() {
 		while (stopped && !shutdown) {
 			try {
 				Thread.sleep(SLEEP_TIME);
@@ -195,7 +196,6 @@ public abstract class QueueHandler extends Thread {
 
 	/**
 	 * Handle an incoming message from the queue.
-	 * 
 	 * @param msg
 	 *            The incoming message
 	 */

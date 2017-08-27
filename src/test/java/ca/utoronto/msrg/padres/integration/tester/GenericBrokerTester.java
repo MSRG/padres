@@ -885,17 +885,17 @@ public class GenericBrokerTester implements IBrokerTester {
 	}
 
 	@Override
-	public void msgDequeued(TesterMessageQueue msgQueue, Message msg) {
+	public void msgDequeued(IMessageQueueTester msgQueue, Message msg) {
 		MessageType msgType = msg.getType();
 		
 		if(msgType.equals(MessageType.SHUTDOWN))
 			return;
 		
 		report("DQ", msgQueue, msg);
-		MessageDestination msgDestination = msgQueue._myDestination;
+		MessageDestination msgDestination = msgQueue.getMyDestination();
 		String dest = msgDestination == null ? null : msgDestination.getDestinationID();
 		
-		_msgCollector.addMessage(msgQueue._brokerURI, msg, dest);
+		_msgCollector.addMessage(msgQueue.getBrokerURI(), msg, dest);
 		synchronized (_expectedEvents) {
 			Iterator<ExpectedBrokerEvent> expectedEventsIt =
 				_expectedEvents.iterator();
@@ -904,26 +904,26 @@ public class GenericBrokerTester implements IBrokerTester {
 				boolean doesItMatch = false;
 				if(msgType.equals(MessageType.COMPOSITESUBSCRIPTION)) {
 					doesItMatch = expectedEvent.match(
-							msgQueue._brokerURI, BrokerEventType.DEQUEUE, MessageType.COMPOSITESUBSCRIPTION,
+							msgQueue.getBrokerURI(), BrokerEventType.DEQUEUE, MessageType.COMPOSITESUBSCRIPTION,
 							((CompositeSubscriptionMessage)msg).getSubscription(),
-							"" + msgQueue._myDestination);
+							"" + msgQueue.getMyDestination());
 				} else if(msgType.equals(MessageType.UNADVERTISEMENT)) {
 					doesItMatch = expectedEvent.match(
-							msgQueue._brokerURI, BrokerEventType.DEQUEUE, MessageType.UNADVERTISEMENT,
+							msgQueue.getBrokerURI(), BrokerEventType.DEQUEUE, MessageType.UNADVERTISEMENT,
 							getFullPredicates(msg),
 							((UnadvertisementMessage) msg).getUnadvertisement().getAdvID(),
-							"" + msgQueue._myDestination);
+							"" + msgQueue.getMyDestination());
 				} else if(msgType.equals(MessageType.UNSUBSCRIPTION)) {
 					doesItMatch = expectedEvent.match(
-							msgQueue._brokerURI, BrokerEventType.DEQUEUE, MessageType.UNSUBSCRIPTION,
+							msgQueue.getBrokerURI(), BrokerEventType.DEQUEUE, MessageType.UNSUBSCRIPTION,
 							getFullPredicates(msg),
 							((UnsubscriptionMessage) msg).getUnsubscription().getSubID(),
-							"" + msgQueue._myDestination);
+							"" + msgQueue.getMyDestination());
 				} else {
 					doesItMatch = expectedEvent.match(
-							msgQueue._brokerURI, BrokerEventType.DEQUEUE, msgType,
+							msgQueue.getBrokerURI(), BrokerEventType.DEQUEUE, msgType,
 							getFullPredicates(msg),
-							"" + msgQueue._myDestination);
+							"" + msgQueue.getMyDestination());
 				}
 				
 				if(doesItMatch) {
@@ -939,7 +939,7 @@ public class GenericBrokerTester implements IBrokerTester {
 		}
 	}
 
-	protected void report(String prefix, TesterMessageQueue msgQueue, Message msg) {
+	protected void report(String prefix, IMessageQueueTester msgQueue, Message msg) {
 		if(!PRODUCE_PRINT_TRACES)
 			return;
 		
@@ -974,9 +974,9 @@ public class GenericBrokerTester implements IBrokerTester {
 			}
 		}
 	}
-	
+
 	@Override
-	public void msgEnqueued(TesterMessageQueue msgQueue, Message msg) {
+	public void msgEnqueued(IMessageQueueTester msgQueue, Message msg) {
 		report("EQ", msgQueue, msg);
 		
 		MessageType msgType = msg.getType();
@@ -984,9 +984,9 @@ public class GenericBrokerTester implements IBrokerTester {
 		if(msgType.equals(MessageType.SHUTDOWN))
 			return;
 		
-		MessageDestination msgDestination = msgQueue._myDestination;
+		MessageDestination msgDestination = msgQueue.getMyDestination();
 		String dest = msgDestination == null ? null : msgDestination.getDestinationID();
-		_msgCollector.addMessage(msgQueue._brokerURI, msg, dest);
+		_msgCollector.addMessage(msgQueue.getBrokerURI(), msg, dest);
 		
 		synchronized (_expectedEvents) {
 			Iterator<ExpectedBrokerEvent> expectedEventsIt =
@@ -996,30 +996,30 @@ public class GenericBrokerTester implements IBrokerTester {
 				boolean doesItMatch = false;
 				if(msgType.equals(MessageType.COMPOSITESUBSCRIPTION)) {
 					doesItMatch = expectedEvent.match(
-							msgQueue == null ? null : msgQueue._brokerURI,
+							msgQueue == null ? null : msgQueue.getBrokerURI(),
 							BrokerEventType.ENQUEUE, msgType,
 							((CompositeSubscriptionMessage)msg).getSubscription(),
-							"" + (msgQueue == null ? null : msgQueue._myDestination));
+							"" + (msgQueue == null ? null : msgQueue.getMyDestination()));
 				} else if(msgType.equals(MessageType.UNADVERTISEMENT)) {
 					doesItMatch = expectedEvent.match(
-							msgQueue == null ? null : msgQueue._brokerURI,
+							msgQueue == null ? null : msgQueue.getBrokerURI(),
 							BrokerEventType.ENQUEUE, msgType,
 							getFullPredicates(msg),
 							((UnadvertisementMessage) msg).getUnadvertisement().getAdvID(),
-							"" + (msgQueue == null ? null : msgQueue._myDestination));
+							"" + (msgQueue == null ? null : msgQueue.getMyDestination()));
 				} else if(msgType.equals(MessageType.UNSUBSCRIPTION)) {
 					doesItMatch = expectedEvent.match(
-							msgQueue == null ? null : msgQueue._brokerURI,
+							msgQueue == null ? null : msgQueue.getBrokerURI(),
 							BrokerEventType.ENQUEUE, msgType,
 							getFullPredicates(msg),
 							((UnsubscriptionMessage) msg).getUnsubscription().getSubID(),
-							"" + (msgQueue == null ? null : msgQueue._myDestination));
+							"" + (msgQueue == null ? null : msgQueue.getMyDestination()));
 				} else {
 					doesItMatch = expectedEvent.match(
-							msgQueue == null ? null : msgQueue._brokerURI,
+							msgQueue == null ? null : msgQueue.getBrokerURI(),
 							BrokerEventType.ENQUEUE, msgType,
 							getFullPredicates(msg),
-							"" + (msgQueue == null ? null : msgQueue._myDestination));
+							"" + (msgQueue == null ? null : msgQueue.getMyDestination()));
 				}
 				
 				if(doesItMatch) {

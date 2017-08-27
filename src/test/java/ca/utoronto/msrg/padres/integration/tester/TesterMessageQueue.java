@@ -26,30 +26,38 @@ import ca.utoronto.msrg.padres.common.message.MessageDestination;
  *
  */
 
-class TesterMessageQueue extends MessageQueue {
+public class TesterMessageQueue extends MessageQueue implements IMessageQueueTester {
 	
 	private static final long serialVersionUID = -7378211408067992715L;
 	protected IBrokerTester _brokerTester;
 	protected String _brokerURI;
 	protected MessageDestination _myDestination;
 
-	protected void setBrokerTester(IBrokerTester brokerTester) {
+	@Override
+	public void setBrokerTester(IBrokerTester brokerTester) {
 		_brokerTester = brokerTester;
 	}
 	
-	protected void setMyMessageDestination(
-			MessageDestination myDestination) {
+	@Override
+	public void setMyMessageDestination(MessageDestination myDestination) {
 		_myDestination = myDestination;
 	}
 	
-	protected void setBrokerURI(String brokerURI) {
+	@Override
+	public void setBrokerURI(String brokerURI) {
 		_brokerURI = brokerURI;
 	}
 	
-	protected MessageDestination getMyDestination() {
+	@Override
+	public MessageDestination getMyDestination() {
 		return _myDestination;
 	}
-	
+
+	@Override
+	public String getBrokerURI() {
+		return _brokerURI;
+	}
+
 	@Override
 	public void add(Message msg) {
 		super.add(msg);

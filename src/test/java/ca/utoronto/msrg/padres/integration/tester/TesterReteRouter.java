@@ -35,7 +35,7 @@ import ca.utoronto.msrg.padres.common.message.UnsubscriptionMessage;
  * Created: July 26, 2011
  *
  */
-public class TesterReteRouter extends ReteRouter {
+class TesterReteRouter extends ReteRouter {
 	
 	public final IBrokerTester _brokerTester;
 	public final BrokerCore _broker;

@@ -1,0 +1,74 @@
+##############################################################################
+# This file provides a small tutorial on topology transformation for PADRES. #
+# The current implementation support only the shift operation [a]. In order  #
+# to create a plan consisting of shift operations to transform any acyclic   #
+# topology, please refer to https://github.com/pxsalehi/ittplanner           #
+##############################################################################
+
+
+1) Start zookeeper server. Here we assume Zookeeper runs on localhost:2181
+
+2) Using Zookeeper client create the following nodes. (Required for shift deployment)
+
+ > create /itt null
+ > create /itt/brokers null
+
+3) Start brokers:
+
+ > bin/startbroker -uri socket://localhost:10010/b1 -itt -itt.out ./b1.itt -zk localhost:2181
+
+ > bin/startbroker -uri socket://localhost:10030/b3 -itt -itt.out ./b3.itt -zk localhost:2181
+
+ > bin/startbroker -uri socket://localhost:10020/b2 \
+   -n socket://localhost:10010/b1,socket://localhost:10030/b3 \
+   -itt -itt.out ./b1.itt -zk localhost:2181
+
+The ITT agent of each broker opens a port on the broker port + 1. Therefore, on the machine
+running broker 1, besides the port 10010 used by the broker, the port 10011 is also required
+to be free.
+
+4) Start publisher and advertise:
+
+ > bin/startclient -i publisher -b socket://localhost:10010/b1 -cli
+
+ > adv [class,eq,'temp'],[value,<,100]
+
+5) Start subscriber and subscribe:
+
+ > bin/startclient -i subscriber -b socket://localhost:10030/b3 -cli
+
+ > sub [class,eq,'temp'],[value,>,50]
+
+    Steps 3 to 5 result in the following topology:   publisher --[b1]---[b2]---[b3]-- subscriber
+
+6) Publish on publisher:
+
+ > pub [class,'temp'],[value,60]
+
+   Subscriber should receive the publication if the topology is built correctly.
+
+7) Reconfigure overlay by deploying shift(b1, b2, b3). This operation requires that b1-b2
+   and b2-b3 are connected. If successful, this operation removes the link b1-b2 and creates
+   the link b1-b3.
+
+ > python bin/itt/deploy_shift.py localhost:2181 socket://localhost:10010/b1 \
+   socket://localhost:10020/b2 socket://localhost:10030/b3
+
+8) Take down broker 2. If the operation was correct the topology should be:
+
+                           .--- [b2]
+   publisher -- [b1] ----[b3] -- subscriber
+
+   therefore removing b2 should not cause any problem in delivering publications.
+
+ > bin/stopbroker b2
+
+9) Publish again!
+
+ > pub [class,'temp'],[value,61]
+
+
+References:
+
+[a] Yoon, Young, Vinod Muthusamy, and Hans-Arno Jacobsen. "Foundations for highly available
+    content-based publish/subscribe overlays." ICDCS 2011.
